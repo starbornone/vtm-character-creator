@@ -82,7 +82,6 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
       </header>
 
       <DraftControls
-        key={id ?? 'unnamed'}
         library={drafts.library}
         activeId={id}
         name={name}
