@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { editCharacter, initialCharacterDraft, type CharacterAction, type GuideStep } from '../rules/character-guide.ts'
 import { downloadTextFile } from '../sharing/download-text.ts'
 import {
-  appendRestoredDraft, browserStorage, draftNameError, loadDraftLibrary, saveDraftLibrary, withSavedDraft,
+  activeDrafts, appendRestoredDraft, archiveSavedDraft, browserStorage, draftNameError, loadDraftLibrary, reopenArchivedDraft, saveDraftLibrary, withSavedDraft,
   type DraftLibrary, type NamedDraft,
 } from './browser-drafts.ts'
 import { serializeDraftDownload, type DraftSnapshot } from './draft-backup.ts'
@@ -37,10 +37,10 @@ export function useBrowserDrafts() {
     setSession(next)
   }
 
-  function writeLibrary(current: DraftSession, library: DraftLibrary, open: OpenDraft) {
+  function writeLibrary(current: DraftSession, library: DraftLibrary, open?: OpenDraft) {
     const result = saveDraftLibrary(browserStorage, library, current.saved)
     if (result.issue !== undefined) return result.issue
-    show({ library, saved: result.saved, open, dirty: false })
+    show(open ? { library, saved: result.saved, open, dirty: false } : { ...current, library, saved: result.saved })
   }
 
   function persist(current: DraftSession, library: DraftLibrary, open: OpenDraft, keepOnError = false) {
@@ -81,7 +81,7 @@ export function useBrowserDrafts() {
   function switchDraft(id: string | null) {
     const current = latest.current
     if (id === current.open.id) return false
-    const open = id === null ? blankDraft : current.library.drafts.find(draft => draft.id === id)
+    const open = id === null ? blankDraft : activeDrafts(current.library).find(draft => draft.id === id)
     if (!open) return false
     if (!canLeaveDraft(current)) return false
     // A blank session has no active pointer to clear.
@@ -109,6 +109,25 @@ export function useBrowserDrafts() {
     return writeLibrary(current, copy.library, copy.draft)
   }
 
+  function archive(id: string) {
+    const current = latest.current
+    const isOpen = current.open.id === id
+    const draft = isOpen ? { ...current.open, id } : current.library.drafts.find(entry => entry.id === id)
+    const library = draft && archiveSavedDraft(current.library, draft)
+    if (!draft || !library) return { changed: false, issue: 'This draft is no longer available to archive.' }
+    const issue = draftNameError(current.library, draft.name, id) ?? writeLibrary(current, library, isOpen ? blankDraft : undefined)
+    return { changed: issue === undefined, issue }
+  }
+
+  function reopen(id: string) {
+    const current = latest.current
+    const reopened = reopenArchivedDraft(current.library, id)
+    if (!reopened) return { changed: false, issue: 'This draft is no longer in the archive.' }
+    if (!canLeaveDraft(current)) return { changed: false }
+    const issue = writeLibrary(current, reopened.library, reopened.draft)
+    return { changed: issue === undefined, issue }
+  }
+
   function download() {
     const { open } = latest.current
     const name = open.name || open.character.concept.name.trim() || 'Untitled draft'
@@ -116,5 +135,5 @@ export function useBrowserDrafts() {
     downloadTextFile(serializeDraftDownload({ name, step: open.step, character: open.character }), `${stem || 'character'}-draft.json`, 'application/json')
   }
 
-  return { ...session, dispatch, goTo, save, switchDraft, download, restore, duplicate }
+  return { ...session, dispatch, goTo, save, switchDraft, download, restore, duplicate, archive, reopen }
 }

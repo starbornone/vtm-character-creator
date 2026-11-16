@@ -10,6 +10,7 @@ export interface NamedDraft extends DraftSnapshot {
 export interface DraftLibrary {
   activeId: string | null
   drafts: NamedDraft[]
+  archivedIds?: string[]
 }
 
 // Resolve storage inside the read/write try blocks. The browser can throw on property access.
@@ -27,11 +28,17 @@ function parseLibrary(raw: string): DraftLibrary | undefined {
   try {
     const value: unknown = JSON.parse(raw)
     if (!isRecord(value) || value.ruleset !== draftRuleset) return
-    const { activeId, drafts } = value
-    if (!Array.isArray(drafts) || !drafts.every(isNamedDraft) || new Set(drafts.map(draft => draft.id)).size !== drafts.length) return
+    const { activeId, drafts, archivedIds } = value
+    if (!Array.isArray(drafts) || !drafts.every(isNamedDraft)) return
+    const draftIds = new Set(drafts.map(draft => draft.id))
+    if (draftIds.size !== drafts.length) return
     if (value.schemaVersion !== draftSchemaVersionFor(drafts)) return
-    if (activeId !== null && (typeof activeId !== 'string' || !drafts.some(draft => draft.id === activeId))) return
-    return { activeId, drafts }
+    if (activeId !== null && (typeof activeId !== 'string' || !draftIds.has(activeId))) return
+    if (archivedIds === undefined) return { activeId, drafts }
+    if (!Array.isArray(archivedIds) || !archivedIds.every((id): id is string => typeof id === 'string' && draftIds.has(id))
+      || new Set(archivedIds).size !== archivedIds.length
+      || (activeId !== null && archivedIds.includes(activeId))) return
+    return { activeId, drafts, archivedIds }
   } catch {
     return undefined
   }
@@ -70,7 +77,27 @@ export function draftNameError(library: DraftLibrary, name: string, id?: string)
 
 export function withSavedDraft(library: DraftLibrary, draft: NamedDraft): DraftLibrary {
   const exists = library.drafts.some(entry => entry.id === draft.id)
-  return { activeId: draft.id, drafts: exists ? library.drafts.map(entry => entry.id === draft.id ? draft : entry) : [...library.drafts, draft] }
+  return { ...library, activeId: draft.id, drafts: exists ? library.drafts.map(entry => entry.id === draft.id ? draft : entry) : [...library.drafts, draft] }
+}
+
+export function activeDrafts(library: DraftLibrary) {
+  return library.drafts.filter(draft => !library.archivedIds?.includes(draft.id))
+}
+
+export function archiveSavedDraft(library: DraftLibrary, draft: NamedDraft): DraftLibrary | undefined {
+  if (library.archivedIds?.includes(draft.id) || !library.drafts.some(entry => entry.id === draft.id)) return
+  return {
+    activeId: library.activeId === draft.id ? null : library.activeId,
+    drafts: library.drafts.map(entry => entry.id === draft.id ? draft : entry),
+    archivedIds: [...(library.archivedIds ?? []), draft.id],
+  }
+}
+
+export function reopenArchivedDraft(library: DraftLibrary, id: string) {
+  const draft = library.drafts.find(entry => entry.id === id)
+  if (!draft || !library.archivedIds?.includes(id)) return
+  const remaining = library.archivedIds.filter(archivedId => archivedId !== id)
+  return { draft, library: { ...library, activeId: id, archivedIds: remaining.length ? remaining : undefined } }
 }
 
 export function suggestRestoreName(library: DraftLibrary, original: string) {
@@ -91,5 +118,5 @@ export function appendRestoredDraft(library: DraftLibrary, snapshot: DraftSnapsh
   if (issue) return { issue }
   if (library.drafts.some(draft => draft.id === id)) return { issue: 'Could not assign a fresh draft ID. Try again.' }
   const draft: NamedDraft = { name, step: snapshot.step, character: snapshot.character, id }
-  return { draft, library: { activeId: id, drafts: [...library.drafts, draft] } }
+  return { draft, library: { ...library, activeId: id, drafts: [...library.drafts, draft] } }
 }

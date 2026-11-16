@@ -19,6 +19,7 @@ import { StartingExperienceEditor } from '@/components/StartingExperienceEditor'
 import { StartingOptionsEditor } from '@/components/StartingOptionsEditor'
 import { StorytellerBrief } from '@/components/StorytellerBrief'
 import { TableReference } from '@/components/TableReference'
+import { activeDrafts } from '@/drafts/browser-drafts'
 import { useBrowserDrafts } from '@/drafts/use-browser-drafts'
 import { chronicleSettings, evaluateCharacter, guideSteps, type GuideStep, type ReviewTarget } from '@/rules/character-guide'
 import { skillDistributionIds, skillDistributions } from '@/rules/trait-ledger'
@@ -104,7 +105,7 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
         </div>
         <div className="flex flex-wrap gap-2">
           <TableReference />
-          <CoteriePlanner drafts={drafts.library.drafts} />
+          <CoteriePlanner drafts={activeDrafts(drafts.library)} />
           <HandoffPrototype />
         </div>
       </header>
@@ -126,6 +127,16 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
           const issue = drafts.duplicate(copyName)
           if (issue === undefined) requestAnimationFrame(() => panel.current?.focus())
           return issue
+        }}
+        onArchive={draftId => {
+          const result = drafts.archive(draftId)
+          if (result.changed && draftId === id) requestAnimationFrame(() => panel.current?.focus())
+          return result
+        }}
+        onReopen={draftId => {
+          const result = drafts.reopen(draftId)
+          if (result.changed) requestAnimationFrame(() => panel.current?.focus())
+          return result
         }}
         onRestore={snapshot => {
           const result = drafts.restore(snapshot)

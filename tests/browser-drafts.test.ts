@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
-  appendRestoredDraft, draftLibraryKey, draftNameError, loadDraftLibrary, saveDraftLibrary, suggestCopyName, withSavedDraft,
+  activeDrafts, appendRestoredDraft, archiveSavedDraft, draftLibraryKey, draftNameError, loadDraftLibrary, reopenArchivedDraft, saveDraftLibrary, suggestCopyName, withSavedDraft,
   type DraftLibrary, type GetStorage, type NamedDraft,
 } from '../src/drafts/browser-drafts.ts'
 import { serializeDraftDownload } from '../src/drafts/draft-backup.ts'
@@ -26,6 +26,54 @@ function memoryStorage(initial: string | null = null) {
   })
   return { storage, block: (value: boolean) => { blocked = value } }
 }
+
+test('archiving the active draft keeps its working inputs and step and reopening keeps the same ID', () => {
+  const { storage } = memoryStorage()
+  const other = { ...maraDraft, name: 'Another draft', id: 'other' }
+  const library = { activeId: maraDraft.id, drafts: [maraDraft, other] }
+  const { saved } = saveDraftLibrary(storage, library, null)
+  assert.ok(saved)
+  const working = { ...maraDraft, step: 'relationships' as const, character: editCharacter(maraCharacter, {
+    type: 'concept', update: { desire: 'Test a different approach' },
+  }) }
+  const archived = archiveSavedDraft(library, working)
+  assert.ok(archived)
+  assert.ok(saveDraftLibrary(storage, archived, saved).saved)
+  const reloaded = loadDraftLibrary(storage)
+  assert.equal(reloaded.library.activeId, null)
+  assert.deepEqual(activeDrafts(reloaded.library), [other])
+  assert.match(draftNameError(reloaded.library, maraDraft.name) ?? '', /already exists/)
+  const newSave = withSavedDraft(reloaded.library, other)
+  const imported = appendRestoredDraft(newSave, { ...other, name: 'Imported draft' }, 'imported')
+  assert.ok(imported.library)
+  assert.deepEqual(imported.library.archivedIds, [maraDraft.id])
+  const reopened = reopenArchivedDraft(reloaded.library, maraDraft.id)
+  assert.ok(reopened)
+  assert.deepEqual(reopened.draft, working)
+  assert.ok(saveDraftLibrary(storage, reopened.library, reloaded.saved).saved)
+  assert.deepEqual(loadDraftLibrary(storage).library, { activeId: maraDraft.id, drafts: [working, other] })
+})
+
+test('failed archive and reopen writes leave the browser library intact', () => {
+  const { storage, block } = memoryStorage()
+  const library = withSavedDraft({ activeId: null, drafts: [] }, maraDraft)
+  const { saved } = saveDraftLibrary(storage, library, null)
+  assert.ok(saved)
+  const archived = archiveSavedDraft(library, maraDraft)
+  assert.ok(archived)
+  block(true)
+  assert.match(saveDraftLibrary(storage, archived, saved).issue ?? '', /Could not save/)
+  assert.equal(loadDraftLibrary(storage).saved, saved)
+  block(false)
+  const result = saveDraftLibrary(storage, archived, saved)
+  assert.ok(result.saved)
+  const reopened = reopenArchivedDraft(archived, maraDraft.id)
+  assert.ok(reopened)
+  assert.match(saveDraftLibrary(storage, reopened.library, saved).issue ?? '', /Browser drafts changed/)
+  block(true)
+  assert.match(saveDraftLibrary(storage, reopened.library, result.saved).issue ?? '', /Could not save/)
+  assert.equal(loadDraftLibrary(storage).saved, result.saved)
+})
 
 test('named incomplete and complete characters restore their own step and active draft', () => {
   const { storage } = memoryStorage()
@@ -129,6 +177,8 @@ test('blocked, malformed and unsupported storage falls back without overwriting 
   const invalid = [
     '{bad', envelope({ schemaVersion: 2 }), envelope({ ruleset: 'other' }),
     envelope({ activeId: 'absent' }), envelope({ drafts: [maraDraft, maraDraft] }),
+    envelope({ archivedIds: ['missing'] }), envelope({ archivedIds: ['mara'] }),
+    envelope({ activeId: null, archivedIds: ['mara', 'mara'] }),
     envelope({ drafts: [{ ...maraDraft, step: 'missing' }] }),
     envelope({ drafts: [{ ...maraDraft, character: { ...maraCharacter, traits: { ...maraCharacter.traits, distribution: 'missing' } } }] }),
     envelope({ drafts: [{ ...maraDraft, character: { ...maraCharacter, starting: { ...maraCharacter.starting, purchases: [{ kind: 'skill', id: 'invalid', to: 1 }] } } }] }),

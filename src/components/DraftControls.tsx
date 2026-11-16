@@ -1,6 +1,6 @@
-import { ChevronDown, Copy, Download, FilePlus, FolderOpen, Save } from 'lucide-react'
+import { Archive, ArchiveRestore, ChevronDown, Copy, Download, FilePlus, FolderOpen, Save } from 'lucide-react'
 import { useRef, useState } from 'react'
-import { suggestCopyName, type DraftLibrary } from '@/drafts/browser-drafts'
+import { activeDrafts, suggestCopyName, type DraftLibrary } from '@/drafts/browser-drafts'
 import type { DraftSnapshot } from '@/drafts/draft-backup'
 import { BackupRestore } from '@/components/BackupRestore'
 import { Card, CardContent } from '@/components/ui/card'
@@ -16,6 +16,8 @@ interface DraftControlsProps {
   onDownload: () => void
   onRestore: (draft: DraftSnapshot) => { restored: boolean; issue?: string }
   onDuplicate: (name: string) => string | undefined
+  onArchive: (id: string) => { changed: boolean; issue?: string }
+  onReopen: (id: string) => { changed: boolean; issue?: string }
 }
 
 export function DraftControls(props: DraftControlsProps) {
@@ -39,10 +41,15 @@ export function DraftControls(props: DraftControlsProps) {
   )
 }
 
-function DraftFields({ library, activeId, name, dirty, issue, onSave, onSwitch, onDownload, onRestore, onDuplicate }: DraftControlsProps) {
+function DraftFields({ library, activeId, name, dirty, issue, onSave, onSwitch, onDownload, onRestore, onDuplicate, onArchive, onReopen }: DraftControlsProps) {
   const [label, setLabel] = useState(name)
   const [selectedId, setSelectedId] = useState(library.activeId ?? '')
   const [nameIssue, setNameIssue] = useState<string>()
+  const [archiveIssue, setArchiveIssue] = useState<string>()
+  const [archiveStatus, setArchiveStatus] = useState('')
+  const savedPicker = useRef<HTMLSelectElement>(null)
+  const savedDrafts = activeDrafts(library)
+  const archivedDrafts = library.drafts.filter(draft => library.archivedIds?.includes(draft.id))
 
   return (
     <CardContent className="space-y-3 border-t border-border p-4 sm:p-5">
@@ -67,12 +74,25 @@ function DraftFields({ library, activeId, name, dirty, issue, onSave, onSwitch, 
         <div className="flex flex-wrap items-end gap-2">
           <label className="grid min-w-40 flex-1 gap-1 text-sm">
             Saved drafts
-            <select className="ledger-field w-full" value={selectedId} disabled={!library.drafts.length} onChange={event => setSelectedId(event.target.value)}>
-              <option value="">{library.drafts.length ? 'Choose a draft' : 'No saved drafts'}</option>
-              {library.drafts.map(draft => <option key={draft.id} value={draft.id}>{draft.name}</option>)}
+            <select ref={savedPicker} className="ledger-field w-full" value={selectedId} disabled={!savedDrafts.length} onChange={event => {
+              setSelectedId(event.target.value)
+              setArchiveIssue(undefined)
+              setArchiveStatus('')
+            }}>
+              <option value="">{savedDrafts.length ? 'Choose a draft' : 'No saved drafts'}</option>
+              {savedDrafts.map(draft => <option key={draft.id} value={draft.id}>{draft.name}</option>)}
             </select>
           </label>
           <button type="button" className="guide-button guide-action disabled:opacity-50" disabled={!selectedId || selectedId === activeId} onClick={() => onSwitch(selectedId)}><FolderOpen aria-hidden="true" />Open draft</button>
+          <button type="button" className="guide-button guide-action disabled:opacity-50" disabled={!selectedId} onClick={() => {
+            const result = onArchive(selectedId)
+            setArchiveIssue(result.issue)
+            setArchiveStatus(result.changed ? 'Draft moved to Archived drafts.' : '')
+            if (result.changed) {
+              setSelectedId('')
+              if (selectedId !== activeId) savedPicker.current?.focus()
+            }
+          }}><Archive aria-hidden="true" />Archive draft</button>
         </div>
       </div>
 
@@ -86,10 +106,34 @@ function DraftFields({ library, activeId, name, dirty, issue, onSave, onSwitch, 
         }}><FilePlus aria-hidden="true" />New draft</button>
         <button type="button" className="guide-button guide-action" onClick={onDownload}><Download aria-hidden="true" />Download current draft</button>
         <BackupRestore library={library} onRestore={onRestore} />
-        {library.drafts.some(draft => draft.id === activeId) && (
+        {savedDrafts.some(draft => draft.id === activeId) && (
           <DuplicateDraft suggestedName={suggestCopyName(library, name)} onDuplicate={onDuplicate} />
         )}
       </div>
+      {archivedDrafts.length > 0 && (
+        <details className="group/archive rounded-lg border border-border">
+          <summary className="flex min-h-10 cursor-pointer list-none items-center justify-between gap-2 px-3 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-rose-300 [&::-webkit-details-marker]:hidden">
+            Archived drafts
+            <ChevronDown aria-hidden="true" className="size-4 shrink-0 group-open/archive:rotate-180" />
+          </summary>
+          <ul className="space-y-2 border-t border-border p-3">
+            {archivedDrafts.map(draft => (
+              <li key={draft.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
+                <span className="min-w-0 wrap-break-word">{draft.name}</span>
+                <button type="button" className="guide-button guide-action" aria-label={`Reopen ${draft.name}`}
+                  onClick={() => {
+                    setArchiveStatus('')
+                    setArchiveIssue(onReopen(draft.id).issue)
+                  }}>
+                  <ArchiveRestore aria-hidden="true" />Reopen
+                </button>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+      {archiveIssue && <p role="alert" className="text-sm text-rose-300">{archiveIssue}</p>}
+      {archiveStatus && <p role="status" className="text-sm text-muted-foreground">{archiveStatus}</p>}
     </CardContent>
   )
 }
