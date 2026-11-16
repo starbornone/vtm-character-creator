@@ -9,7 +9,7 @@ The Vampire: The Masquerade Character Creator is in development for players prep
 3. Record Advantages, Flaws, Convictions, Touchstones, and relevant relationships. Apply starting XP and review the resulting sheet and any open Storyteller rulings.
 4. Open **Review & Print** to resolve open choices and print the character sheet.
 
-Name a browser draft at any step to autosave it. Each saved character resumes at its own last step. The guide downloads the current draft as a JSON backup and previews a backup before restoring it as a new draft. The Storyteller brief and mechanical build links are later milestones.
+Name a browser draft at any step to autosave it. Each saved character resumes at its own last step. Download a full JSON backup to restore the draft elsewhere, or share a read-only mechanical build link that leaves out narrative and custom text. The Storyteller brief is a later milestone.
 
 ## Release boundaries
 

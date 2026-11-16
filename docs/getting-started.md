@@ -29,6 +29,12 @@ Select **Choose JSON backup** and open the file. Review the character, saved ste
 
 The guide reports malformed files, unsupported versions or rulesets, and invalid draft inputs before restoring anything. If browser storage rejects the restore, the preview stays open so you can retry.
 
+## Share a mechanical build
+
+In **Review & Print**, select **Share mechanical build** and copy the link. Anyone with the link can open a read-only sheet showing the included ratings, catalog choices, and starting XP. The link leaves out draft and character names, chronicle details, relationships, notes, custom Specialty names, and manual entries.
+
+The preview identifies omitted choices that need to be re-entered. Select **Save as new draft** to add an editable copy to your own browser library. The copy starts at **Concept** so you can add its name and story. Use a [JSON backup](#back-up-and-restore-a-draft) when you want to share the full draft.
+
 ## Choose options from the Core catalog
 
 Under **Clan & Predator Type**, use the search fields to filter the pickers by option name or source page. The picker shows eligibility restrictions. Once you choose a Predator Type, complete its Specialty, Discipline power, and any additional grant choices. Characters with Blood Sorcery can select an optional starting level-one Ritual.
@@ -61,6 +67,6 @@ npm run build
 npm run preview
 ```
 
-The tests check Mara’s complete sheet, core path and grant rules, browser draft storage, and JSON backup round-trips. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
+The tests check Mara’s complete sheet, core path and grant rules, browser draft storage, JSON backup round-trips, and the build link allowlist. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
 
 See the [overview](overview.md) for first-release scope and [Development](development.md) for contributor checks.

@@ -1,6 +1,6 @@
 # Decision records
 
-The static app, Core catalog, print sheet, named browser drafts, and JSON backup and restore are implemented. See the [roadmap](../roadmap/roadmap.json) for delivery status.
+The static app, Core catalog, print sheet, named browser drafts, JSON backup and restore, and mechanical build links are implemented. See the [roadmap](../roadmap/roadmap.json) for delivery status.
 
 ## 1 Static Vite app with shadcn/ui
 
@@ -33,6 +33,8 @@ The static app, Core catalog, print sheet, named browser drafts, and JSON backup
 **Decision.** Use a versioned JSON backup, an allowlisted mechanical build link, and a Markdown Storyteller brief with opt-in narrative sections.
 
 **Consequences.** Validate portable inputs before applying them. New draft fields require an explicit decision about backup, link, and brief behavior.
+
+Build links start from an allowlist of catalog IDs and mechanical ratings. A format version lets the preview reject unsupported links. Names, narrative, and custom text stay in the full backup. The recipient can save a separate local draft after previewing the mechanics.
 
 ## 5 Print from the review sheet
 

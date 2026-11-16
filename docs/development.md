@@ -16,6 +16,7 @@
 | `src/rules/character-guide.ts`, `src/components/CharacterSheet.tsx` | Shared draft evaluation, review issues, and the printable sheet. |
 | `src/drafts/`, `src/components/DraftControls.tsx` | Draft input validation, browser storage, recovery download, and draft controls. |
 | `src/drafts/draft-backup.ts`, `src/components/BackupRestore.tsx` | Versioned backup format, file validation, and restore preview. |
+| `src/sharing/build-link.ts`, `src/components/SharedBuild.tsx` | Mechanical allowlist, versioned URL fragment, and read-only recipient preview. |
 | `tests/fixtures/mara-vale.ts`, `tests/` | Shared neonate fixture and rules regression tests. |
 
 Start from a [roadmap item](../roadmap/roadmap.json) and read the relevant section of the [plan](../PLAN.md). For documentation changes, follow the relative links from the edited pages and parse the three roadmap files if any changed. Check schema values, matching project metadata, timestamps, and unique IDs across all three files. Review the diff for unrelated edits.
@@ -31,3 +32,5 @@ For catalog changes, run the [catalog tests](../tests/core-catalog.test.ts) and 
 For draft changes, run the [browser storage tests](../tests/browser-drafts.test.ts), save two characters at different steps, and reload after switching between them. Force a write failure on the local draft key and confirm that the last save persists, the current edits appear in the download, and a retry succeeds when writes resume.
 
 For backup changes, run the [backup tests](../tests/draft-backup.test.ts). In the browser, restore a finished Mara Vale backup and one unfinished character, then reload both at their saved steps. Verify that cancelling a preview or choosing malformed JSON, an unsupported ruleset, or invalid inputs leaves the open draft and saved library intact.
+
+For link changes, run the [build link tests](../tests/build-link.test.ts). Generate a link from Mara Vale and inspect the decoded fragment for names, narrative, and custom choice text. Open it in another tab, confirm that the preview leaves the library intact, and save a separate copy. Check that a malformed fragment shows an error.

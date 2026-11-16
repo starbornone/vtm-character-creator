@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T16:10:50+11:00",
+  "updatedAt": "2026-11-16T16:20:45+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -98,6 +98,13 @@
       "group": "Sharing",
       "notes": "Validated and previewed versioned V5 JSON backups before restoring copies with fresh IDs. Verified complete Mara Vale and unfinished draft round-trips, reload and name collision handling, and preservation of saved drafts after cancellation, rejected files, and a failed storage write.",
       "completedAt": "2026-11-16T16:10:50+11:00"
+    },
+    {
+      "id": "share-mechanical-build-links",
+      "title": "Share mechanical build links",
+      "group": "Sharing",
+      "notes": "Added versioned, allowlisted build links, a read-only preview, and an explicit save-as-copy action. Verified Mara Vale’s decoded payload excludes names and narrative, custom choices produce omission flags, invalid links are rejected, and opening a preview leaves saved drafts intact.",
+      "completedAt": "2026-11-16T16:20:45+11:00"
     }
   ]
 }
