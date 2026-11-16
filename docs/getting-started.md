@@ -67,6 +67,12 @@ Drafts belong to the current browser and site address. If saving fails, the last
 
 Open a named draft and expand **Browser drafts**. Select **Duplicate draft**, accept or edit the suggested **Copy name**, then select **Save copy**. The copy opens at the same step with the current character inputs. From then on, the two drafts autosave separately. If saving the copy fails, the original stays open at the same step and the copy form shows the error.
 
+### Archive or reopen a draft
+
+In **Browser drafts**, choose a named draft under **Saved drafts** and select **Archive draft**. Archiving the draft you are editing saves its current inputs and step and opens a blank **Concept** editor. Archiving another draft keeps your current editor open.
+
+Expand **Archived drafts** and select **Reopen** beside the draft. It returns to **Saved drafts** and opens at its saved step. Its name stays reserved while archived. If the archive or reopen write fails, the draft stays in its previous list and the editor stays open.
+
 ## Back up and restore a draft
 
 Select **Download current draft** to save a JSON backup of the character and current step, including an unfinished or unnamed character. The backup includes narrative fields, Storyteller notes, and the XP advancement journal when present.

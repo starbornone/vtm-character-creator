@@ -51,6 +51,8 @@ Predator grant choices use stable IDs and are applied only while the current sel
 
 [`src/drafts/use-browser-drafts.ts`](../src/drafts/use-browser-drafts.ts) duplicates the open named draft’s working inputs and step under a fresh ID. The copy becomes active only after the library write succeeds. A rejected write leaves the draft and library in their previous session state and reports the error in the copy form.
 
+The browser library stores archived draft IDs alongside the existing snapshots. Archive and reopen each update the archive and the active draft pointer in one write. The same snapshots and IDs are used when reopening, and names stay reserved across both lists. An individual draft backup carries the character and step. Archive status belongs to the browser library.
+
 [`src/drafts/chronicle-presets.ts`](../src/drafts/chronicle-presets.ts) stores named chronicle settings in a separate versioned browser library. The preset preview compares the saved settings with the open character. Applying the preset dispatches one character edit for the chronicle name, Tenets, and enabled source packs. The draft and backup store the applied values in their existing fields, so restored characters can use those settings independently of the preset library.
 
 [`src/drafts/draft-backup.ts`](../src/drafts/draft-backup.ts) handles the portable backup envelope. It carries `format`, `schemaVersion`, `ruleset`, and a snapshot of the name, step, and character inputs. Backup restore and browser storage use the same input validation. The preview evaluates the snapshot with the live rules engine. Confirmation allocates a fresh draft ID and saves the appended library and its active ID in one write.

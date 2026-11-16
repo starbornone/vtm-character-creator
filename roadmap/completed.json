@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-17T00:45:41+11:00",
+  "updatedAt": "2026-11-17T00:55:49+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -252,6 +252,13 @@
       "group": "Rules coverage",
       "notes": "Added Ravnos to the opt-in catalog with its cited creation choices and No Haven restriction. Verified the hand-checked Lena Ortiz fixture through review, Letter print, JSON restore and reload, and the mechanical build link. Confirmed opt-in behavior and identical Core and Ministry sheets, backups, and build links against the previous commit.",
       "completedAt": "2026-11-17T00:45:41+11:00"
+    },
+    {
+      "id": "archive-browser-drafts",
+      "title": "Archive and reopen named browser drafts",
+      "group": "Browser drafts",
+      "notes": "Added a reversible archive. Archiving the open draft saves it and opens blank Concept. Verified active and archived lists after reload, reopening with the same ID, inputs, and step, and preserving both drafts after stale archive and reopen attempts. Quota tests confirm rejected writes preserve stored data.",
+      "completedAt": "2026-11-17T00:55:49+11:00"
     }
   ]
 }

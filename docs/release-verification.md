@@ -43,6 +43,12 @@ In the local production preview, a named draft on **Relationships** suggested a 
 
 A second tab then saved a newer edit to the original. Saving another copy in the older tab showed the storage conflict in the copy form and left the original open at **Relationships**. After reloading, the library still held only the original and the first copy, and the newer edit was present. The browser draft test also checks that a quota failure leaves the stored library byte-for-byte intact.
 
+## Browser draft archive
+
+In the local production preview, a draft saved at **Relationships** moved out of **Saved drafts** while another draft stayed open at **Advantages & XP**. After reload, reopening from **Archived drafts** returned the same draft ID, Touchstone, and saved step. Archiving the open draft returned the editor to a blank **Concept** step. Reload kept that state, and reopening restored the original draft at **Relationships**.
+
+A second tab saved a newer edit to the original. The older tab rejected both an archive and a reopen attempt and kept the open editor and both lists intact. After reload, the newer edit was present, and the archived alternate reopened with its original ID, saved step, and separate Touchstone. Automated tests also verify that quota failures on both operations leave the stored library byte for byte unchanged.
+
 ## Public site
 
 Vercel reported the notice commit `e70e956` ready for production on 16 November 2026. The live creator and a shared build preview both displayed the official Dark Pack logo, the Paradox copyright and trademark notice, and the unofficial designation. The logo loaded from the public domain and linked to the Dark Pack Agreement. [Public character creator](https://vtm.astralarchives.games/) · [Dark Pack Agreement](https://www.paradoxinteractive.com/games/world-of-darkness/community/dark-pack-agreement) · [Official V5 resources](https://renegadegamestudios.com/vampire)
