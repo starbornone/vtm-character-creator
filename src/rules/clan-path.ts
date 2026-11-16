@@ -1,11 +1,18 @@
 import {
-  coreClans, corePredators, disciplineIds, disciplinePowers,
+  caitiffOption, clanChoices, corePredators, disciplineIds, disciplinePowers,
   type ClanOption, type DisciplineId, type DisciplinePower, type DotGrant, type PredatorOption,
 } from '../catalog/clan-path.ts'
 import { skillIds } from '../catalog/traits.ts'
 import { ageProfiles, type AgeProfile } from './creation-profiles.ts'
 
 export const manualOptionId = 'manual'
+
+const suspect = { name: 'Suspect', dots: 1 }
+export const caitiffStatusIssue = 'Caitiff cannot take positive Status during character creation. Core p. 107.'
+
+export function isStatusAdvantage(name: string) {
+  return /\bstatus\b/i.test(name)
+}
 
 export interface ManualClan {
   name: string
@@ -118,7 +125,8 @@ export function predatorRestriction(clanId: string | undefined, predatorId: stri
 }
 
 export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true, profile: AgeProfile = ageProfiles.neonate) {
-  const clan = draft.clan === manualOptionId ? manualClanOption(draft.manualClan) : coreClans.find(option => option.id === draft.clan)
+  const clan = draft.clan === manualOptionId ? manualClanOption(draft.manualClan) : clanChoices.find(option => option.id === draft.clan)
+  const isCaitiff = clan?.id === caitiffOption.id
   const twoDot = clan?.disciplines.find(id => id === draft.twoDotDiscipline)
   const oneDot = clan?.disciplines.find(id => id === draft.oneDotDiscipline && id !== twoDot)
   const clanRatings: DisciplineRatings = {}
@@ -133,10 +141,13 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true,
     }
   }
 
-  const predatorIssue = profile.predatorAllowed ? predatorRestriction(clan?.id, draft.predatorType, profile.bloodPotency) : undefined
-  const predator = profile.predatorAllowed && clan && !predatorIssue ? (draft.predatorType === manualOptionId
-    ? manualPredatorOption(draft.manualPredator)
-    : corePredators.find(option => option.id === draft.predatorType)) : undefined
+  const predatorOption = draft.predatorType === manualOptionId
+    ? manualPredatorOption(draft.manualPredator) : corePredators.find(option => option.id === draft.predatorType)
+  const predatorIssue = profile.predatorAllowed
+    ? (isCaitiff && predatorOption?.advantages?.some(grant => isStatusAdvantage(grant.name))
+      ? caitiffStatusIssue : predatorRestriction(clan?.id, draft.predatorType, profile.bloodPotency))
+    : undefined
+  const predator = profile.predatorAllowed && clan && !predatorIssue ? predatorOption : undefined
   const specialtyOption = predator?.specialties.find(option => option.skill === draft.predatorSpecialty)
   const specialtyName = specialtyOption?.custom ? (draft.predatorSpecialtyName ?? '').trim() : specialtyOption?.name
   const grantedSpecialty = specialtyOption && specialtyName ? { skill: specialtyOption.skill, name: specialtyName } : undefined
@@ -186,9 +197,9 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true,
     total: totalRatings[discipline] ?? 0,
   }))
   return {
-    profile, clan, twoDot, oneDot, clanSlots, predator, predatorIssue, predatorDisciplines, specialtyOption, grantedSpecialty,
+    profile, clan, isCaitiff, twoDot, oneDot, clanSlots, predator, predatorIssue, predatorDisciplines, specialtyOption, grantedSpecialty,
     disciplineGrant, predatorSlot, ledger, advantages, flaws, grantChoices, reviews,
-    clanFlaws: clan?.id === 'nosferatu' ? [{ name: 'Repulsive', dots: 2 }] : [],
+    clanFlaws: isCaitiff ? [suspect] : clan?.id === 'nosferatu' ? [{ name: 'Repulsive', dots: 2 }] : [],
     bloodPotencyChange: predator?.bloodPotencyChange ?? 0,
     humanity: { base: profile.humanity, adjustment: predator?.humanityChange ?? 0, total: profile.humanity + (predator?.humanityChange ?? 0) },
     complete: clanSlots.length === 3 && clanSlots.every(slot => slot.selectedPower)

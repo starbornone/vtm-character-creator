@@ -147,6 +147,13 @@ export const coreClans: readonly ClanOption[] = [
   { id: 'ventrue', name: 'Ventrue', disciplines: ['dominate', 'fortitude', 'presence'], bane: 'Rarefied Tastes', compulsion: 'Arrogance', source: 'Core pp. 99–103, 211' },
 ]
 
+export const caitiffOption = {
+  id: 'caitiff', name: 'Caitiff', disciplines: disciplineIds,
+  bane: '', compulsion: '', source: 'Core pp. 107, 136–137, 148, 194',
+} satisfies ClanOption
+
+export const clanChoices = [...coreClans, caitiffOption]
+
 export interface SpecialtyOption {
   skill: SkillId
   name: string

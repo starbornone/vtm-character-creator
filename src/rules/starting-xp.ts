@@ -1,7 +1,7 @@
 import { disciplinePowers, disciplines, type DisciplineId } from '../catalog/clan-path.ts'
 import { advantageIds, startingAdvantages, startingFlaws, type AdvantageId, type FlawId } from '../catalog/starting-options.ts'
 import { skillIds, traitGroups, traitLabel, type AttributeId, type SkillId } from '../catalog/traits.ts'
-import type { evaluateClanPath } from './clan-path.ts'
+import { caitiffStatusIssue, isStatusAdvantage, type evaluateClanPath } from './clan-path.ts'
 import { generationForProfile, type StartingGeneration } from './creation-profiles.ts'
 import { specialtySkills, type evaluateTraitLedger, type TraitDraft } from './trait-ledger.ts'
 
@@ -21,7 +21,7 @@ export type Purchase =
   | { kind: 'attribute'; id: AttributeId; to: number }
   | { kind: 'skill'; id: SkillId; to: number; specialty?: string }
   | { kind: 'specialty'; id: SkillId; name: string }
-  | { kind: 'discipline'; id: DisciplineId; to: number; power: string }
+  | { kind: 'discipline'; id: DisciplineId; to: number; power: string; caitiffLearning?: true }
   | { kind: 'advantage'; id: AdvantageId; to: number }
   | { kind: 'blood-potency'; to: BloodPotency }
 
@@ -84,6 +84,7 @@ function evaluateOptions(draft: StartingDraft, path: ClanPath, hasLingeringKiss:
     const duplicate = known.some(entry => entry.name.toLowerCase() === normalized)
       || entries.some((entry, position) => position !== index && entry.kind === option.kind && entry.name.trim().toLowerCase() === normalized)
     const issue = !name || !source ? 'Enter a name and source or Storyteller note.'
+      : path.isCaitiff && option.kind === 'advantage' && isStatusAdvantage(name) ? caitiffStatusIssue
       : !Number.isInteger(option.dots) || option.dots < 1 || option.dots > (option.kind === 'advantage' ? 5 : 2) ? 'Choose a valid starting dot rating.'
       : duplicate ? 'This option already appears in the catalog, grants, or manual entries.' : undefined
     return { ...option, name, source, issue }
@@ -108,6 +109,7 @@ interface ExperienceState {
   powers: string[]
   readyDisciplines: DisciplineId[]
   clanDisciplines: readonly DisciplineId[]
+  isCaitiff: boolean
   looksRestricted: boolean
   advantages: Partial<Record<AdvantageId, number>>
   flaws: FlawId[]
@@ -137,7 +139,8 @@ function startExperience(traits: TraitDraft, ledger: TraitLedger, path: ClanPath
     disciplines: Object.fromEntries(path.ledger.map(row => [row.discipline, row.total])),
     powers: slots.flatMap(slot => slot.selectedPower ? [slot.selectedPower.id] : []),
     readyDisciplines: path.ledger.filter(row => slots.every(slot => slot.discipline !== row.discipline || slot.selectedPower)).map(row => row.discipline),
-    clanDisciplines: path.clan?.disciplines ?? [],
+    clanDisciplines: path.isCaitiff ? [] : path.clan?.disciplines ?? [],
+    isCaitiff: path.isCaitiff,
     looksRestricted: path.clan?.id === 'nosferatu',
     advantages,
     flaws: options.flaws.filter(option => !option.issue).map(({ id }) => id),
@@ -189,10 +192,16 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase): { cos
     }
     case 'discipline': {
       const current = state.disciplines[purchase.id]
-      if (current === undefined || !state.readyDisciplines.includes(purchase.id)) return { issue: 'Choose a clan Discipline or complete its Predator Type power first.' }
+      if (current === undefined || !state.readyDisciplines.includes(purchase.id)) return {
+        issue: state.isCaitiff ? 'Complete the starting powers for this Discipline first.' : 'Choose a clan Discipline or complete its Predator Type power first.',
+      }
       if (purchase.to !== current + 1 || purchase.to > 5) return { issue: 'Raise the Discipline one dot at a time, up to 5.' }
-      const price = checkBudget(purchase.to * (state.clanDisciplines.includes(purchase.id) ? 5 : 7))
+      const multiplier = state.isCaitiff ? 6 : state.clanDisciplines.includes(purchase.id) ? 5 : 7
+      const price = checkBudget(purchase.to * multiplier)
       if (price.issue) return price
+      if (state.isCaitiff && current === 0 && !purchase.caitiffLearning) {
+        return { ...price, issue: 'Confirm the blood-tasting and learning requirements for this Discipline. Core pp. 107, 244.' }
+      }
       const power = disciplinePowers[purchase.id].find(option => option.id === purchase.power)
       if (!power || power.level > purchase.to || state.powers.includes(power.id)) return { ...price, issue: 'Choose an eligible new power for this dot.' }
       if (power.amalgam && (state.disciplines[power.amalgam.discipline] ?? 0) < power.amalgam.dots) return { ...price, issue: 'This power’s Amalgam prerequisite is unmet.' }
@@ -253,7 +262,7 @@ export function evaluateStartingBuild(draft: StartingDraft, traits: TraitDraft, 
   const generationIssue = draft.generation && !generation
     ? `${draft.generation}th Generation is unavailable for ${path.profile.name}. Choose a Generation for this profile.` : undefined
   return {
-    ...options, final, entries, profile: path.profile, predatorAdvantage, xpAdvantageDots, totalAdvantageDots,
+    ...options, final, entries, isCaitiff: path.isCaitiff, profile: path.profile, predatorAdvantage, xpAdvantageDots, totalAdvantageDots,
     generation, generationIssue, humanity: path.humanity.total,
     bloodPotency: final.bloodPotency, ...bloodEffects[final.bloodPotency],
   }

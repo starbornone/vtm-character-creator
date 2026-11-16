@@ -1,4 +1,4 @@
-import { coreClans, corePredators, disciplineIds, disciplinePowers, startingRituals } from '../catalog/clan-path.ts'
+import { caitiffOption, clanChoices, corePredators, disciplineIds, disciplinePowers, startingRituals } from '../catalog/clan-path.ts'
 import { advantageIds, flawIds, startingAdvantages } from '../catalog/starting-options.ts'
 import { skillIds } from '../catalog/traits.ts'
 import { isCharacterDraft, isRecord } from '../drafts/draft-inputs.ts'
@@ -12,6 +12,7 @@ import { ratings, skillDistributionIds, specialtySkills } from '../rules/trait-l
 export const buildLinkPrefix = '#build='
 const legacyVersion = 1
 const profiledVersion = 2
+const caitiffVersion = 3
 const maxTokenLength = 12000
 
 export const omittedChoices = {
@@ -29,7 +30,7 @@ function selectedId<Id extends string>(ids: readonly Id[], value: unknown) {
   return ids.find(id => id === value)
 }
 
-function supportedPurchase(purchase: Purchase, maxDiscipline: number, maxBloodPotency: number): Purchase | undefined {
+function supportedPurchase(purchase: Purchase, maxDiscipline: number, maxBloodPotency: number, isCaitiff: boolean): Purchase | undefined {
   switch (purchase.kind) {
     case 'attribute': {
       const id = selectedId(attributeIds, purchase.id)
@@ -45,7 +46,10 @@ function supportedPurchase(purchase: Purchase, maxDiscipline: number, maxBloodPo
     case 'discipline': {
       const id = selectedId(disciplineIds, purchase.id)
       const power = id && disciplinePowers[id].find(option => option.id === purchase.power && option.level <= maxDiscipline)
-      if (id && power && Number.isInteger(purchase.to) && purchase.to >= 1 && purchase.to <= maxDiscipline) return { kind: 'discipline', id, to: purchase.to, power: power.id }
+      if (id && power && Number.isInteger(purchase.to) && purchase.to >= 1 && purchase.to <= maxDiscipline) {
+        const confirmed = isCaitiff && purchase.to === 1 && purchase.caitiffLearning === true
+        return { kind: 'discipline', id, to: purchase.to, power: power.id, ...(confirmed ? { caitiffLearning: true } : {}) }
+      }
       break
     }
     case 'advantage': {
@@ -62,7 +66,7 @@ function projectBuild(draft: CharacterDraft) {
   const profile = ageProfiles[draft.ageProfile ?? defaultAgeProfile]
   const maxDiscipline = draft.ageProfile === 'ancilla' ? 4 : 3
   const path = evaluateClanPath(draft.clanPath, true, profile)
-  const clan = coreClans.find(option => option.id === path.clan?.id)
+  const clan = clanChoices.find(option => option.id === path.clan?.id)
   const predator = clan && corePredators.find(option => option.id === path.predator?.id)
   const clanPowers: CharacterDraft['clanPath']['clanPowers'] = {}
   if (clan) for (const slot of path.clanSlots) {
@@ -103,9 +107,14 @@ function projectBuild(draft: CharacterDraft) {
     starting: {
       generation: generationForProfile(profile, draft.starting.generation),
       advantages, flaws: flawIds.filter(id => draft.starting.flaws.includes(id)),
-      purchases: profile.xp > 0 ? draft.starting.purchases.flatMap(purchase => supportedPurchase(purchase, maxDiscipline, profile.maxBloodPotency) ?? []) : [],
+      purchases: profile.xp > 0 ? draft.starting.purchases.flatMap(purchase => supportedPurchase(purchase, maxDiscipline, profile.maxBloodPotency, path.isCaitiff) ?? []) : [],
     },
   }
+}
+
+function formatVersion(clanId: unknown, ageProfile: unknown) {
+  if (clanId === caitiffOption.id) return caitiffVersion
+  return ageProfile === undefined ? legacyVersion : profiledVersion
 }
 
 export function encodeBuildLink(draft: CharacterDraft) {
@@ -120,7 +129,7 @@ export function encodeBuildLink(draft: CharacterDraft) {
     (purchase.kind === 'skill' && purchase.to === 1 && specialtySkills.some(skill => skill === purchase.id)))) omitted.push('specialty-purchases')
 
   const mechanics = projectBuild(draft)
-  const version = mechanics.ageProfile ? profiledVersion : legacyVersion
+  const version = formatVersion(mechanics.clanPath.clan, mechanics.ageProfile)
   const payload = { version, ruleset: draftRuleset, mechanics, omitted }
   const token = btoa(JSON.stringify(payload)).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '')
   return token.length <= maxTokenLength ? buildLinkPrefix + token : undefined
@@ -133,10 +142,11 @@ export function decodeBuildLink(hash: string): { draft: CharacterDraft; omitted:
   try {
     const value: unknown = JSON.parse(atob(token.replaceAll('-', '+').replaceAll('_', '/')))
     if (!isRecord(value) || !isRecord(value.mechanics) || !Array.isArray(value.omitted) || Object.keys(value).length !== 4) return invalid
-    if ((value.version !== legacyVersion && value.version !== profiledVersion) || value.ruleset !== draftRuleset) return { issue: 'This build link uses an unsupported version or ruleset.' }
+    if ((value.version !== legacyVersion && value.version !== profiledVersion && value.version !== caitiffVersion) || value.ruleset !== draftRuleset) return { issue: 'This build link uses an unsupported version or ruleset.' }
     const { ageProfile, traits, clanPath, starting } = value.mechanics
-    if (value.version === legacyVersion ? ageProfile !== undefined : !ageProfileIds.some(id => id !== defaultAgeProfile && id === ageProfile)) return invalid
-    if (!isRecord(traits)) return invalid
+    if (!isRecord(traits) || !isRecord(clanPath)) return invalid
+    if (ageProfile !== undefined && !ageProfileIds.some(id => id !== defaultAgeProfile && id === ageProfile)) return invalid
+    if (value.version !== formatVersion(clanPath.clan, ageProfile)) return invalid
     const draft: unknown = {
       ...(ageProfile ? { ageProfile } : {}),
       concept: initialCharacterDraft.concept,

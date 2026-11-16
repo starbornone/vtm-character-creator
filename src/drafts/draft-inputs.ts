@@ -54,6 +54,7 @@ function isPurchase(value: unknown) {
     case 'skill': return oneOf(value.id, skillIds) && isInteger(value.to) && (value.specialty === undefined || isString(value.specialty))
     case 'specialty': return oneOf(value.id, skillIds) && isString(value.name)
     case 'discipline': return oneOf(value.id, disciplineIds) && isInteger(value.to) && isString(value.power)
+      && (value.caitiffLearning === undefined || (value.to === 1 && value.caitiffLearning === true))
     case 'advantage': return oneOf(value.id, advantageIds) && isInteger(value.to)
     case 'blood-potency': return oneOf(value.to, bloodPotencyRatings)
     default: return false

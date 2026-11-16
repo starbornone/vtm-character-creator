@@ -102,7 +102,7 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
   if (!path.clan) pending.clan.push(draft.clanPath.clan === manualOptionId
     ? 'Name the manual clan, add its source or note, and choose three distinct Disciplines.' : 'Choose a clan.')
   else {
-    if (path.clanSlots.length < 3 || path.clanSlots.some(slot => !slot.selectedPower)) pending.clan.push('Assign both clan Disciplines and their powers.')
+    if (path.clanSlots.length < 3 || path.clanSlots.some(slot => !slot.selectedPower)) pending.clan.push(path.isCaitiff ? 'Assign two distinct starting Disciplines and their powers.' : 'Assign both clan Disciplines and their powers.')
     if (profile.predatorAllowed) {
       if (!path.predator) pending.clan.push(path.predatorIssue ?? (draft.clanPath.predatorType === manualOptionId
         ? 'Complete the manual Predator Type’s name, source or note, and any grant details.' : 'Choose a Predator Type.'))
@@ -146,8 +146,8 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
       health: tracks.health.total, willpower: tracks.willpower.total,
       humanity: starting.humanity, bloodPotency: starting.bloodPotency, baneSeverity: starting.baneSeverity, bloodSurge: starting.bloodSurge,
     },
-    bane: hideClanText ? undefined : path.clan?.bane,
-    compulsion: hideClanText ? undefined : path.clan?.compulsion,
+    bane: hideClanText ? undefined : path.clan?.bane || undefined,
+    compulsion: hideClanText ? undefined : path.clan?.compulsion || undefined,
     traitGroups: traitGroups.map(group => ({
       name: group.name,
       attributes: group.attributes.map(id => ({ name: traitLabel(id), rating: final.attributes[id] })),
