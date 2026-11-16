@@ -10,7 +10,8 @@ const profiledDraftSchemaVersion = 2
 const caitiffDraftSchemaVersion = 3
 const thinBloodDraftSchemaVersion = 4
 const sourceDraftSchemaVersion = 5
-const draftSchemaVersions = [legacyDraftSchemaVersion, profiledDraftSchemaVersion, caitiffDraftSchemaVersion, thinBloodDraftSchemaVersion, sourceDraftSchemaVersion]
+const advancementDraftSchemaVersion = 6
+const draftSchemaVersions = [legacyDraftSchemaVersion, profiledDraftSchemaVersion, caitiffDraftSchemaVersion, thinBloodDraftSchemaVersion, sourceDraftSchemaVersion, advancementDraftSchemaVersion]
 export const draftRuleset = 'vtm-v5'
 const backupFormat = 'vtm-character-creator-draft'
 
@@ -21,6 +22,7 @@ export interface DraftSnapshot {
 }
 
 export function draftSchemaVersionFor(snapshots: readonly DraftSnapshot[]) {
+  if (snapshots.some(({ character }) => character.advancement !== undefined)) return advancementDraftSchemaVersion
   if (snapshots.some(({ character }) => character.sourcePacks !== undefined || usesPlayersGuideSelections(character.clanPath, character.starting.purchases))) {
     return sourceDraftSchemaVersion
   }
@@ -68,7 +70,7 @@ export function readDraftBackup(raw: string): BackupResult {
   if (!isRecord(value) || value.format !== backupFormat) return { issue: 'Choose a Character Creator draft backup.' }
   if (!draftSchemaVersions.some(version => version === value.schemaVersion)) return { issue: 'This draft backup version is unsupported.' }
   if (value.ruleset !== draftRuleset) return { issue: 'This draft backup uses an unsupported ruleset.' }
-  if (value.schemaVersion === sourceDraftSchemaVersion && isRecord(value.draft) && isRecord(value.draft.character)) {
+  if ((value.schemaVersion === sourceDraftSchemaVersion || value.schemaVersion === advancementDraftSchemaVersion) && isRecord(value.draft) && isRecord(value.draft.character)) {
     const packs = value.draft.character.sourcePacks
     const unavailable = isSourcePacks(packs) ? unavailableSourcePacks(packs) : []
     if (unavailable.length) return { issue: unavailableSourceMessage(unavailable), unavailableSources: unavailable }

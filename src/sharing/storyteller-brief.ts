@@ -22,7 +22,7 @@ function details(rows: readonly Detail[]) {
 }
 
 export function makeStorytellerBrief(draft: CharacterDraft, narrative: BriefNarrative = {}) {
-  const { sheet, pending, starting } = evaluateCharacter(draft, { includeCustomText: narrative.custom === true })
+  const { sheet, pending, starting, advancement } = evaluateCharacter(draft, { includeCustomText: narrative.custom === true })
   const { identity, tracks, relationships, thinBlood } = sheet
   const lines = ['# Storyteller Brief', '', 'Vampire: The Masquerade · Fifth Edition', '']
 
@@ -82,6 +82,10 @@ export function makeStorytellerBrief(draft: CharacterDraft, narrative: BriefNarr
     `${sheet.xpSpent} XP spent · ${sheet.xpRemaining} XP remaining`, '',
     ...sheet.purchases.map(entry => `- ${inline(entry.label)} · ${entry.cost} XP`),
   ])
+  if (sheet.advancement) section('### Advancement XP', [
+    `${sheet.advancement.earned} XP earned · ${sheet.advancement.spent} XP spent · ${sheet.advancement.remaining} XP remaining`, '',
+    ...sheet.advancement.purchases.map(entry => `- ${inline(entry.label)} · ${entry.cost} XP`),
+  ])
 
   const rulings: string[] = []
   for (const step of guideSteps) {
@@ -91,6 +95,10 @@ export function makeStorytellerBrief(draft: CharacterDraft, narrative: BriefNarr
   }
   for (const entry of starting.entries) {
     if (entry.issue) rulings.push(`- **XP purchase:** ${inline(entry.label)} · ${inline(entry.issue)}`)
+  }
+  if (advancement?.paused) rulings.push('- **Advancement XP:** Resume the journal after resolving the open creation choices.')
+  for (const entry of advancement?.entries ?? []) {
+    if (entry.issue) rulings.push(`- **Advancement purchase:** ${inline(entry.label)} · ${inline(entry.issue)}`)
   }
   for (const review of new Set(sheet.reviews)) rulings.push(`- **Storyteller review:** ${inline(review)}`)
   section('## Open Rulings', rulings.length ? rulings : ['None outstanding.'])

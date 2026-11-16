@@ -10,7 +10,7 @@ import { specialtySkills, type evaluateTraitLedger, type TraitDraft } from './tr
 export const attributeIds = traitGroups.flatMap(({ attributes }): readonly AttributeId[] => attributes)
 
 // Core p. 216 and Renegade's Blood Potency Correction.
-const bloodEffects = {
+export const bloodEffects = {
   0: { baneSeverity: 0, bloodSurge: 1 },
   1: { baneSeverity: 2, bloodSurge: 2 },
   2: { baneSeverity: 2, bloodSurge: 2 },
@@ -24,7 +24,7 @@ export type Purchase =
   | { kind: 'attribute'; id: AttributeId; to: number }
   | { kind: 'skill'; id: SkillId; to: number; specialty?: string }
   | { kind: 'specialty'; id: SkillId; name: string }
-  | { kind: 'discipline'; id: DisciplineId; to: number; power: string; caitiffLearning?: true }
+  | { kind: 'discipline'; id: DisciplineId; to: number; power: string; caitiffLearning?: true; outOfClanLearning?: true }
   | { kind: 'advantage'; id: AdvantageId; to: number }
   | { kind: 'blood-potency'; to: Exclude<BloodPotency, 0> }
 
@@ -105,7 +105,7 @@ function evaluateOptions(draft: StartingDraft, path: ClanPath, hasLingeringKiss:
   }
 }
 
-interface ExperienceState {
+export interface ExperienceState {
   attributes: Partial<Record<AttributeId, number>>
   skills: Partial<Record<SkillId, number>>
   unresolvedSkills: SkillId[]
@@ -116,6 +116,7 @@ interface ExperienceState {
   sourcePacks: readonly string[]
   clanDisciplines: readonly DisciplineId[]
   isCaitiff: boolean
+  isThinBlood: boolean
   looksRestricted: boolean
   advantages: Partial<Record<AdvantageId, number>>
   flaws: FlawId[]
@@ -148,6 +149,7 @@ function startExperience(traits: TraitDraft, ledger: TraitLedger, path: ClanPath
     sourcePacks: path.sourcePacks,
     clanDisciplines: path.isCaitiff ? [] : path.clan?.disciplines ?? [],
     isCaitiff: path.isCaitiff,
+    isThinBlood: Boolean(path.thinBlood),
     looksRestricted: path.hasNosferatuBane,
     advantages,
     flaws: options.flaws.filter(option => !option.issue).map(({ id }) => id),
@@ -170,8 +172,8 @@ export function purchaseLabel(purchase: Purchase, includeCustomText = true) {
 }
 
 // Quote and apply use the same rule, including the remaining budget at this point in the journal.
-export function quotePurchase(state: ExperienceState, purchase: Purchase): { cost?: number; issue?: string } {
-  const checkBudget = (cost: number) => ({ cost, issue: cost > state.remaining ? 'Not enough starting XP.' : undefined })
+export function quotePurchase(state: ExperienceState, purchase: Purchase, advancing = false): { cost?: number; issue?: string } {
+  const checkBudget = (cost: number) => ({ cost, issue: cost > state.remaining ? `Not enough ${advancing ? 'earned' : 'starting'} XP.` : undefined })
   switch (purchase.kind) {
     case 'attribute': {
       const current = state.attributes[purchase.id]
@@ -200,8 +202,9 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase): { cos
     case 'discipline': {
       const power = allDisciplinePowers[purchase.id].find(option => option.id === purchase.power)
       if (power && !sourceEnabled(state.sourcePacks, power)) return { issue: playersGuideDisabled }
-      const current = state.disciplines[purchase.id]
-      if (current === undefined || !state.readyDisciplines.includes(purchase.id)) return {
+      if (advancing && state.isThinBlood && !state.readyDisciplines.includes(purchase.id)) return { issue: 'Thin-bloods can advance only their permanent Discipline Affinity.' }
+      const current = state.disciplines[purchase.id] ?? 0
+      if (!state.readyDisciplines.includes(purchase.id)) return {
         issue: state.isCaitiff ? 'Complete the starting powers for this Discipline first.' : 'Choose a clan Discipline or complete its Predator Type power first.',
       }
       if (purchase.to !== current + 1 || purchase.to > 5) return { issue: 'Raise the Discipline one dot at a time, up to 5.' }
@@ -210,6 +213,9 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase): { cos
       if (price.issue) return price
       if (state.isCaitiff && current === 0 && !purchase.caitiffLearning) {
         return { ...price, issue: 'Confirm the blood-tasting and learning requirements for this Discipline. Core pp. 107, 244.' }
+      }
+      if (advancing && !state.isThinBlood && !state.isCaitiff && multiplier === 7 && current === 0 && !purchase.outOfClanLearning) {
+        return { ...price, issue: 'Confirm the blood-tasting and learning requirements for this Discipline. Core p. 244.' }
       }
       if (!power || power.level > purchase.to || state.powers.includes(power.id)) return { ...price, issue: 'Choose an eligible new power for this dot.' }
       if (power.amalgam && (state.disciplines[power.amalgam.discipline] ?? 0) < power.amalgam.dots) return { ...price, issue: 'This power’s Amalgam prerequisite is unmet.' }
@@ -249,17 +255,21 @@ function applyPurchase(state: ExperienceState, purchase: Purchase, cost: number)
   }
 }
 
+export function replayPurchases(state: ExperienceState, purchases: readonly Purchase[], includeCustomText: boolean, advancing = false) {
+  return purchases.map(purchase => {
+    const quote = quotePurchase(state, purchase, advancing)
+    if (!quote.issue && quote.cost !== undefined) applyPurchase(state, purchase, quote.cost)
+    return { ...quote, label: purchaseLabel(purchase, includeCustomText), remaining: state.remaining }
+  })
+}
+
 export function evaluateStartingBuild(draft: StartingDraft, traits: TraitDraft, ledger: TraitLedger, path: ClanPath, includeCustomText = true) {
   const hasLingeringKiss = path.clanSlots.some(slot => slot.selectedPower?.id === 'lingering-kiss') || path.predatorSlot?.selectedPower?.id === 'lingering-kiss'
   const options = evaluateOptions(draft, path, hasLingeringKiss)
   const final = startExperience(traits, ledger, path, options)
   // Keep purchases in the draft when changing profiles. A zero-XP profile suspends the journal.
   const purchases = path.profile.xp > 0 ? draft.purchases : []
-  const entries = purchases.map(purchase => {
-    const quote = quotePurchase(final, purchase)
-    if (!quote.issue && quote.cost !== undefined) applyPurchase(final, purchase, quote.cost)
-    return { ...quote, label: purchaseLabel(purchase, includeCustomText), remaining: final.remaining }
-  })
+  const entries = replayPurchases(final, purchases, includeCustomText)
   const predatorAdvantage = path.advantages.reduce((sum, grant) => sum + grant.dots, 0)
   const trackedGrants = Object.values(options.grantedAdvantages).reduce((sum, dots) => sum + dots, 0)
   const manualAdvantageDots = options.manualOptions.reduce((sum, option) => sum + (option.kind === 'advantage' && !option.issue ? option.dots : 0), 0)

@@ -3,6 +3,7 @@ import { isSourcePacks } from '../catalog/source-packs.ts'
 import { thinBloodFlaws, thinBloodMerits } from '../catalog/thin-blood.ts'
 import { advantageIds, flawIds } from '../catalog/starting-options.ts'
 import { skillIds } from '../catalog/traits.ts'
+import { isXpAward } from '../rules/advancement.ts'
 import type { CharacterDraft } from '../rules/character-guide.ts'
 import { ageProfileIds, startingGenerations } from '../rules/creation-profiles.ts'
 import { attributeIds, bloodPotencyRatings } from '../rules/starting-xp.ts'
@@ -58,7 +59,7 @@ function isClanPath(value: unknown) {
       && (manualPredator.humanityChange === undefined || isInteger(manualPredator.humanityChange))))
 }
 
-function isPurchase(value: unknown) {
+function isPurchase(value: unknown, advancing = false) {
   if (!isRecord(value)) return false
   switch (value.kind) {
     case 'attribute': return oneOf(value.id, attributeIds) && isInteger(value.to)
@@ -66,6 +67,7 @@ function isPurchase(value: unknown) {
     case 'specialty': return oneOf(value.id, skillIds) && isString(value.name)
     case 'discipline': return oneOf(value.id, disciplineIds) && isInteger(value.to) && isString(value.power)
       && (value.caitiffLearning === undefined || (value.to === 1 && value.caitiffLearning === true))
+      && (value.outOfClanLearning === undefined || (advancing && value.to === 1 && value.outOfClanLearning === true && value.caitiffLearning === undefined))
     case 'advantage': return oneOf(value.id, advantageIds) && isInteger(value.to)
     case 'blood-potency': return oneOf(value.to, bloodPotencyRatings)
     default: return false
@@ -77,15 +79,21 @@ function isStarting(value: unknown) {
     && (value.generation === undefined || oneOf(value.generation, startingGenerations))
     && mapOf(value.advantages, isInteger, advantageIds)
     && Array.isArray(value.flaws) && value.flaws.every(id => oneOf(id, flawIds))
-    && Array.isArray(value.purchases) && value.purchases.every(isPurchase)
+    && Array.isArray(value.purchases) && value.purchases.every(purchase => isPurchase(purchase))
     && (value.manualOptions === undefined || (Array.isArray(value.manualOptions) && value.manualOptions.every(option =>
       isRecord(option) && oneOf(option.kind, ['advantage', 'flaw']) && strings(option, 'name', 'source') && isInteger(option.dots))))
+}
+
+function isAdvancement(value: unknown) {
+  return isRecord(value) && Array.isArray(value.awards) && value.awards.every(isXpAward)
+    && Number.isSafeInteger(value.awards.reduce((sum, award) => sum + award, 0))
+    && Array.isArray(value.purchases) && value.purchases.every(purchase => isPurchase(purchase, true))
 }
 
 // Check the stored input shape. The rules evaluator handles unfinished and invalid choices.
 export function isCharacterDraft(value: unknown): value is CharacterDraft {
   if (!isRecord(value)) return false
-  const { ageProfile, sourcePacks, concept, relationships, traits, clanPath, starting } = value
+  const { ageProfile, sourcePacks, concept, relationships, traits, clanPath, starting, advancement } = value
   const selectedProfile = ageProfileIds.find(id => id === ageProfile)
   if (ageProfile !== undefined && !selectedProfile) return false
   if (sourcePacks !== undefined && !isSourcePacks(sourcePacks)) return false
@@ -98,4 +106,5 @@ export function isCharacterDraft(value: unknown): value is CharacterDraft {
     && mapOf(traits.firstDotSpecialties, isString, specialtySkills)
     && isRecord(traits.freeSpecialty) && (traits.freeSpecialty.skill === '' || oneOf(traits.freeSpecialty.skill, skillIds))
     && isString(traits.freeSpecialty.name) && isClanPath(clanPath) && isStarting(starting)
+    && (advancement === undefined || isAdvancement(advancement))
 }
