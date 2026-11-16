@@ -1,13 +1,15 @@
-import { useEffect, useReducer, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { traitGroups } from '@/catalog/traits'
 import { AllocationEditor } from '@/components/AllocationEditor'
 import { CharacterSheet } from '@/components/CharacterSheet'
 import { ClanPathEditor } from '@/components/ClanPathEditor'
+import { DraftControls } from '@/components/DraftControls'
 import { ConceptEditor, RelationshipEditor } from '@/components/NarrativeEditors'
 import { SpecialtyEditor } from '@/components/SpecialtyEditor'
 import { StartingExperienceEditor } from '@/components/StartingExperienceEditor'
 import { StartingOptionsEditor } from '@/components/StartingOptionsEditor'
-import { editCharacter, evaluateCharacter, guideSteps, initialCharacterDraft, type GuideStep } from '@/rules/character-guide'
+import { useBrowserDrafts } from '@/drafts/use-browser-drafts'
+import { evaluateCharacter, guideSteps, type GuideStep } from '@/rules/character-guide'
 import { skillDistributionIds, skillDistributions } from '@/rules/trait-ledger'
 
 const attributeGroups = traitGroups.map(({ name, attributes }) => ({ name, ids: attributes }))
@@ -15,8 +17,9 @@ const skillGroups = traitGroups.map(({ name, skills }) => ({ name, ids: skills }
 const editSteps = guideSteps.filter(step => step.id !== 'review')
 
 export function App() {
-  const [draft, dispatch] = useReducer(editCharacter, initialCharacterDraft)
-  const [step, setStep] = useState<GuideStep>('concept')
+  const drafts = useBrowserDrafts()
+  const { character: draft, step, id, name } = drafts.open
+  const { dispatch } = drafts
   const panel = useRef<HTMLDivElement>(null)
   const shouldFocus = useRef(false)
   const { path, traits, starting, tracks, sheet, pending } = evaluateCharacter(draft)
@@ -38,7 +41,7 @@ export function App() {
   function goTo(target: GuideStep) {
     if (target === step) return
     shouldFocus.current = true
-    setStep(target)
+    drafts.goTo(target)
   }
 
   return (
@@ -47,6 +50,22 @@ export function App() {
         <p className="text-sm font-medium text-muted-foreground">Vampire: The Masquerade Fifth Edition</p>
         <h1 className="mt-1 text-3xl font-semibold tracking-tight text-balance sm:text-5xl">Character Creator</h1>
       </header>
+
+      <DraftControls
+        key={id ?? 'unnamed'}
+        library={drafts.library}
+        activeId={id}
+        name={name}
+        dirty={drafts.dirty}
+        issue={drafts.issue}
+        onSave={drafts.save}
+        onSwitch={draftId => {
+          if (!drafts.switchDraft(draftId)) return false
+          requestAnimationFrame(() => panel.current?.focus())
+          return true
+        }}
+        onDownload={drafts.download}
+      />
 
       <nav aria-label="Character creation steps" className="print:hidden">
         <ol className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
