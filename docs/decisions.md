@@ -102,4 +102,10 @@ The brief shows evaluated mechanics and open rulings with generic labels for man
 
 **Consequences.** Handoffs can move between browsers and restore as new plans. The planner leaves the original character drafts and their saved steps intact. A later change to a character stays with that character until a planner member is added again from the draft.
 
+## 14 Scope private workspace work around handoff review
+
+**Decision.** Prototype one invite-only chronicle workflow with fictional data. A player sends a previewed brief snapshot and the owner Storyteller responds. The character remains editable through the browser creator. Define export and removal around the shared submission and its review.
+
+**Consequences.** The prototype can show both roles without committing to accounts or hosted data. A later hosted pilot needs a separate implementation decision and must verify access and deletion boundaries. [Private Storyteller workspace scope](storyteller-workspace.md)
+
 See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the full flow.

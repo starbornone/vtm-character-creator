@@ -66,7 +66,7 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 
 ## Next priorities
 
-**Scope a private Storyteller workspace.** Use the walkthrough findings to identify which shared chronicle tasks still need a workspace. Describe what players and Storytellers can see and change, who owns the chronicle data, and what export and deletion mean. Capture the smallest useful workflow and a decision on whether to pursue it.
+**Prototype private handoff review.** The [workspace scope](docs/storyteller-workspace.md) defines an invite-only chronicle inbox for reviewing a player’s submitted brief, including who can read it and what export and deletion mean. Use fictional data and local role views to test submission, requested changes, and withdrawal before deciding whether to build a hosted pilot.
 
 ### Deferred external handoff feedback
 

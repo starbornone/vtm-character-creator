@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T23:16:52+11:00",
+  "updatedAt": "2026-11-16T23:18:36+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -10,10 +10,10 @@
   },
   "items": [
     {
-      "id": "scope-private-storyteller-workspace",
-      "title": "Scope a private Storyteller workspace",
+      "id": "prototype-private-handoff-review",
+      "title": "Prototype private handoff review with fictional data",
       "group": "Chronicle discovery",
-      "notes": "Use the handoff feedback to identify shared chronicle work that the current planner and portable files leave unresolved. Record the first useful workflow, player and Storyteller access, data ownership, export and deletion expectations, and a decision on whether to pursue implementation."
+      "notes": "Use local role views to demonstrate one invite-only chronicle, a previewed Storyteller brief snapshot, a review response, resubmission, per-handoff export, and withdrawal. Walk the flow with one Storyteller and two fictional players, then record whether to pursue a hosted pilot. Use docs/storyteller-workspace.md for the scope."
     },
     {
       "id": "review-player-storyteller-handoffs",

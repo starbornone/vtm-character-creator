@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T22:59:22+11:00",
+  "updatedAt": "2026-11-16T23:18:36+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -189,6 +189,13 @@
       "group": "Chronicle tools",
       "notes": "Added named local plans with multiple members, optional Relationship Map details, shared purpose, and Domain ratings and notes. Verified the handoff preview at 390 px, download, import cancellation, restore as a separate plan, and reload. In the browser Mara and Rowan retained their original relationships and saved steps. Automated coverage verifies that plan operations leave the character library byte-for-byte unchanged.",
       "completedAt": "2026-11-16T22:59:22+11:00"
+    },
+    {
+      "id": "scope-private-storyteller-workspace",
+      "title": "Scope a private Storyteller workspace",
+      "group": "Chronicle discovery",
+      "notes": "Defined an invite-only chronicle inbox for previewed brief snapshots and a Storyteller review response. Documented role access, player control of character data, per-handoff export, withdrawal, member removal, and chronicle deletion. The next priority is a local prototype with fictional roles to inform a hosted pilot decision. External handoff feedback is deferred.",
+      "completedAt": "2026-11-16T23:18:36+11:00"
     }
   ]
 }
