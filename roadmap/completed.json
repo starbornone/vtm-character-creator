@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-17T00:00:50+11:00",
+  "updatedAt": "2026-11-17T00:08:24+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -217,6 +217,13 @@
       "group": "Local handoff usability",
       "notes": "Showed the same evaluated rulings beside the Markdown on desktop and above it at 390 px. Verified keyboard opening, opt-ins, and download. Compared both downloaded files with the visible ruling about the last 6 starting XP for Mara Vale. Covered redaction and Markdown escaping for custom purchase names.",
       "completedAt": "2026-11-17T00:00:50+11:00"
+    },
+    {
+      "id": "route-mismatched-json-handoffs",
+      "title": "Point players to the matching JSON restore control",
+      "group": "Local handoff usability",
+      "notes": "Both restore controls identify valid files for the other tool and name the matching picker. Verified both directions with the documented samples, malformed JSON rejection, preservation of the open draft and step and unsaved plan edit, and reopening the saved draft and plan after reload.",
+      "completedAt": "2026-11-17T00:08:24+11:00"
     }
   ]
 }

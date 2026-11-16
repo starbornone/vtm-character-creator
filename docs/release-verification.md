@@ -51,13 +51,19 @@ Rehearsed both walkthroughs on 16 November 2026 in the Chromium production previ
 | Priority | Observation | Follow-up to test with reviewers |
 | --- | --- | --- |
 | 1 | The original brief preview put open rulings below the mechanics in the same scrolling field. | The preview now shows a separate **Open Rulings** list. [Preview verification](#storyteller-brief-preview-verification) |
-| 2 | Giving the planner a character JSON backup produces a format error that names the expected file but gives no route back to **Browser drafts**. | Check whether reviewers can tell the two JSON files apart. If they choose the wrong file, point them to the matching restore control. |
+| 2 | The original format error named the expected file but gave no route to the matching control. | Both controls now name the other tool and its file picker when they recognize a valid file. [Restore control verification](#json-restore-control-verification) |
 
 ### Storyteller brief preview verification
 
 In the local production preview, Mara’s remaining 6 starting XP appeared in **Open Rulings** beside the Markdown at desktop width and above it at 390 × 844. The phone layout fit without horizontal overflow. The ruling was visible with the Markdown field at its initial scroll position.
 
 Enter opened the preview and downloaded the brief. Tab and Space reached and toggled all five narrative options. Both downloaded files contained the same ruling shown in the preview, **Advantages & XP: Spend the remaining starting XP.** The default file omitted Mara’s identity and narrative. Enabling the options included her identity, motivations, Touchstone, sire, and custom Specialty name. The brief tests also check that a rejected purchase’s custom name appears in both the visible ruling data and the escaped Markdown only when selected.
+
+### JSON restore control verification
+
+In the local production preview, **Choose coterie JSON** identified Mara’s sample character backup and pointed to **Browser drafts → Choose JSON backup**. **Choose JSON backup** identified the sample coterie plan and pointed to **Coterie & Domain → Choose coterie JSON**. The matching inputs opened the normal previews.
+
+Choosing malformed JSON in either input showed the JSON error. None of the four rejected selections opened a restore preview. The saved character stayed on **Relationships** with its Touchstone intact, and the coterie plan kept an unsaved shared purpose edit when reopened before reload. After reload, the character reopened at **Relationships** and the saved plan reopened with its original shared purpose. The library still held only the original plan.
 
 ### Review status
 

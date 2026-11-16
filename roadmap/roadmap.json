@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-17T00:00:50+11:00",
+  "updatedAt": "2026-11-17T00:08:24+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -9,12 +9,6 @@
     "summary": "A browser-based Vampire: The Masquerade V5 creator with Core and optional Player’s Guide choices, XP advancement, chronicle presets, a searchable rules reference, and local character and coterie planning tools."
   },
   "items": [
-    {
-      "id": "route-mismatched-json-handoffs",
-      "title": "Point players to the matching JSON restore control",
-      "group": "Local handoff usability",
-      "notes": "When a valid character backup is selected in the coterie planner, point to Browser drafts. When a valid coterie handoff is selected in Browser drafts, point to Coterie & Domain. Verify both directions with the documented sample files. Wrong-format and malformed files must leave the current draft, step, coterie plan, and saved libraries intact."
-    },
     {
       "id": "review-player-storyteller-handoffs",
       "title": "Review sample handoffs with a player and a Storyteller",

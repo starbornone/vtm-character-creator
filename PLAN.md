@@ -66,10 +66,11 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 9. The [local handoff review prototype](docs/storyteller-workspace.md#prototype-walkthrough) demonstrates submission, review, replacement, export, and withdrawal with one fictional Storyteller and two players.
 10. **Review & Print** links each open choice to the field or option group where it can be resolved. The same evaluation controls the Draft marker on the sheet. [Review issue navigation checks](docs/release-verification.md#review-issue-navigation)
 11. The [Storyteller brief preview](docs/getting-started.md#export-a-storyteller-brief) shows **Open Rulings** alongside the Markdown on desktop and above it on a narrow screen. The same rulings appear in the download with the selected narrative options.
+12. The two [JSON restore controls](docs/getting-started.md#back-up-and-restore-a-draft) identify a valid file meant for the other tool and name the matching control.
 
 ## Next priorities
 
-1. **Guide players to the right JSON restore control.** When a valid character backup or coterie plan is opened in the other tool, name the matching restore control. Verify both directions and confirm that choosing a wrong or malformed file leaves the open draft and plan intact. [Internal handoff walkthrough](docs/release-verification.md#internal-walkthrough)
+The local guide and handoff improvements are complete. The remaining roadmap items are deferred.
 
 ### Deferred external handoff feedback
 

@@ -65,7 +65,9 @@ Select **Download current draft** to save a JSON backup of the character and cur
 
 Select **Choose JSON backup** and open the file. Review the character, saved step, and completion status in **Backup preview**. Edit **New draft name** if desired, then select **Restore as new draft**. The copy opens at its saved step and the existing drafts remain in the library. If the original name is already taken, the preview suggests a name with a copy suffix.
 
-The guide reports malformed files, unsupported versions or rulesets, and invalid draft inputs before restoring anything. If browser storage rejects the restore, the preview stays open so you can retry.
+If you pick a valid coterie handoff here, the guide directs you to **Coterie & Domain → Choose coterie JSON**. If you pick a valid character backup in the planner, it directs you to **Browser drafts → Choose JSON backup**. Select the file again in the matching control to preview it.
+
+The guide reports malformed files, unsupported versions or rulesets, and invalid inputs before restoring anything. Rejected files leave the open draft and plan and both saved libraries intact. If browser storage rejects the restore, the preview stays open so you can retry.
 
 ## Share a mechanical build
 
