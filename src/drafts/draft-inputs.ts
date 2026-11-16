@@ -2,8 +2,8 @@ import { disciplineIds } from '../catalog/clan-path.ts'
 import { advantageIds, flawIds } from '../catalog/starting-options.ts'
 import { skillIds } from '../catalog/traits.ts'
 import type { CharacterDraft } from '../rules/character-guide.ts'
-import { ageProfileIds, ageProfiles, defaultAgeProfile, type AgeProfile } from '../rules/creation-profiles.ts'
-import { attributeIds } from '../rules/starting-xp.ts'
+import { ageProfileIds, startingGenerations } from '../rules/creation-profiles.ts'
+import { attributeIds, bloodPotencyRatings } from '../rules/starting-xp.ts'
 import { ratings, skillDistributionIds, specialtySkills } from '../rules/trait-ledger.ts'
 
 type JsonRecord = Record<string, unknown>
@@ -55,14 +55,14 @@ function isPurchase(value: unknown) {
     case 'specialty': return oneOf(value.id, skillIds) && isString(value.name)
     case 'discipline': return oneOf(value.id, disciplineIds) && isInteger(value.to) && isString(value.power)
     case 'advantage': return oneOf(value.id, advantageIds) && isInteger(value.to)
-    case 'blood-potency': return oneOf(value.to, [1, 2, 3])
+    case 'blood-potency': return oneOf(value.to, bloodPotencyRatings)
     default: return false
   }
 }
 
-function isStarting(value: unknown, profile: AgeProfile) {
+function isStarting(value: unknown) {
   return isRecord(value)
-    && (value.generation === undefined || oneOf(value.generation, profile.generations))
+    && (value.generation === undefined || oneOf(value.generation, startingGenerations))
     && mapOf(value.advantages, isInteger, advantageIds)
     && Array.isArray(value.flaws) && value.flaws.every(id => oneOf(id, flawIds))
     && Array.isArray(value.purchases) && value.purchases.every(isPurchase)
@@ -84,5 +84,5 @@ export function isCharacterDraft(value: unknown): value is CharacterDraft {
     && mapOf(traits.skills, value => oneOf(value, ratings), skillIds)
     && mapOf(traits.firstDotSpecialties, isString, specialtySkills)
     && isRecord(traits.freeSpecialty) && (traits.freeSpecialty.skill === '' || oneOf(traits.freeSpecialty.skill, skillIds))
-    && isString(traits.freeSpecialty.name) && isClanPath(clanPath) && isStarting(starting, ageProfiles[selectedProfile ?? defaultAgeProfile])
+    && isString(traits.freeSpecialty.name) && isClanPath(clanPath) && isStarting(starting)
 }

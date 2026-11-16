@@ -2,7 +2,7 @@ import { disciplinePowers, disciplines, type DisciplineId } from '../catalog/cla
 import { advantageIds, startingAdvantages, startingFlaws, type AdvantageId, type FlawId } from '../catalog/starting-options.ts'
 import { skillIds, traitGroups, traitLabel, type AttributeId, type SkillId } from '../catalog/traits.ts'
 import type { evaluateClanPath } from './clan-path.ts'
-import type { StartingGeneration } from './creation-profiles.ts'
+import { generationForProfile, type StartingGeneration } from './creation-profiles.ts'
 import { specialtySkills, type evaluateTraitLedger, type TraitDraft } from './trait-ledger.ts'
 
 export const attributeIds = traitGroups.flatMap(({ attributes }): readonly AttributeId[] => attributes)
@@ -12,8 +12,10 @@ const bloodEffects = {
   1: { baneSeverity: 2, bloodSurge: 2 },
   2: { baneSeverity: 2, bloodSurge: 2 },
   3: { baneSeverity: 3, bloodSurge: 3 },
+  4: { baneSeverity: 3, bloodSurge: 3 },
 }
 type BloodPotency = keyof typeof bloodEffects
+export const bloodPotencyRatings = [1, 2, 3, 4] as const
 
 export type Purchase =
   | { kind: 'attribute'; id: AttributeId; to: number }
@@ -110,6 +112,7 @@ interface ExperienceState {
   advantages: Partial<Record<AdvantageId, number>>
   flaws: FlawId[]
   bloodPotency: BloodPotency
+  predatorId: string | undefined
   maxBloodPotency: BloodPotency
   remaining: number
 }
@@ -138,7 +141,8 @@ function startExperience(traits: TraitDraft, ledger: TraitLedger, path: ClanPath
     looksRestricted: path.clan?.id === 'nosferatu',
     advantages,
     flaws: options.flaws.filter(option => !option.issue).map(({ id }) => id),
-    bloodPotency: path.bloodPotencyChange ? 2 : path.profile.bloodPotency,
+    bloodPotency: bloodPotencyRatings.find(rating => rating === path.profile.bloodPotency + path.bloodPotencyChange) ?? path.profile.bloodPotency,
+    predatorId: path.predator?.id,
     maxBloodPotency: path.profile.maxBloodPotency,
     remaining: path.profile.xp,
   }
@@ -192,6 +196,7 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase): { cos
       const power = disciplinePowers[purchase.id].find(option => option.id === purchase.power)
       if (!power || power.level > purchase.to || state.powers.includes(power.id)) return { ...price, issue: 'Choose an eligible new power for this dot.' }
       if (power.amalgam && (state.disciplines[power.amalgam.discipline] ?? 0) < power.amalgam.dots) return { ...price, issue: 'This power’s Amalgam prerequisite is unmet.' }
+      if (power.prerequisite && !state.powers.includes(power.prerequisite.id)) return { ...price, issue: `Requires ${power.prerequisite.name}.` }
       if (power.id === 'lingering-kiss' && state.advantages.unbondable) return { ...price, issue: 'Lingering Kiss conflicts with Unbondable.' }
       return price
     }
@@ -206,6 +211,7 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase): { cos
     }
     case 'blood-potency':
       if (purchase.to !== state.bloodPotency + 1 || purchase.to > state.maxBloodPotency) return { issue: 'Raise Blood Potency one dot at a time, within the Generation limit.' }
+      if (state.predatorId === 'farmer' && purchase.to >= 3) return { issue: 'Farmer requires Blood Potency below 3.' }
       return checkBudget(purchase.to * 10)
   }
 }
@@ -243,9 +249,12 @@ export function evaluateStartingBuild(draft: StartingDraft, traits: TraitDraft, 
   const purchasedAdvantageDots = Object.values(final.advantages).reduce((sum, dots) => sum + dots, manualAdvantageDots) - trackedGrants
   const totalAdvantageDots = purchasedAdvantageDots + predatorAdvantage
   const xpAdvantageDots = purchasedAdvantageDots - options.advantageBudget.used
+  const generation = generationForProfile(path.profile, draft.generation)
+  const generationIssue = draft.generation && !generation
+    ? `${draft.generation}th Generation is unavailable for ${path.profile.name}. Choose a Generation for this profile.` : undefined
   return {
     ...options, final, entries, profile: path.profile, predatorAdvantage, xpAdvantageDots, totalAdvantageDots,
-    generation: draft.generation, humanity: path.humanity.total,
+    generation, generationIssue, humanity: path.humanity.total,
     bloodPotency: final.bloodPotency, ...bloodEffects[final.bloodPotency],
   }
 }

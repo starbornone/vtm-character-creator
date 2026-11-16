@@ -114,7 +114,7 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
     }
   }
 
-  if (!starting.generation) pending.starting.push('Choose a Generation.')
+  if (!starting.generation) pending.starting.push(starting.generationIssue ?? 'Choose a Generation.')
   if (starting.advantageBudget.remaining !== 0 || starting.advantages.some(option => option.issue)) pending.starting.push('Resolve the base Advantage choices and their budget.')
   if (starting.flawBudget.remaining !== 0 || starting.flaws.some(option => option.issue)) pending.starting.push('Resolve the base Flaw choices and their budget.')
   if (starting.manualOptions.some(option => option.issue)) pending.starting.push('Resolve incomplete or duplicate manual Advantages and Flaws.')

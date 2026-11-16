@@ -5,7 +5,7 @@ import { isCharacterDraft, isRecord } from '../drafts/draft-inputs.ts'
 import { draftRuleset } from '../drafts/draft-backup.ts'
 import { evaluateClanPath, manualOptionId } from '../rules/clan-path.ts'
 import { initialCharacterDraft, type CharacterDraft } from '../rules/character-guide.ts'
-import { ageProfiles, defaultAgeProfile } from '../rules/creation-profiles.ts'
+import { ageProfileIds, ageProfiles, defaultAgeProfile, generationForProfile } from '../rules/creation-profiles.ts'
 import { attributeIds, type Purchase } from '../rules/starting-xp.ts'
 import { ratings, skillDistributionIds, specialtySkills } from '../rules/trait-ledger.ts'
 
@@ -29,7 +29,7 @@ function selectedId<Id extends string>(ids: readonly Id[], value: unknown) {
   return ids.find(id => id === value)
 }
 
-function supportedPurchase(purchase: Purchase): Purchase | undefined {
+function supportedPurchase(purchase: Purchase, maxDiscipline: number, maxBloodPotency: number): Purchase | undefined {
   switch (purchase.kind) {
     case 'attribute': {
       const id = selectedId(attributeIds, purchase.id)
@@ -44,8 +44,8 @@ function supportedPurchase(purchase: Purchase): Purchase | undefined {
     }
     case 'discipline': {
       const id = selectedId(disciplineIds, purchase.id)
-      const power = id && disciplinePowers[id].find(option => option.id === purchase.power)?.id
-      if (id && power && Number.isInteger(purchase.to) && purchase.to >= 1 && purchase.to <= 3) return { kind: 'discipline', id, to: purchase.to, power }
+      const power = id && disciplinePowers[id].find(option => option.id === purchase.power && option.level <= maxDiscipline)
+      if (id && power && Number.isInteger(purchase.to) && purchase.to >= 1 && purchase.to <= maxDiscipline) return { kind: 'discipline', id, to: purchase.to, power: power.id }
       break
     }
     case 'advantage': {
@@ -54,12 +54,13 @@ function supportedPurchase(purchase: Purchase): Purchase | undefined {
       break
     }
     case 'blood-potency':
-      if (purchase.to === 2 || purchase.to === 3) return { kind: 'blood-potency', to: purchase.to }
+      if (purchase.to >= 2 && purchase.to <= maxBloodPotency) return { kind: 'blood-potency', to: purchase.to }
   }
 }
 
 function projectBuild(draft: CharacterDraft) {
   const profile = ageProfiles[draft.ageProfile ?? defaultAgeProfile]
+  const maxDiscipline = draft.ageProfile === 'ancilla' ? 4 : 3
   const path = evaluateClanPath(draft.clanPath, true, profile)
   const clan = coreClans.find(option => option.id === path.clan?.id)
   const predator = clan && corePredators.find(option => option.id === path.predator?.id)
@@ -100,9 +101,9 @@ function projectBuild(draft: CharacterDraft) {
       ritual: startingRituals.find(option => option.id === draft.clanPath.ritual)?.id ?? '',
     },
     starting: {
-      generation: profile.generations.find(generation => generation === draft.starting.generation),
+      generation: generationForProfile(profile, draft.starting.generation),
       advantages, flaws: flawIds.filter(id => draft.starting.flaws.includes(id)),
-      purchases: profile.xp > 0 ? draft.starting.purchases.flatMap(purchase => supportedPurchase(purchase) ?? []) : [],
+      purchases: profile.xp > 0 ? draft.starting.purchases.flatMap(purchase => supportedPurchase(purchase, maxDiscipline, profile.maxBloodPotency) ?? []) : [],
     },
   }
 }
@@ -134,7 +135,7 @@ export function decodeBuildLink(hash: string): { draft: CharacterDraft; omitted:
     if (!isRecord(value) || !isRecord(value.mechanics) || !Array.isArray(value.omitted) || Object.keys(value).length !== 4) return invalid
     if ((value.version !== legacyVersion && value.version !== profiledVersion) || value.ruleset !== draftRuleset) return { issue: 'This build link uses an unsupported version or ruleset.' }
     const { ageProfile, traits, clanPath, starting } = value.mechanics
-    if (value.version === legacyVersion ? ageProfile !== undefined : ageProfile !== 'fledgling') return invalid
+    if (value.version === legacyVersion ? ageProfile !== undefined : !ageProfileIds.some(id => id !== defaultAgeProfile && id === ageProfile)) return invalid
     if (!isRecord(traits)) return invalid
     const draft: unknown = {
       ...(ageProfile ? { ageProfile } : {}),

@@ -1,5 +1,5 @@
 import { guideSteps, type CharacterDraft, type GuideStep } from '../rules/character-guide.ts'
-import { defaultAgeProfile } from '../rules/creation-profiles.ts'
+import { ageProfiles, defaultAgeProfile, generationForProfile } from '../rules/creation-profiles.ts'
 import { isCharacterDraft, isRecord } from './draft-inputs.ts'
 
 const legacyDraftSchemaVersion = 1
@@ -14,7 +14,10 @@ export interface DraftSnapshot {
 }
 
 export function draftSchemaVersionFor(snapshots: readonly DraftSnapshot[]) {
-  return snapshots.some(({ character }) => character.ageProfile && character.ageProfile !== defaultAgeProfile)
+  return snapshots.some(({ character: { ageProfile, starting } }) =>
+    (ageProfile ?? defaultAgeProfile) !== defaultAgeProfile
+    || (starting.generation !== undefined && !generationForProfile(ageProfiles.neonate, starting.generation))
+    || starting.purchases.some(purchase => purchase.kind === 'blood-potency' && purchase.to === 4))
     ? profiledDraftSchemaVersion : legacyDraftSchemaVersion
 }
 
@@ -47,7 +50,7 @@ export function readDraftBackup(raw: string): BackupResult {
   if (value.schemaVersion !== legacyDraftSchemaVersion && value.schemaVersion !== profiledDraftSchemaVersion) return { issue: 'This draft backup version is unsupported.' }
   if (value.ruleset !== draftRuleset) return { issue: 'This draft backup uses an unsupported ruleset.' }
   if (!isDraftSnapshot(value.draft)) return { issue: 'The draft name, guide step, or character inputs are missing or invalid.' }
-  if (value.schemaVersion !== draftSchemaVersionFor([value.draft])) return { issue: 'The age profile does not match this draft backup version.' }
+  if (value.schemaVersion !== draftSchemaVersionFor([value.draft])) return { issue: 'The character inputs do not match this draft backup version.' }
 
   const { name, step, character } = value.draft
   return { draft: { name: name.trim(), step, character } }

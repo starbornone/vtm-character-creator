@@ -19,16 +19,17 @@ export const disciplineIds = Object.keys(disciplines) as DisciplineId[]
 export interface DisciplinePower {
   id: string
   name: string
-  level: 1 | 2 | 3
+  level: 1 | 2 | 3 | 4
   page: number
   amalgam?: { discipline: DisciplineId; dots: number }
+  prerequisite?: { id: string; name: string }
 }
 
-function power(id: string, name: string, level: DisciplinePower['level'], page: number, amalgam?: DisciplinePower['amalgam']): DisciplinePower {
-  return { id, name, level, page, amalgam }
+function power(id: string, name: string, level: DisciplinePower['level'], page: number, requirements?: Pick<DisciplinePower, 'amalgam' | 'prerequisite'>): DisciplinePower {
+  return { id, name, level, page, ...requirements }
 }
 
-// Core pp. 244–274. Starting dots and the 15-XP budget can reach rank 3.
+// Core pp. 244–274. The ancilla starting XP budget can reach rank 4.
 export const disciplinePowers: Record<DisciplineId, readonly DisciplinePower[]> = {
   animalism: [
     power('bond-famulus', 'Bond Famulus', 1, 245),
@@ -36,7 +37,8 @@ export const disciplinePowers: Record<DisciplineId, readonly DisciplinePower[]> 
     power('feral-whispers', 'Feral Whispers', 2, 246),
     power('animal-succulence', 'Animal Succulence', 3, 246),
     power('quell-the-beast', 'Quell the Beast', 3, 246),
-    power('unliving-hive', 'Unliving Hive', 3, 246, { discipline: 'obfuscate', dots: 2 }),
+    power('unliving-hive', 'Unliving Hive', 3, 246, { amalgam: { discipline: 'obfuscate', dots: 2 } }),
+    power('subsume-the-spirit', 'Subsume the Spirit', 4, 247),
   ],
   auspex: [
     power('heightened-senses', 'Heightened Senses', 1, 249),
@@ -44,6 +46,7 @@ export const disciplinePowers: Record<DisciplineId, readonly DisciplinePower[]> 
     power('premonition', 'Premonition', 2, 249),
     power('scry-the-soul', 'Scry the Soul', 3, 249),
     power('share-the-senses', 'Share the Senses', 3, 250),
+    power('spirits-touch', 'Spirit’s Touch', 4, 250),
   ],
   'blood-sorcery': [
     power('corrosive-vitae', 'Corrosive Vitae', 1, 272),
@@ -51,6 +54,7 @@ export const disciplinePowers: Record<DisciplineId, readonly DisciplinePower[]> 
     power('extinguish-vitae', 'Extinguish Vitae', 2, 273),
     power('blood-of-potency', 'Blood of Potency', 3, 273),
     power('scorpions-touch', 'Scorpion’s Touch', 3, 273),
+    power('theft-of-vitae', 'Theft of Vitae', 4, 274),
   ],
   celerity: [
     power('cats-grace', 'Cat’s Grace', 1, 252),
@@ -58,22 +62,26 @@ export const disciplinePowers: Record<DisciplineId, readonly DisciplinePower[]> 
     power('fleetness', 'Fleetness', 2, 253),
     power('blink', 'Blink', 3, 253),
     power('traversal', 'Traversal', 3, 253),
+    power('draught-of-elegance', 'Draught of Elegance', 4, 254),
+    power('unerring-aim', 'Unerring Aim', 4, 254, { amalgam: { discipline: 'auspex', dots: 2 } }),
   ],
   dominate: [
     power('cloud-memory', 'Cloud Memory', 1, 256),
     power('compel', 'Compel', 1, 256),
     power('mesmerize', 'Mesmerize', 2, 256),
-    power('dementation', 'Dementation', 2, 256, { discipline: 'obfuscate', dots: 2 }),
+    power('dementation', 'Dementation', 2, 256, { amalgam: { discipline: 'obfuscate', dots: 2 } }),
     power('the-forgetful-mind', 'The Forgetful Mind', 3, 257),
     power('submerged-directive', 'Submerged Directive', 3, 257),
+    power('rationalize', 'Rationalize', 4, 257),
   ],
   fortitude: [
     power('resilience', 'Resilience', 1, 258),
     power('unswayable-mind', 'Unswayable Mind', 1, 258),
     power('toughness', 'Toughness', 2, 258),
-    power('enduring-beasts', 'Enduring Beasts', 2, 258, { discipline: 'animalism', dots: 1 }),
+    power('enduring-beasts', 'Enduring Beasts', 2, 258, { amalgam: { discipline: 'animalism', dots: 1 } }),
     power('defy-bane', 'Defy Bane', 3, 259),
     power('fortify-the-inner-facade', 'Fortify the Inner Façade', 3, 259),
+    power('draught-of-endurance', 'Draught of Endurance', 4, 259),
   ],
   obfuscate: [
     power('cloak-of-shadows', 'Cloak of Shadows', 1, 261),
@@ -81,14 +89,17 @@ export const disciplinePowers: Record<DisciplineId, readonly DisciplinePower[]> 
     power('unseen-passage', 'Unseen Passage', 2, 261),
     power('ghost-in-the-machine', 'Ghost in the Machine', 3, 262),
     power('mask-of-a-thousand-faces', 'Mask of a Thousand Faces', 3, 262),
+    power('conceal', 'Conceal', 4, 262, { amalgam: { discipline: 'auspex', dots: 3 } }),
+    power('vanish', 'Vanish', 4, 262, { prerequisite: { id: 'cloak-of-shadows', name: 'Cloak of Shadows' } }),
   ],
   potence: [
     power('lethal-body', 'Lethal Body', 1, 264),
     power('soaring-leap', 'Soaring Leap', 1, 264),
     power('prowess', 'Prowess', 2, 264),
     power('brutal-feed', 'Brutal Feed', 3, 264),
-    power('spark-of-rage', 'Spark of Rage', 3, 265, { discipline: 'presence', dots: 3 }),
+    power('spark-of-rage', 'Spark of Rage', 3, 265, { amalgam: { discipline: 'presence', dots: 3 } }),
     power('uncanny-grip', 'Uncanny Grip', 3, 265),
+    power('draught-of-might', 'Draught of Might', 4, 265),
   ],
   presence: [
     power('awe', 'Awe', 1, 267),
@@ -96,6 +107,8 @@ export const disciplinePowers: Record<DisciplineId, readonly DisciplinePower[]> 
     power('lingering-kiss', 'Lingering Kiss', 2, 267),
     power('dread-gaze', 'Dread Gaze', 3, 267),
     power('entrancement', 'Entrancement', 3, 268),
+    power('irresistible-voice', 'Irresistible Voice', 4, 268, { amalgam: { discipline: 'dominate', dots: 1 } }),
+    power('summon', 'Summon', 4, 268),
   ],
   protean: [
     power('eyes-of-the-beast', 'Eyes of the Beast', 1, 269),
@@ -103,6 +116,7 @@ export const disciplinePowers: Record<DisciplineId, readonly DisciplinePower[]> 
     power('feral-weapons', 'Feral Weapons', 2, 270),
     power('earth-meld', 'Earth Meld', 3, 270),
     power('shapechange', 'Shapechange', 3, 270),
+    power('metamorphosis', 'Metamorphosis', 4, 271, { prerequisite: { id: 'shapechange', name: 'Shapechange' } }),
   ],
 }
 

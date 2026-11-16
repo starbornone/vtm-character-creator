@@ -133,7 +133,7 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true,
     }
   }
 
-  const predatorIssue = profile.predatorAllowed ? predatorRestriction(clan?.id, draft.predatorType) : undefined
+  const predatorIssue = profile.predatorAllowed ? predatorRestriction(clan?.id, draft.predatorType, profile.bloodPotency) : undefined
   const predator = profile.predatorAllowed && clan && !predatorIssue ? (draft.predatorType === manualOptionId
     ? manualPredatorOption(draft.manualPredator)
     : corePredators.find(option => option.id === draft.predatorType)) : undefined
@@ -190,7 +190,7 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true,
     disciplineGrant, predatorSlot, ledger, advantages, flaws, grantChoices, reviews,
     clanFlaws: clan?.id === 'nosferatu' ? [{ name: 'Repulsive', dots: 2 }] : [],
     bloodPotencyChange: predator?.bloodPotencyChange ?? 0,
-    humanity: { base: 7, adjustment: predator?.humanityChange ?? 0, total: 7 + (predator?.humanityChange ?? 0) },
+    humanity: { base: profile.humanity, adjustment: predator?.humanityChange ?? 0, total: profile.humanity + (predator?.humanityChange ?? 0) },
     complete: clanSlots.length === 3 && clanSlots.every(slot => slot.selectedPower)
       && (!profile.predatorAllowed || (Boolean(predatorSlot?.selectedPower && grantedSpecialty) && grantChoices.every(choice => choice.complete))),
   }
