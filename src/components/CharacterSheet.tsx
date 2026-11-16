@@ -11,7 +11,7 @@ function Details({ rows }: { rows: readonly Detail[] }) {
   </dl>
 }
 
-export function CharacterSheet({ sheet }: { sheet: Sheet }) {
+export function CharacterSheet({ sheet, mechanicalOnly = false }: { sheet: Sheet; mechanicalOnly?: boolean }) {
   const { identity, tracks, relationships } = sheet
   const tracksAndExperience: Detail[] = [
     ['Health', tracks.health ?? '—'], ['Willpower', tracks.willpower ?? '—'], ['Humanity', tracks.humanity],
@@ -23,14 +23,14 @@ export function CharacterSheet({ sheet }: { sheet: Sheet }) {
       <header className="sheet-header">
         <div>
           <p className="sheet-caption">Vampire: The Masquerade · Fifth Edition</p>
-          <h2 id="sheet-name">{identity.name || 'Unnamed character'}</h2>
-          {identity.concept && <p className="sheet-concept">{identity.concept}</p>}
+          <h2 id="sheet-name">{mechanicalOnly ? 'Mechanical sheet' : identity.name || 'Unnamed character'}</h2>
+          {!mechanicalOnly && identity.concept && <p className="sheet-concept">{identity.concept}</p>}
         </div>
         {sheet.draft && <p className="sheet-draft">Draft · Open choices</p>}
       </header>
       <Details rows={[
-        ['Chronicle', identity.chronicle], ['Clan', identity.clan], ['Predator Type', identity.predator],
-        ['Generation', identity.generation && `${identity.generation}th`], ['Embraced', identity.embraced],
+        ['Chronicle', mechanicalOnly ? undefined : identity.chronicle], ['Clan', identity.clan], ['Predator Type', identity.predator],
+        ['Generation', identity.generation && `${identity.generation}th`], ['Embraced', mechanicalOnly ? undefined : identity.embraced],
         ['Clan Bane', sheet.bane], ['Compulsion', sheet.compulsion],
       ]} />
       <dl className="sheet-tracks" aria-label="Character tracks">
@@ -83,7 +83,7 @@ export function CharacterSheet({ sheet }: { sheet: Sheet }) {
         </section>
       </div>
 
-      <section aria-labelledby="sheet-story">
+      {!mechanicalOnly && <section aria-labelledby="sheet-story">
         <h3 id="sheet-story">Beliefs &amp; Relationships</h3>
         <Details rows={[
           ['Ambition', identity.ambition], ['Desire', identity.desire], ['Sire', relationships.sire],
@@ -94,7 +94,7 @@ export function CharacterSheet({ sheet }: { sheet: Sheet }) {
             <strong>Conviction</strong> {pair.conviction || '—'} · <strong>Touchstone</strong> {pair.touchstone || '—'}
           </li>)}
         </ul>}
-      </section>
+      </section>}
       {sheet.reviews.length > 0 && <section aria-labelledby="sheet-storyteller">
         <h3 id="sheet-storyteller">Storyteller Review</h3>
         <ul className="sheet-list">{sheet.reviews.map(note => <li key={note}>{note}</li>)}</ul>

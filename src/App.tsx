@@ -1,23 +1,51 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { traitGroups } from '@/catalog/traits'
 import { AllocationEditor } from '@/components/AllocationEditor'
 import { CharacterSheet } from '@/components/CharacterSheet'
 import { ClanPathEditor } from '@/components/ClanPathEditor'
 import { DraftControls } from '@/components/DraftControls'
 import { ConceptEditor, RelationshipEditor } from '@/components/NarrativeEditors'
+import { ShareBuildControls, SharedBuild } from '@/components/SharedBuild'
 import { SpecialtyEditor } from '@/components/SpecialtyEditor'
 import { StartingExperienceEditor } from '@/components/StartingExperienceEditor'
 import { StartingOptionsEditor } from '@/components/StartingOptionsEditor'
 import { useBrowserDrafts } from '@/drafts/use-browser-drafts'
 import { evaluateCharacter, guideSteps, type GuideStep } from '@/rules/character-guide'
 import { skillDistributionIds, skillDistributions } from '@/rules/trait-ledger'
+import { buildLinkPrefix } from '@/sharing/build-link'
 
 const attributeGroups = traitGroups.map(({ name, attributes }) => ({ name, ids: attributes }))
 const skillGroups = traitGroups.map(({ name, skills }) => ({ name, ids: skills }))
 const editSteps = guideSteps.filter(step => step.id !== 'review')
 
 export function App() {
+  const [hash, setHash] = useState(() => window.location.hash)
   const drafts = useBrowserDrafts()
+
+  useEffect(() => {
+    const update = () => setHash(window.location.hash)
+    window.addEventListener('hashchange', update)
+    return () => window.removeEventListener('hashchange', update)
+  }, [])
+
+  function closePreview() {
+    const url = new URL(window.location.href)
+    url.hash = ''
+    window.history.replaceState(window.history.state, '', url)
+    setHash('')
+  }
+
+  if (hash.startsWith(buildLinkPrefix)) return (
+    <SharedBuild key={hash} hash={hash} library={drafts.library} onClose={closePreview} onSave={snapshot => {
+      const result = drafts.restore(snapshot)
+      if (result.restored) closePreview()
+      return result
+    }} />
+  )
+  return <CharacterCreator drafts={drafts} />
+}
+
+function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDrafts> }) {
   const { character: draft, step, id, name } = drafts.open
   const { dispatch } = drafts
   const panel = useRef<HTMLDivElement>(null)
@@ -144,6 +172,7 @@ export function App() {
               </div>
               <button type="button" className="guide-button guide-button-primary" onClick={() => window.print()}>Print character sheet</button>
             </div>
+            <ShareBuildControls key={id ?? 'unnamed'} draft={draft} />
             {openSteps.length > 0 && <ul aria-label="Open choices" className="grid gap-3 sm:grid-cols-2">
               {openSteps.map(option => <li key={option.id} className="rounded-lg border border-border px-3 py-2">
                 <button type="button" className="font-medium text-rose-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-rose-300" onClick={() => goTo(option.id)}>{option.title}</button>
