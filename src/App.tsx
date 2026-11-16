@@ -129,15 +129,15 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
         {step === 'concept' && <>
           <ConceptEditor draft={draft.concept} onChange={update => dispatch({ type: 'concept', update })}
             ageProfile={ageProfile} onAgeProfile={profile => dispatch({ type: 'age-profile', profile })} />
-          <fieldset className="space-y-2 rounded-xl border border-border bg-card p-5 sm:p-7">
+          <fieldset className="rounded-xl border border-border bg-card px-5 pt-1 pb-5 sm:px-7 sm:pb-7">
             <legend className="px-2 font-semibold"><span className="guide-action"><BookOpen aria-hidden="true" />Rule sources</span></legend>
             <label className="flex min-h-9 items-center gap-2 text-sm">
               <input type="checkbox" className="size-4 accent-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300"
                 checked={path.sourcePacks.includes(playersGuide.id)} onChange={event => dispatch({ type: 'players-guide', enabled: event.target.checked })} />
               Enable Player’s Guide
             </label>
-            <p className="text-sm text-muted-foreground">Core is always available. The Player’s Guide adds selected clans, Predator Types, and powers to this draft.</p>
-            {sourceIssues.map(issue => <p key={issue} role="status" className="text-sm text-rose-300">{issue}</p>)}
+            <p className="mt-2 text-sm text-muted-foreground">Core is always available. The Player’s Guide adds selected clans, Predator Types, and powers to this draft.</p>
+            {sourceIssues.map(issue => <p key={issue} role="status" className="mt-2 text-sm text-rose-300">{issue}</p>)}
           </fieldset>
         </>}
         {step === 'traits' && <>
