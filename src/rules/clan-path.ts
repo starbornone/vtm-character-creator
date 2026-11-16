@@ -1,9 +1,10 @@
 import {
-  caitiffOption, clanChoices, corePredators, disciplineIds, disciplinePowers,
+  caitiffOption, clanChoices, corePredators, disciplineIds, disciplinePowers, thinBloodOption,
   type ClanOption, type DisciplineId, type DisciplinePower, type DotGrant, type PredatorOption,
 } from '../catalog/clan-path.ts'
 import { skillIds } from '../catalog/traits.ts'
-import { ageProfiles, type AgeProfile } from './creation-profiles.ts'
+import { ageProfiles, thinBloodProfile, type AgeProfile } from './creation-profiles.ts'
+import { evaluateThinBlood, type ThinBloodDraft } from './thin-blood.ts'
 
 export const manualOptionId = 'manual'
 
@@ -44,6 +45,7 @@ export interface ClanPathDraft {
   ritual?: string
   manualClan?: ManualClan
   manualPredator?: ManualPredator
+  thinBlood?: ThinBloodDraft
 }
 
 export const initialClanPath: ClanPathDraft = {
@@ -124,9 +126,13 @@ export function predatorRestriction(clanId: string | undefined, predatorId: stri
   if (predatorId === 'farmer' && bloodPotency >= 3) return 'Farmer requires Blood Potency below 3.'
 }
 
-export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true, profile: AgeProfile = ageProfiles.neonate) {
+export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true, age: AgeProfile = ageProfiles.neonate) {
   const clan = draft.clan === manualOptionId ? manualClanOption(draft.manualClan) : clanChoices.find(option => option.id === draft.clan)
   const isCaitiff = clan?.id === caitiffOption.id
+  const thinBlood = clan?.id === thinBloodOption.id ? evaluateThinBlood(draft.thinBlood) : undefined
+  const profile = thinBlood ? thinBloodProfile : age
+  const ageIssue = thinBlood && age.name !== 'Fledgling' ? 'Thin-blood creation requires the Fledgling age profile. Core p. 140.' : undefined
+  const hasNosferatuBane = clan?.id === 'nosferatu' || thinBlood?.curse?.id === 'nosferatu'
   const twoDot = clan?.disciplines.find(id => id === draft.twoDotDiscipline)
   const oneDot = clan?.disciplines.find(id => id === draft.oneDotDiscipline && id !== twoDot)
   const clanRatings: DisciplineRatings = {}
@@ -139,6 +145,12 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true,
       if (rank > (clanRatings[discipline] ?? 0)) break
       clanSlots.push(powerSlot(discipline, rank, draft.clanPowers[discipline]?.[rank] ?? '', clanRatings, clanSlots))
     }
+  }
+
+  const affinity = thinBlood?.affinity
+  if (affinity) {
+    clanRatings[affinity.discipline] = 1
+    clanSlots.push(powerSlot(affinity.discipline, 1, affinity.power.id, clanRatings, clanSlots))
   }
 
   const predatorOption = draft.predatorType === manualOptionId
@@ -190,19 +202,20 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true,
 
   const lane = new Set(clan?.disciplines ?? [])
   if (disciplineGrant) lane.add(disciplineGrant)
+  if (affinity) lane.add(affinity.discipline)
   const ledger = [...lane].map(discipline => ({
     discipline,
-    clanDots: clanRatings[discipline] ?? 0,
+    clanDots: thinBlood ? 0 : clanRatings[discipline] ?? 0,
     predatorDots: Number(discipline === disciplineGrant),
     total: totalRatings[discipline] ?? 0,
   }))
   return {
-    profile, clan, isCaitiff, twoDot, oneDot, clanSlots, predator, predatorIssue, predatorDisciplines, specialtyOption, grantedSpecialty,
+    profile, clan, isCaitiff, thinBlood, ageIssue, hasNosferatuBane, twoDot, oneDot, clanSlots, predator, predatorIssue, predatorDisciplines, specialtyOption, grantedSpecialty,
     disciplineGrant, predatorSlot, ledger, advantages, flaws, grantChoices, reviews,
-    clanFlaws: isCaitiff ? [suspect] : clan?.id === 'nosferatu' ? [{ name: 'Repulsive', dots: 2 }] : [],
+    clanFlaws: isCaitiff ? [suspect] : hasNosferatuBane ? [{ name: 'Repulsive', dots: 2 }] : [],
     bloodPotencyChange: predator?.bloodPotencyChange ?? 0,
     humanity: { base: profile.humanity, adjustment: predator?.humanityChange ?? 0, total: profile.humanity + (predator?.humanityChange ?? 0) },
-    complete: clanSlots.length === 3 && clanSlots.every(slot => slot.selectedPower)
+    complete: thinBlood ? !ageIssue && thinBlood.issues.length === 0 : clanSlots.length === 3 && clanSlots.every(slot => slot.selectedPower)
       && (!profile.predatorAllowed || (Boolean(predatorSlot?.selectedPower && grantedSpecialty) && grantChoices.every(choice => choice.complete))),
   }
 }

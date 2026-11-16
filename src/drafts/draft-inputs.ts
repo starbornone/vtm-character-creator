@@ -1,4 +1,5 @@
 import { disciplineIds } from '../catalog/clan-path.ts'
+import { thinBloodFlaws, thinBloodMerits } from '../catalog/thin-blood.ts'
 import { advantageIds, flawIds } from '../catalog/starting-options.ts'
 import { skillIds } from '../catalog/traits.ts'
 import type { CharacterDraft } from '../rules/character-guide.ts'
@@ -31,14 +32,23 @@ function isDotGrant(value: unknown) {
   return isRecord(value) && strings(value, 'name') && isInteger(value.dots)
 }
 
+function isThinBlood(value: unknown) {
+  if (!isRecord(value) || !Array.isArray(value.merits) || !Array.isArray(value.flaws)) return false
+  const { merits, flaws } = value
+  return merits.every(id => thinBloodMerits.some(option => option.id === id)) && new Set(merits).size === merits.length
+    && flaws.every(id => thinBloodFlaws.some(option => option.id === id)) && new Set(flaws).size === flaws.length
+    && ['curseClan', 'affinity', 'affinityPower', 'method', 'formula'].every(key => value[key] === undefined || isString(value[key]))
+}
+
 function isClanPath(value: unknown) {
   if (!isRecord(value) || !strings(value, 'clan', 'twoDotDiscipline', 'oneDotDiscipline', 'predatorType', 'predatorDiscipline', 'predatorSpecialty')) return false
-  const { clanPowers, predatorPowers, predatorSpecialtyName, predatorChoices, ritual, manualClan, manualPredator } = value
+  const { clanPowers, predatorPowers, predatorSpecialtyName, predatorChoices, ritual, manualClan, manualPredator, thinBlood } = value
   return mapOf(clanPowers, slots => mapOf(slots, isString, ['1', '2']), disciplineIds)
     && mapOf(predatorPowers, isString, disciplineIds)
     && (predatorChoices === undefined || mapOf(predatorChoices, choice => mapOf(choice, isInteger)))
     && (predatorSpecialtyName === undefined || isString(predatorSpecialtyName))
     && (ritual === undefined || isString(ritual))
+    && (thinBlood === undefined || isThinBlood(thinBlood))
     && (manualClan === undefined || (isRecord(manualClan) && strings(manualClan, 'name', 'source', 'bane', 'compulsion')
       && Array.isArray(manualClan.disciplines) && manualClan.disciplines.every(isString)))
     && (manualPredator === undefined || (isRecord(manualPredator) && strings(manualPredator, 'name', 'source')

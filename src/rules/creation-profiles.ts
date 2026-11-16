@@ -9,11 +9,14 @@ export const ageProfiles = {
 
 export type AgeProfileId = keyof typeof ageProfiles
 export type AgeProfile = (typeof ageProfiles)[AgeProfileId]
-export type StartingGeneration = AgeProfile['generations'][number]
+// Thin-bloods use the Fledgling age with their own Generation and Blood Potency ranges.
+export const thinBloodProfile = { ...ageProfiles.fledgling, generations: [14, 15, 16], bloodPotency: 0, maxBloodPotency: 0 } as const
+export type CreationProfile = AgeProfile | typeof thinBloodProfile
+export type StartingGeneration = CreationProfile['generations'][number]
 export const ageProfileIds = Object.keys(ageProfiles) as AgeProfileId[]
 export const defaultAgeProfile: AgeProfileId = 'neonate'
-export const startingGenerations = [...new Set(Object.values(ageProfiles).flatMap(profile => [...profile.generations]))]
+export const startingGenerations = [...new Set([...Object.values(ageProfiles), thinBloodProfile].flatMap(profile => [...profile.generations]))]
 
-export function generationForProfile(profile: AgeProfile, generation: StartingGeneration | undefined) {
+export function generationForProfile(profile: CreationProfile, generation: StartingGeneration | undefined) {
   return profile.generations.find(allowed => allowed === generation)
 }

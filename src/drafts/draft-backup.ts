@@ -1,4 +1,4 @@
-import { caitiffOption } from '../catalog/clan-path.ts'
+import { caitiffOption, thinBloodOption } from '../catalog/clan-path.ts'
 import { guideSteps, type CharacterDraft, type GuideStep } from '../rules/character-guide.ts'
 import { ageProfiles, defaultAgeProfile, generationForProfile } from '../rules/creation-profiles.ts'
 import { isCharacterDraft, isRecord } from './draft-inputs.ts'
@@ -6,6 +6,8 @@ import { isCharacterDraft, isRecord } from './draft-inputs.ts'
 const legacyDraftSchemaVersion = 1
 const profiledDraftSchemaVersion = 2
 const caitiffDraftSchemaVersion = 3
+const thinBloodDraftSchemaVersion = 4
+const draftSchemaVersions = [legacyDraftSchemaVersion, profiledDraftSchemaVersion, caitiffDraftSchemaVersion, thinBloodDraftSchemaVersion]
 export const draftRuleset = 'vtm-v5'
 const backupFormat = 'vtm-character-creator-draft'
 
@@ -16,6 +18,10 @@ export interface DraftSnapshot {
 }
 
 export function draftSchemaVersionFor(snapshots: readonly DraftSnapshot[]) {
+  if (snapshots.some(({ character: { clanPath, starting } }) =>
+    clanPath.clan === thinBloodOption.id || clanPath.thinBlood !== undefined || (starting.generation ?? 0) >= 14)) {
+    return thinBloodDraftSchemaVersion
+  }
   if (snapshots.some(({ character: { clanPath, starting } }) =>
     clanPath.clan === caitiffOption.id
     || starting.purchases.some(purchase => purchase.kind === 'discipline' && purchase.caitiffLearning))) {
@@ -54,7 +60,7 @@ export function readDraftBackup(raw: string): BackupResult {
   }
 
   if (!isRecord(value) || value.format !== backupFormat) return { issue: 'Choose a Character Creator draft backup.' }
-  if (value.schemaVersion !== legacyDraftSchemaVersion && value.schemaVersion !== profiledDraftSchemaVersion && value.schemaVersion !== caitiffDraftSchemaVersion) return { issue: 'This draft backup version is unsupported.' }
+  if (!draftSchemaVersions.some(version => version === value.schemaVersion)) return { issue: 'This draft backup version is unsupported.' }
   if (value.ruleset !== draftRuleset) return { issue: 'This draft backup uses an unsupported ruleset.' }
   if (!isDraftSnapshot(value.draft)) return { issue: 'The draft name, guide step, or character inputs are missing or invalid.' }
   if (value.schemaVersion !== draftSchemaVersionFor([value.draft])) return { issue: 'The character inputs do not match this draft backup version.' }

@@ -1,18 +1,22 @@
-import { caitiffOption, clanChoices, corePredators, disciplineIds, disciplinePowers, startingRituals } from '../catalog/clan-path.ts'
+import { caitiffOption, clanChoices, coreClans, corePredators, disciplineIds, disciplinePowers, startingRituals, thinBloodOption } from '../catalog/clan-path.ts'
+import { alchemyMethods, startingFormulae } from '../catalog/thin-blood.ts'
 import { advantageIds, flawIds, startingAdvantages } from '../catalog/starting-options.ts'
 import { skillIds } from '../catalog/traits.ts'
 import { isCharacterDraft, isRecord } from '../drafts/draft-inputs.ts'
 import { draftRuleset } from '../drafts/draft-backup.ts'
 import { evaluateClanPath, manualOptionId } from '../rules/clan-path.ts'
 import { initialCharacterDraft, type CharacterDraft } from '../rules/character-guide.ts'
-import { ageProfileIds, ageProfiles, defaultAgeProfile, generationForProfile } from '../rules/creation-profiles.ts'
+import { ageProfileIds, ageProfiles, defaultAgeProfile, generationForProfile, thinBloodProfile } from '../rules/creation-profiles.ts'
 import { attributeIds, type Purchase } from '../rules/starting-xp.ts'
+import type { ThinBloodDraft } from '../rules/thin-blood.ts'
 import { ratings, skillDistributionIds, specialtySkills } from '../rules/trait-ledger.ts'
 
 export const buildLinkPrefix = '#build='
 const legacyVersion = 1
 const profiledVersion = 2
 const caitiffVersion = 3
+const thinBloodVersion = 4
+const buildVersions = [legacyVersion, profiledVersion, caitiffVersion, thinBloodVersion]
 const maxTokenLength = 12000
 
 export const omittedChoices = {
@@ -62,14 +66,30 @@ function supportedPurchase(purchase: Purchase, maxDiscipline: number, maxBloodPo
   }
 }
 
+function projectThinBlood(draft: ThinBloodDraft | undefined, path: NonNullable<ReturnType<typeof evaluateClanPath>['thinBlood']>) {
+  const hasAlchemy = path.merits.some(({ id }) => id === 'thin-blood-alchemist')
+  const hasAffinity = path.merits.some(({ id }) => id === 'discipline-affinity')
+  const affinity = hasAffinity ? selectedId(disciplineIds, draft?.affinity) : undefined
+  return {
+    merits: path.merits.map(({ id }) => id),
+    flaws: path.flaws.map(({ id }) => id),
+    curseClan: path.flaws.some(({ id }) => id === 'clan-curse') ? coreClans.find(({ id }) => id === draft?.curseClan)?.id : undefined,
+    affinity,
+    affinityPower: affinity ? disciplinePowers[affinity].find(power => power.id === draft?.affinityPower && power.level === 1)?.id : undefined,
+    method: hasAlchemy ? alchemyMethods.find(({ id }) => id === draft?.method)?.id : undefined,
+    formula: hasAlchemy ? startingFormulae.find(({ id }) => id === draft?.formula)?.id : undefined,
+  }
+}
+
 function projectBuild(draft: CharacterDraft) {
-  const profile = ageProfiles[draft.ageProfile ?? defaultAgeProfile]
+  const age = ageProfiles[draft.ageProfile ?? defaultAgeProfile]
   const maxDiscipline = draft.ageProfile === 'ancilla' ? 4 : 3
-  const path = evaluateClanPath(draft.clanPath, true, profile)
+  const path = evaluateClanPath(draft.clanPath, true, age)
+  const { profile, thinBlood } = path
   const clan = clanChoices.find(option => option.id === path.clan?.id)
   const predator = clan && corePredators.find(option => option.id === path.predator?.id)
   const clanPowers: CharacterDraft['clanPath']['clanPowers'] = {}
-  if (clan) for (const slot of path.clanSlots) {
+  if (clan && !thinBlood) for (const slot of path.clanSlots) {
     const power = disciplinePowers[slot.discipline].find(option => option.id === slot.selectedId)?.id
     if (power) clanPowers[slot.discipline] = { ...clanPowers[slot.discipline], [slot.rank]: power }
   }
@@ -102,7 +122,9 @@ function projectBuild(draft: CharacterDraft) {
       predatorSpecialty: predator?.specialties.find(option => option.skill === draft.clanPath.predatorSpecialty)?.skill ?? '',
       predatorPowers: predatorSlot && predatorPower ? { [predatorSlot.discipline]: predatorPower } : {},
       predatorChoices,
-      ritual: startingRituals.find(option => option.id === draft.clanPath.ritual)?.id ?? '',
+      ritual: !thinBlood || thinBlood.affinity?.discipline === 'blood-sorcery'
+        ? startingRituals.find(option => option.id === draft.clanPath.ritual)?.id ?? '' : '',
+      thinBlood: thinBlood ? projectThinBlood(draft.clanPath.thinBlood, thinBlood) : undefined,
     },
     starting: {
       generation: generationForProfile(profile, draft.starting.generation),
@@ -113,12 +135,13 @@ function projectBuild(draft: CharacterDraft) {
 }
 
 function formatVersion(clanId: unknown, ageProfile: unknown) {
+  if (clanId === thinBloodOption.id) return thinBloodVersion
   if (clanId === caitiffOption.id) return caitiffVersion
   return ageProfile === undefined ? legacyVersion : profiledVersion
 }
 
 export function encodeBuildLink(draft: CharacterDraft) {
-  const profile = ageProfiles[draft.ageProfile ?? defaultAgeProfile]
+  const profile = draft.clanPath.clan === thinBloodOption.id ? thinBloodProfile : ageProfiles[draft.ageProfile ?? defaultAgeProfile]
   const omitted: Omission[] = []
   if (draft.clanPath.clan === manualOptionId) omitted.push('manual-clan')
   if (profile.predatorAllowed && draft.clanPath.predatorType === manualOptionId) omitted.push('manual-predator')
@@ -142,7 +165,7 @@ export function decodeBuildLink(hash: string): { draft: CharacterDraft; omitted:
   try {
     const value: unknown = JSON.parse(atob(token.replaceAll('-', '+').replaceAll('_', '/')))
     if (!isRecord(value) || !isRecord(value.mechanics) || !Array.isArray(value.omitted) || Object.keys(value).length !== 4) return invalid
-    if ((value.version !== legacyVersion && value.version !== profiledVersion && value.version !== caitiffVersion) || value.ruleset !== draftRuleset) return { issue: 'This build link uses an unsupported version or ruleset.' }
+    if (!buildVersions.some(version => version === value.version) || value.ruleset !== draftRuleset) return { issue: 'This build link uses an unsupported version or ruleset.' }
     const { ageProfile, traits, clanPath, starting } = value.mechanics
     if (!isRecord(traits) || !isRecord(clanPath)) return invalid
     if (ageProfile !== undefined && !ageProfileIds.some(id => id !== defaultAgeProfile && id === ageProfile)) return invalid

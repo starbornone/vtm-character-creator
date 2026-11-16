@@ -152,7 +152,12 @@ export const caitiffOption = {
   bane: '', compulsion: '', source: 'Core pp. 107, 136–137, 148, 194',
 } satisfies ClanOption
 
-export const clanChoices = [...coreClans, caitiffOption]
+export const thinBloodOption = {
+  id: 'thin-blood', name: 'Thin-blood', disciplines: [],
+  bane: '', compulsion: '', source: 'Core pp. 109–113, 140, 148–149, 182–184',
+} satisfies ClanOption
+
+export const clanChoices = [...coreClans, caitiffOption, thinBloodOption]
 
 export interface SpecialtyOption {
   skill: SkillId

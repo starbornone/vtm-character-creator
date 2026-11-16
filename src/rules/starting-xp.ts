@@ -3,12 +3,14 @@ import { advantageIds, startingAdvantages, startingFlaws, type AdvantageId, type
 import { skillIds, traitGroups, traitLabel, type AttributeId, type SkillId } from '../catalog/traits.ts'
 import { caitiffStatusIssue, isStatusAdvantage, type evaluateClanPath } from './clan-path.ts'
 import { generationForProfile, type StartingGeneration } from './creation-profiles.ts'
+import { isRestrictedThinBloodOption, thinBloodBackgroundIssue } from './thin-blood.ts'
 import { specialtySkills, type evaluateTraitLedger, type TraitDraft } from './trait-ledger.ts'
 
 export const attributeIds = traitGroups.flatMap(({ attributes }): readonly AttributeId[] => attributes)
 
 // Core p. 216 and Renegade's Blood Potency Correction.
 const bloodEffects = {
+  0: { baneSeverity: 0, bloodSurge: 1 },
   1: { baneSeverity: 2, bloodSurge: 2 },
   2: { baneSeverity: 2, bloodSurge: 2 },
   3: { baneSeverity: 3, bloodSurge: 3 },
@@ -23,7 +25,7 @@ export type Purchase =
   | { kind: 'specialty'; id: SkillId; name: string }
   | { kind: 'discipline'; id: DisciplineId; to: number; power: string; caitiffLearning?: true }
   | { kind: 'advantage'; id: AdvantageId; to: number }
-  | { kind: 'blood-potency'; to: BloodPotency }
+  | { kind: 'blood-potency'; to: Exclude<BloodPotency, 0> }
 
 export interface StartingDraft {
   generation: StartingGeneration | undefined
@@ -62,8 +64,9 @@ function evaluateOptions(draft: StartingDraft, path: ClanPath, hasLingeringKiss:
   const advantages = advantageIds.flatMap(id => {
     const dots = draft.advantages[id] ?? 0
     if (dots === 0) return []
-    const issue = id === 'unbondable' && hasLingeringKiss ? 'Unbondable conflicts with Lingering Kiss.'
-      : id === 'beautiful' && path.clan?.id === 'nosferatu' ? 'The Nosferatu Bane prohibits the Beautiful Merit.'
+    const issue = id === 'unbondable' && path.thinBlood ? thinBloodBackgroundIssue
+      : id === 'unbondable' && hasLingeringKiss ? 'Unbondable conflicts with Lingering Kiss.'
+      : id === 'beautiful' && path.hasNosferatuBane ? 'The Nosferatu Bane prohibits the Beautiful Merit.'
       : !startingAdvantages[id].dots.includes(dots) ? 'Choose a listed rating.'
       : !startingAdvantages[id].dots.includes(dots + grantedAdvantages[id]) ? 'The selected dots and existing grant exceed the listed ratings.' : undefined
     return [{ id, dots, issue }]
@@ -72,7 +75,7 @@ function evaluateOptions(draft: StartingDraft, path: ClanPath, hasLingeringKiss:
   const flaws = [...new Set(draft.flaws)].map(id => ({
     id, dots: startingFlaws[id].dots,
     issue: grantedFlaws.some(flaw => flaw.name === startingFlaws[id].name) ? 'Already granted by the clan or Predator Type.'
-      : id === 'ugly' && path.clan?.id === 'nosferatu' ? 'The Nosferatu Bane already imposes Repulsive.'
+      : id === 'ugly' && path.hasNosferatuBane ? 'The Nosferatu Bane already imposes Repulsive.'
       : active.some(option => flawConflict(id, option.id)) ? 'Conflicts with a selected Advantage.'
       : advantageIds.some(advantage => grantedAdvantages[advantage] && flawConflict(id, advantage)) ? 'Conflicts with a granted Advantage.' : undefined,
   }))
@@ -84,6 +87,7 @@ function evaluateOptions(draft: StartingDraft, path: ClanPath, hasLingeringKiss:
     const duplicate = known.some(entry => entry.name.toLowerCase() === normalized)
       || entries.some((entry, position) => position !== index && entry.kind === option.kind && entry.name.trim().toLowerCase() === normalized)
     const issue = !name || !source ? 'Enter a name and source or Storyteller note.'
+      : path.thinBlood && isRestrictedThinBloodOption(name) ? thinBloodBackgroundIssue
       : path.isCaitiff && option.kind === 'advantage' && isStatusAdvantage(name) ? caitiffStatusIssue
       : !Number.isInteger(option.dots) || option.dots < 1 || option.dots > (option.kind === 'advantage' ? 5 : 2) ? 'Choose a valid starting dot rating.'
       : duplicate ? 'This option already appears in the catalog, grants, or manual entries.' : undefined
@@ -141,7 +145,7 @@ function startExperience(traits: TraitDraft, ledger: TraitLedger, path: ClanPath
     readyDisciplines: path.ledger.filter(row => slots.every(slot => slot.discipline !== row.discipline || slot.selectedPower)).map(row => row.discipline),
     clanDisciplines: path.isCaitiff ? [] : path.clan?.disciplines ?? [],
     isCaitiff: path.isCaitiff,
-    looksRestricted: path.clan?.id === 'nosferatu',
+    looksRestricted: path.hasNosferatuBane,
     advantages,
     flaws: options.flaws.filter(option => !option.issue).map(({ id }) => id),
     bloodPotency: bloodPotencyRatings.find(rating => rating === path.profile.bloodPotency + path.bloodPotencyChange) ?? path.profile.bloodPotency,
@@ -260,10 +264,15 @@ export function evaluateStartingBuild(draft: StartingDraft, traits: TraitDraft, 
   const xpAdvantageDots = purchasedAdvantageDots - options.advantageBudget.used
   const generation = generationForProfile(path.profile, draft.generation)
   const generationIssue = draft.generation && !generation
-    ? `${draft.generation}th Generation is unavailable for ${path.profile.name}. Choose a Generation for this profile.` : undefined
+    ? (path.thinBlood
+      ? `${draft.generation}th Generation is unavailable for Thin-bloods. Choose 14th, 15th, or 16th Generation.`
+      : `${draft.generation}th Generation is unavailable for ${path.profile.name}. Choose a Generation for this profile.`)
+    : undefined
   return {
-    ...options, final, entries, isCaitiff: path.isCaitiff, profile: path.profile, predatorAdvantage, xpAdvantageDots, totalAdvantageDots,
+    ...options, final, entries, isCaitiff: path.isCaitiff, isThinBlood: Boolean(path.thinBlood), profile: path.profile, predatorAdvantage, xpAdvantageDots, totalAdvantageDots,
     generation, generationIssue, humanity: path.humanity.total,
-    bloodPotency: final.bloodPotency, ...bloodEffects[final.bloodPotency],
+    bloodPotency: final.bloodPotency,
+    bloodSurge: bloodEffects[final.bloodPotency].bloodSurge,
+    baneSeverity: path.thinBlood?.curse ? 1 : bloodEffects[final.bloodPotency].baneSeverity,
   }
 }

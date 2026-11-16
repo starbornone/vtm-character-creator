@@ -81,8 +81,9 @@ const conceptFields = [
 
 export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = true } = {}) {
   const ageProfile = draft.ageProfile ?? defaultAgeProfile
-  const profile = ageProfiles[ageProfile]
-  const path = evaluateClanPath(draft.clanPath, includeCustomText, profile)
+  const age = ageProfiles[ageProfile]
+  const path = evaluateClanPath(draft.clanPath, includeCustomText, age)
+  const { profile, thinBlood } = path
   const traits = evaluateTraitLedger(draft.traits, path.grantedSpecialty)
   const starting = evaluateStartingBuild(draft.starting, draft.traits, traits, path, includeCustomText)
   const baseTracks = deriveTracks(starting.final.attributes)
@@ -101,7 +102,10 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
 
   if (!path.clan) pending.clan.push(draft.clanPath.clan === manualOptionId
     ? 'Name the manual clan, add its source or note, and choose three distinct Disciplines.' : 'Choose a clan.')
-  else {
+  else if (thinBlood) {
+    if (path.ageIssue) pending.clan.push(path.ageIssue)
+    pending.clan.push(...thinBlood.issues)
+  } else {
     if (path.clanSlots.length < 3 || path.clanSlots.some(slot => !slot.selectedPower)) pending.clan.push(path.isCaitiff ? 'Assign two distinct starting Disciplines and their powers.' : 'Assign both clan Disciplines and their powers.')
     if (profile.predatorAllowed) {
       if (!path.predator) pending.clan.push(path.predatorIssue ?? (draft.clanPath.predatorType === manualOptionId
@@ -139,14 +143,14 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
       name: draft.concept.name.trim(), concept: draft.concept.concept.trim(), chronicle: draft.concept.chronicle.trim(),
       embraced: draft.concept.embraced.trim(), ambition: draft.concept.ambition.trim(), desire: draft.concept.desire.trim(),
       clan: hideClanText ? 'Manual clan' : path.clan?.name, predator: predatorName, generation: starting.generation,
-      ageProfile: profile.name,
+      ageProfile: age.name,
     },
     relationships: { sire: draft.relationships.sire.trim(), coterie: draft.relationships.coterie.trim(), tenets: draft.relationships.tenets.trim(), convictions },
     tracks: {
       health: tracks.health.total, willpower: tracks.willpower.total,
       humanity: starting.humanity, bloodPotency: starting.bloodPotency, baneSeverity: starting.baneSeverity, bloodSurge: starting.bloodSurge,
     },
-    bane: hideClanText ? undefined : path.clan?.bane || undefined,
+    bane: hideClanText ? undefined : thinBlood?.curse?.bane || path.clan?.bane || undefined,
     compulsion: hideClanText ? undefined : path.clan?.compulsion || undefined,
     traitGroups: traitGroups.map(group => ({
       name: group.name,
@@ -166,6 +170,10 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
       return rating > 0 ? [{ name: disciplines[id], rating, powers }] : []
     }),
     ritual,
+    thinBlood: thinBlood && {
+      merits: thinBlood.merits, flaws: thinBlood.flaws, alchemy: thinBlood.alchemy,
+      cursedClan: thinBlood.curse?.name,
+    },
     reviews: [...path.reviews, ...manualOptions.map(option => includeCustomText
       ? `Manual ${option.kind === 'advantage' ? 'Advantage' : 'Flaw'}: ${option.name} (${option.source}).`
       : `Review a manual ${option.kind} with the Storyteller.`)],
@@ -181,7 +189,7 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
     flaws: [
       ...final.flaws.map(id => ({ ...startingFlaws[id], source: undefined })),
       ...path.flaws.map(({ name, dots }) => ({ name: hidePredatorText ? 'Manual Flaw' : name, dots, source: predatorName })),
-      ...path.clanFlaws.map(grant => ({ ...grant, source: path.clan?.name })),
+      ...path.clanFlaws.map(grant => ({ ...grant, source: thinBlood?.curse ? 'Clan Curse' : path.clan?.name })),
       ...manualOptions.filter(option => option.kind === 'flaw').map(({ name, dots }) => ({ name: includeCustomText ? name : 'Manual Flaw', dots, source: 'Manual · Base' })),
     ],
     advantageDots: starting.totalAdvantageDots,
