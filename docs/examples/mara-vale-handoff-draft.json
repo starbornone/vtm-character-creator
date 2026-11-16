@@ -1,0 +1,133 @@
+{
+  "format": "vtm-character-creator-draft",
+  "schemaVersion": 7,
+  "ruleset": "vtm-v5",
+  "draft": {
+    "name": "Mara Vale (handoff sample)",
+    "step": "review",
+    "character": {
+      "concept": {
+        "name": "Mara Vale",
+        "concept": "Former theater carpenter",
+        "chronicle": "Last Call at the Lyric",
+        "embraced": "1998",
+        "ambition": "Secure a permanent home for the theater company",
+        "desire": "Find the missing stagehand tonight"
+      },
+      "relationships": {
+        "sire": "Inez Varga",
+        "coterie": "",
+        "tenets": "Protect people who depend on you.",
+        "convictions": [
+          {
+            "conviction": "Keep my word",
+            "touchstone": "Jo Reyes, the living stage manager"
+          }
+        ]
+      },
+      "traits": {
+        "distribution": "balanced",
+        "attributes": {
+          "strength": 4,
+          "dexterity": 2,
+          "stamina": 3,
+          "charisma": 3,
+          "manipulation": 2,
+          "composure": 2,
+          "intelligence": 1,
+          "wits": 2,
+          "resolve": 3
+        },
+        "skills": {
+          "athletics": 3,
+          "brawl": 3,
+          "streetwise": 3,
+          "awareness": 2,
+          "insight": 2,
+          "intimidation": 2,
+          "larceny": 2,
+          "persuasion": 2,
+          "craft": 1,
+          "drive": 1,
+          "etiquette": 1,
+          "investigation": 1,
+          "melee": 1,
+          "subterfuge": 1,
+          "technology": 1
+        },
+        "firstDotSpecialties": {
+          "craft": "Carpentry"
+        },
+        "freeSpecialty": {
+          "skill": "athletics",
+          "name": "Climbing"
+        }
+      },
+      "clanPath": {
+        "clan": "brujah",
+        "twoDotDiscipline": "presence",
+        "oneDotDiscipline": "potence",
+        "clanPowers": {
+          "presence": {
+            "1": "awe",
+            "2": "daunt"
+          },
+          "potence": {
+            "1": "lethal-body"
+          }
+        },
+        "predatorType": "alleycat",
+        "predatorDiscipline": "potence",
+        "predatorSpecialty": "brawl",
+        "predatorPowers": {
+          "potence": "prowess"
+        }
+      },
+      "starting": {
+        "generation": 13,
+        "advantages": {
+          "beautiful": 2,
+          "haven": 1,
+          "mask": 2,
+          "resources": 2
+        },
+        "flaws": [
+          "stake-bait"
+        ],
+        "purchases": [
+          {
+            "kind": "skill",
+            "id": "stealth",
+            "to": 1
+          },
+          {
+            "kind": "skill",
+            "id": "stealth",
+            "to": 2
+          }
+        ]
+      },
+      "relationshipMap": {
+        "people": [
+          {
+            "id": "mira",
+            "name": "Mira Blackwell"
+          }
+        ],
+        "connections": [
+          {
+            "id": "favor",
+            "from": {
+              "kind": "character"
+            },
+            "to": {
+              "kind": "person",
+              "id": "mira"
+            },
+            "label": "Owes a favor"
+          }
+        ]
+      }
+    }
+  }
+}

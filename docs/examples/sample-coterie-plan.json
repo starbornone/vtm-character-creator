@@ -1,0 +1,40 @@
+{
+  "format": "vtm-character-creator-coterie-plan",
+  "schemaVersion": 1,
+  "ruleset": "vtm-v5",
+  "plan": {
+    "name": "The Lyric Night Shift",
+    "purpose": "Keep the Lyric open and protect the people who work there.",
+    "domain": {
+      "name": "The Lyric and Old Wharf",
+      "notes": "The theater, its back alley, and the street down to the east pier. Confirm access to the pier with the Storyteller.",
+      "chasse": 2,
+      "lien": 1,
+      "portillon": 1
+    },
+    "members": [
+      {
+        "id": "member-mara",
+        "name": "Mara Vale",
+        "relationships": {
+          "contacts": [
+            "Inez Varga (Sire)",
+            "Jo Reyes, the living stage manager (Touchstone)",
+            "Mira Blackwell"
+          ],
+          "connections": [
+            {
+              "from": "Mara Vale",
+              "label": "Owes a favor",
+              "to": "Mira Blackwell"
+            }
+          ]
+        }
+      },
+      {
+        "id": "member-rowan",
+        "name": "Rowan Pike"
+      }
+    ]
+  }
+}
