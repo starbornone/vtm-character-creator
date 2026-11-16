@@ -1,6 +1,6 @@
 # vtm-character-creator
 
-The Vampire: The Masquerade Character Creator is a browser guide in development for making V5 standard clan neonates. The first playable path takes a Brujah with the Alleycat Predator Type from concept and starting choices to a rules-checked review and printable character sheet. See [the product plan](PLAN.md) for first-release scope and implementation milestones.
+The Vampire: The Masquerade Character Creator is a browser guide in development for making V5 standard clan neonates. Build with the seven named Core Rulebook clans and ten Core Predator Types, then review and print the character sheet. Use manual entries for table-specific options and include their sources or notes for Storyteller review. See [the product plan](PLAN.md) for first-release scope and implementation milestones.
 
 ## Run locally
 

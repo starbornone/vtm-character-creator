@@ -2,7 +2,7 @@
 
 Build a guided Vampire: The Masquerade Fifth Edition (V5) creator that takes a player from character concept to a rules-checked starting sheet they can print or send to their Storyteller. Use Vite, React, TypeScript, Tailwind CSS, and shadcn/ui. Ship a static app with browser-local drafts and portable files. Store the rules edition in every draft and export. V5 is the proposed first edition. White Wolf’s V6 FAQ describes an alpha with materially different rules. [White Wolf’s V6 FAQ](https://www.paradoxinteractive.com/games/world-of-darkness/news/vtm-sixth-edition-faq) · [shadcn/ui Vite setup](https://ui.shadcn.com/docs/installation/vite)
 
-The first playable Brujah and Alleycat path now runs through **Review & Print**. See [Getting started](docs/getting-started.md) for the walkthrough and the [roadmap](roadmap/roadmap.json) for the remaining milestones.
+The core clan and Predator Type catalog is available through **Review & Print**. See [Getting started](docs/getting-started.md) for the walkthrough and the [roadmap](roadmap/roadmap.json) for the remaining milestones.
 
 ## What to take from the reference projects
 
@@ -18,14 +18,14 @@ Start with a general-purpose Core Rulebook creator for standard clan neonates. G
 
 | Step | What the player does and sees |
 | --- | --- |
-| **Concept and clan** | Record a concept, name, Ambition, and Desire. Set the chronicle name and any Storyteller guidance. Compare clans by their Disciplines, Bane, and Compulsion. Keep narrative fields easy to revisit. |
-| **Attributes and Skills** | Assign the V5 Attribute distribution, select a Skill distribution, and allocate its dots and Specialties. Display remaining slots by rating and the live Health and Willpower totals. |
-| **Disciplines and Predator Type** | Allocate clan Discipline dots and choose powers. Preview eligible Predator Types with their mandatory effects and choices. Update the ledger with granted dots, powers to select, Specialties, Advantages, Flaws, and any Humanity or Blood Potency changes. |
+| **Concept** | Record a concept, name, Ambition, and Desire. Set the chronicle name and any Storyteller guidance. Keep narrative fields easy to revisit. |
+| **Clan and Predator Type** | Compare clans by Disciplines, Bane, and Compulsion. Allocate clan Disciplines and powers, then choose an eligible Predator Type. Preview its grants before allocating Attributes and Skills. |
+| **Attributes and Skills** | Assign the V5 Attribute distribution, select a Skill distribution, and allocate its dots and Specialties. Display the remaining slots, live Health and Willpower totals, and how the Predator Type affects the selected Skill. |
 | **Advantages and Flaws** | Browse Backgrounds, Merits, and Flaws. Track the starting budgets and show Predator Type grants with their source. Review prerequisites and restrictions on individual purchases. |
 | **Humanity and relationships** | Record Convictions and their Touchstones, plus relevant connections such as the sire or coterie. Show Chronicle Tenets as shared table context. Keep these fields editable throughout the guide. |
 | **Starting XP and review** | Apply the neonate starting XP rules. Show each purchase and the balance. Review Generation, Blood Potency, Humanity, the complete sheet, and outstanding choices. Jump to the affected field and produce a print sheet, a backup, or a Storyteller handoff. |
 
-Keep a compact summary beside the editor on desktop and behind a clearly labeled control on mobile. Use shadcn/ui cards for steps, a combobox or dialog for searchable catalogs, and alerts with links to affected fields for review issues. Give dot controls visible numbers and keyboard support. Use charcoal surfaces, warm off-white type, and restrained oxblood accents. The print layout uses a light background and works in grayscale.
+Keep a compact summary beside the editor on desktop and behind a clearly labeled control on mobile. Use shadcn/ui cards for steps, labeled searchable pickers for catalogs, and alerts with links to affected fields for review issues. Give dot controls visible numbers and keyboard support. Use charcoal surfaces, warm off-white type, and restrained oxblood accents. The print layout uses a light background and works in grayscale.
 
 ## Rules and data
 

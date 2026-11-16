@@ -1,11 +1,11 @@
 # Project overview
 
-The Vampire: The Masquerade Character Creator is in development for players preparing a V5 vampire and Storytellers reviewing the starting build. The first playable guide connects narrative choices, the rules ledger, and a printable sheet for Brujah and Alleycat. Its Advantage and Flaw catalog covers the neonate fixture. The proposed first release covers standard clan neonates using the Core Rulebook. [Product plan](../PLAN.md)
+The Vampire: The Masquerade Character Creator is in development for players preparing a V5 vampire and Storytellers reviewing the starting build. The guide connects narrative choices, the rules ledger, and a printable sheet for standard clan neonates. It includes the seven named core clans, ten Core Predator Types and their eligibility rules, and a starting set of Advantages and Flaws. Manual clan, Predator Type, Advantage, and Flaw entries carry their source or note into Storyteller review. [Product plan](../PLAN.md)
 
 ## Player workflow
 
 1. Start with a character concept, Ambition, Desire, and clan. Record chronicle guidance as needed.
-2. Assign Attributes and Skills, select Disciplines and powers, and choose an eligible Predator Type. The live ledger explains each allocation and grant.
+2. Choose a clan, its Disciplines and powers, and an eligible Predator Type. Assign Attributes and Skills with the Predator Type’s grant visible in the ledger.
 3. Record Advantages, Flaws, Convictions, Touchstones, and relevant relationships. Apply starting XP and review the resulting sheet and any open Storyteller rulings.
 4. Open **Review & Print** to resolve open choices and print the character sheet. Named drafts, the Storyteller brief, JSON backups, and mechanical build links are later milestones.
 

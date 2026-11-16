@@ -2,7 +2,7 @@
 
 The first playable build uses the English V5 Core Rulebook, Renegade Game Studios’ 2022 second printing. **Core** below refers to the printed page numbers in that book. Renegade’s hardcover listing identifies the updated text as incorporating the earlier Core Rulebook errata and the V5 Companion errata. [Renegade Core Rulebook](https://renegadegamestudios.com/vampire-the-masquerade-5th-edition-roleplaying-game-core-rulebook/)
 
-Use the Companion’s Part IV (pp. 61–63) to trace incorporated changes. Use Renegade’s published Blood Potency correction as the reference for the current table on Core p. 216. At Blood Potency 1, the corrected values include a Blood Surge of two dice and Bane Severity 2. The Companion supplies errata for this build. Additional character options belong to the later catalog work. [World of Darkness Companion download](https://www.paradoxinteractive.com/games/world-of-darkness/community/free-content) · [Renegade Blood Potency correction](https://renegadegamestudios.com/content/File%20Storage%20for%20site/VTM/BloodPotencyTable.pdf)
+Use the Companion’s Part IV (pp. 61–63) to trace incorporated changes. Use Renegade’s published Blood Potency correction as the reference for the current table on Core p. 216. At Blood Potency 1, the corrected values include a Blood Surge of two dice and Bane Severity 2. The Companion supplies errata for this build. [World of Darkness Companion download](https://www.paradoxinteractive.com/games/world-of-darkness/community/free-content) · [Renegade Blood Potency correction](https://renegadegamestudios.com/content/File%20Storage%20for%20site/VTM/BloodPotencyTable.pdf)
 
 ## Attributes and Skills
 
@@ -17,6 +17,23 @@ Distributions count how many distinct traits have each rating. Remaining Skill r
 | Specialist | One Skill at 4, three at 3, three at 2, three at 1. | p. 136 |
 | Base Specialties | One freely assigned Specialty on a rated Skill. Each rated Academics, Craft, Performance, or Science also gets a Specialty when its first dot is assigned. | pp. 136, 145, 159–171 |
 | Specialty limit | Most Skills allow up to one Specialty per dot. Craft can have more Specialties than dots. | pp. 159–160 |
+
+## Core clan and Predator Type catalog
+
+The [catalog](../src/catalog/clan-path.ts) covers Brujah, Gangrel, Malkavian, Nosferatu, Toreador, Tremere, and Ventrue, with the three clan Disciplines, Bane, and Compulsion for each. Use Core pp. 65–103 and 210–211 for clan data. Powers through level three cover the Discipline ratings a standard neonate can reach with this starting allocation and XP budget. Use Core pp. 244–274 for powers and Amalgams. Fortitude’s Resilience adds the current Fortitude rating to Health (Core p. 258). A character with Blood Sorcery may choose one free level-one Ritual (Core pp. 272, 276–277).
+
+The ten Predator Types are Alleycat, Bagger, Blood Leech, Cleaver, Consensualist, Farmer, Osiris, Sandman, Scene Queen, and Siren. Their grants sit outside the base Advantage, Flaw, and Skill budgets. If a Predator Type grants a Specialty for an unrated Skill, it gives a dot in that Skill. Core pp. 136, 149, 175–178.
+
+| Choice | Starting rule | Core reference |
+| --- | --- | --- |
+| Bagger and Farmer | Ventrue cannot select either. Farmer also requires Blood Potency below 3. | pp. 176–177 |
+| Bagger and Osiris | Only Tremere may take their Blood Sorcery dot in the named Core catalog. | pp. 176–177 |
+| Blood Leech | Lose one Humanity, gain one Blood Potency, take Prey Exclusion (Mortals), and choose Diablerist or Shunned. | p. 176 |
+| Osiris | Split three dots between Fame and Herd, and two between Enemy and the named Mythic Flaws. | pp. 177, 182, 184–185 |
+| Scene Queen | Choose Disliked outside the scene or Prey Exclusion for another scene. | p. 178 |
+| Nosferatu | The Bane supplies Repulsive outside the base Flaw budget. The sheet flags the Siren’s Beautiful grant for Storyteller review and excludes it from the total. | pp. 85, 178–179 |
+
+Manual options record a source or table note. The evaluator applies the supported starting dot and grant structure and exposes the entry for Storyteller review. The published clan and Predator catalogs remain scoped to standard Core neonates. Caitiff, Thin-bloods, and other age profiles have separate starting rules.
 
 ## Hand-checked fixture
 
@@ -53,11 +70,11 @@ Presence provides a check on power eligibility. The second dot can take a distin
 
 Alleycat can grant Brawl (Grappling) or Intimidation (Stickups). If the selected Skill has zero base dots, grant one dot in the Skill in place of the Specialty. Keep it outside the starting distribution. On a rated Skill the granted Specialty counts toward the Skill’s Specialty limit. Core pp. 149, 159, 175–176.
 
-The clan and Predator Type selection covers Celerity and Potence through the third dot and Presence through the second. The XP editor can add a third Presence dot with an eligible power. Spark of Rage requires both Potence 3 and Presence 3. Selecting both Lingering Kiss and Unbondable leaves the conflicting purchase or base Advantage inactive until resolved. Core pp. 181, 244, 252–268 and Companion p. 62.
+Spark of Rage requires both Potence 3 and Presence 3. Selecting both Lingering Kiss and Unbondable leaves the conflicting purchase or base Advantage inactive until resolved. Core pp. 181, 244, 265, 267 and Companion p. 62.
 
 ### Ordered starting XP
 
-The starting XP editor supports Attribute dots, Skill dots, Specialties, clan Discipline dots with a power, and the listed Advantages. Each Attribute or clan Discipline dot costs five times the new rating. A Skill dot costs three times the new rating, a Specialty costs 3 XP, and an Advantage costs 3 XP per dot added. A rise from Blood Potency 1 to 2 costs 20 XP, over the neonate’s 15 XP budget. Core pp. 130, 137, 214, 244.
+The starting XP editor supports Attribute dots, Skill dots, Specialties, Discipline dots with a power, and the listed Advantages. Each Attribute or clan Discipline dot costs five times the new rating. An out-of-clan Discipline already granted by the Predator Type costs seven times the new rating. A Skill dot costs three times the new rating, a Specialty costs 3 XP, and an Advantage costs 3 XP per dot added. Increasing Blood Potency costs ten times the new rating, above the neonate’s 15 XP budget. Core pp. 130, 137, 214, 244.
 
 | Purchase | New rating | XP cost | XP remaining |
 | --- | ---: | ---: | ---: |
@@ -68,3 +85,5 @@ The starting XP editor supports Attribute dots, Skill dots, Specialties, clan Di
 The finished sheet shows Stealth 2 and Drive 2. The base allocation stays Balanced with Stealth 0 and Drive 1. Track the XP increases separately from the base Skill dots so the same fixture can verify both stages. The final sheet has Health 6, Willpower 5, Humanity 6, Blood Potency 1, Bane Severity 2, 10 total Advantage dots, 2 Flaw dots, and 0 XP left.
 
 The [ledger test](../tests/trait-ledger.test.ts) exercises the base allocation and its two Specialties. The [clan path test](../tests/clan-path.test.ts) verifies the third Specialty, Potence increase, Contacts, and Humanity adjustment. The [starting XP test](../tests/starting-xp.test.ts) verifies the final budgets, generation, Blood Potency, and purchases, including what happens when purchases are reordered. The [guide test](../tests/character-guide.test.ts) checks that the shared review and print model contains Mara’s narrative, final ratings, powers, and applied purchases.
+
+The [catalog tests](../tests/core-catalog.test.ts) cover every named clan and Predator Type, including a complete Tremere Bagger path, out-of-clan XP, grant budgets, and Storyteller review entries.

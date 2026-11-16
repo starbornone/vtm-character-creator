@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T14:46:18+11:00",
+  "updatedAt": "2026-11-16T15:08:05+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -77,6 +77,13 @@
       "group": "Guide",
       "notes": "Verified Mara Vale through all six guide steps and compared her evaluated sheet with one-page US Letter and A4 printouts. Confirmed that an unfinished sheet retains its Draft label in print.",
       "completedAt": "2026-11-16T14:46:18+11:00"
+    },
+    {
+      "id": "expand-core-option-catalog",
+      "title": "Expand the core option catalog",
+      "group": "Catalog",
+      "notes": "Added and tested all seven named Core clans and ten Predator Types, source-tagged searchable pickers, and manual entries for Storyteller review. Verified a complete Tremere Bagger build, Ventrue restrictions, and Osiris allocations in the browser.",
+      "completedAt": "2026-11-16T15:08:05+11:00"
     }
   ]
 }
