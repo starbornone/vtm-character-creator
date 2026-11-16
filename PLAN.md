@@ -33,7 +33,7 @@ Keep the engine in `src/rules/` and source-tagged catalogs in `src/catalog/`. Gi
 
 Represent base allocations, grants, and XP purchases explicitly. Each ledger entry identifies its origin and each validation issue points to the affected step or choice. Treat a missing required choice as incomplete, an illegal allocation as a rules error, and a manual or table-dependent entry as a Storyteller review item. When a player changes clan, Skill distribution, or Predator Type, preserve affected choices for review, exclude the ineligible ones from totals, and explain how to resolve them. The completion indicator, preview, and print view all use the same evaluated sheet.
 
-Use the [pinned Core Rulebook printing, errata, and hand-checked fixtures](docs/v5-rules.md) when entering rule data. Verify additional dot allocations, Specialty eligibility and grants, Discipline power levels and Amalgam prerequisites, Predator Type exceptions, generation and age defaults, starting budgets, and XP costs against those sources as coverage expands. Test order-sensitive XP purchases and Blood Potency limits.
+Use the [pinned V5 sources, errata, and hand-checked fixtures](docs/v5-rules.md) when entering rule data. Verify additional dot allocations, Specialty eligibility and grants, Discipline power levels and Amalgam prerequisites, Predator Type exceptions, generation and age defaults, starting budgets, and XP costs against those sources as coverage expands. Test order-sensitive XP purchases and Blood Potency limits.
 
 ## Drafts, sharing, and print
 
@@ -57,7 +57,7 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 
 1. Extend standard-clan creation by age profile. The fledgling and ancilla paths are implemented and verified against [Rowan Pike](docs/v5-rules.md#rowan-pike-fledgling-fixture) and [Silas Ward](docs/v5-rules.md#silas-ward-ancilla-fixture). First-release neonate drafts, backups, and build links still resolve as neonates.
 2. Model age and clan or blood status independently. Caitiff and Thin-blood creation are implemented and verified against [Nessa Reed](docs/v5-rules.md#nessa-reed-caitiff-fixture) and [Iris Calder](docs/v5-rules.md#iris-calder-thin-blood-fixture).
-3. Add an opt-in Player’s Guide source pack. Start with a documented set of options and the prerequisites and grants needed to finish those builds. Keep the Core selection available as the default. [Renegade’s V5 Player’s Guide](https://renegadegamestudios.com/pdf-vampire-the-masquerade-roleplaying-game-5th-edition-players-guide/)
+3. The opt-in Player’s Guide pack is implemented with the Ministry, Extortionist, Montero, Pursuer, Chimerstry, and Fata Morgana. [Elias Voss](docs/v5-rules.md#elias-voss-mixed-source-fixture) verifies the mixed-source path. Core remains the default. [Renegade’s V5 Player’s Guide](https://renegadegamestudios.com/pdf-vampire-the-masquerade-roleplaying-game-5th-edition-players-guide/)
 4. Add an XP advancement journal that uses the finished character as its baseline and records earned and spent XP separately from creation.
 
 Consider chronicle presets and a table reference before the Relationship Map and shared coterie and Domain planner. Scope Foundry export around its target system and import format. Revisit access and data ownership before planning a private Storyteller workspace. Use player and Storyteller feedback from the live release to refine priorities as it arrives. The [roadmap](roadmap/roadmap.json) tracks the ordered implementation queue.

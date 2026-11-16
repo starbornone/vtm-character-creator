@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T20:46:51+11:00",
+  "updatedAt": "2026-11-16T21:17:19+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -147,6 +147,13 @@
       "group": "Creation profiles",
       "notes": "Added Core Thin-blood fledgling creation with matched Merits and Flaws, Clan Curse, Discipline Affinity, and starting Alchemy. Verified Iris Calder through browser review, a one-page US Letter print, JSON restore and reload, and a read-only build link. Confirmed that incompatible ages and trait combinations are flagged and that older drafts remain readable.",
       "completedAt": "2026-11-16T20:46:51+11:00"
+    },
+    {
+      "id": "add-players-guide-source-pack",
+      "title": "Add an opt-in Player’s Guide source pack",
+      "group": "Catalog",
+      "notes": "Added the Ministry, Extortionist, Montero, Pursuer, Chimerstry, and Fata Morgana with source references, grants, and prerequisites. Verified Elias Voss through browser review, JSON restore and reload, and a mechanical link. Both previews distinguished disabled selections from unknown source IDs. Core remains the default.",
+      "completedAt": "2026-11-16T21:17:19+11:00"
     }
   ]
 }

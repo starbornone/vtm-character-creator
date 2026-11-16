@@ -47,7 +47,13 @@ In **Review & Print**, select **Storyteller brief**. The Markdown preview includ
 
 Choose the narrative sections you want to share. Character identity and chronicle, Ambition and Desire, Convictions and Touchstones, relationships and Chronicle Tenets, and custom names and Storyteller notes each start unchecked. Manual options and custom Specialties use generic labels in the default brief, while their ratings, costs, and review flags remain visible. Select **Download Markdown** to save the text shown in the preview as `storyteller-brief.md`.
 
-## Choose options from the Core catalog
+## Enable the Player’s Guide
+
+New drafts start with the Core catalog. In **Concept**, use **Rule sources** to enable the Player’s Guide for the current draft. Source tags include page references. Switch the pack off to return to Core choices. Saved pack choices stay in the draft and can take effect again when enabled.
+
+A supported pack enabled in a backup or link is active in its preview and saved with the new copy. If the pack is disabled and the draft still uses its options, the preview flags the open choices. A preview that names an unavailable pack ID requires a creator that supports it to restore or save the character.
+
+## Choose options from the catalog
 
 Under **Clan & Predator Type**, use the search fields to filter the pickers by option name or source page. Caitiff and Thin-blood are dedicated options alongside the named clans. The picker shows eligibility restrictions. Once you choose a Predator Type, complete its Specialty, Discipline power, and any additional grant choices. Characters with Blood Sorcery can select an optional starting level-one Ritual.
 
@@ -95,6 +101,12 @@ In **Concept**, choose **Fledgling**. In **Clan & Predator Type**, select **Thin
 
 Follow the fixture’s trait allocation and choose 15th Generation in **Advantages & XP**. Fill the regular 7 Advantage and 2 Flaw dots separately from the Thin-blood choices. Complete **Relationships**, then confirm Blood Potency 0, Fortitude 1, and the starting formula in **Review & Print**. Print the sheet and download a backup to restore as a new draft.
 
+## Build Elias Voss with both sources
+
+Enable the Player’s Guide in **Concept** and follow the [Elias Voss fixture](v5-rules.md#elias-voss-mixed-source-fixture). Set Obfuscate to 2 and Presence to 1 before choosing Chimerstry. Under **Extortionist Backgrounds**, assign two dots to Contacts and one to Resources, then choose the escaped victim as the Enemy. Buy Obfuscate 3 with Mask of a Thousand Faces for 15 XP.
+
+In **Review & Print**, confirm the Player’s Guide source, Obfuscate 3 with Chimerstry, and 10 total Advantage and 4 total Flaw dots. Download the backup and restore it as a new draft or open the mechanical build link to see the same ratings.
+
 ## Verify the production build
 
 ```sh
@@ -103,6 +115,6 @@ npm run build
 npm run preview
 ```
 
-The tests check the complete Mara, Rowan, Silas, Nessa, and Iris sheets, age profile compatibility, core path and grant rules, browser draft storage, JSON backup round-trips, the build link allowlist, and narrative opt-ins for the Storyteller brief. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
+The tests check the complete Mara, Rowan, Silas, Nessa, Iris, and Elias sheets, age profile compatibility, core path and grant rules, browser draft storage, JSON backup round-trips, the build link allowlist, and narrative opt-ins for the Storyteller brief. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
 
 See the [overview](overview.md) for first-release scope and [Development](development.md) for contributor checks.

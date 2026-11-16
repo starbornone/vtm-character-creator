@@ -4,6 +4,8 @@ The first playable build uses the English V5 Core Rulebook, Renegade Game Studio
 
 Use the Companion’s Part IV (pp. 61–63) to trace incorporated changes. Use Renegade’s published Blood Potency correction as the reference for the current table on Core p. 216. At Blood Potency 1, the corrected values include a Blood Surge of two dice and Bane Severity 2. The Companion supplies errata for this build. [World of Darkness Companion download](https://www.paradoxinteractive.com/games/world-of-darkness/community/free-content) · [Renegade Blood Potency correction](https://renegadegamestudios.com/content/File%20Storage%20for%20site/VTM/BloodPotencyTable.pdf)
 
+The optional source pack uses Renegade Game Studios’ English 2023 V5 Player’s Guide. The catalog tags each additional option with its book and printed page. [Renegade Player’s Guide](https://renegadegamestudios.com/pdf-vampire-the-masquerade-roleplaying-game-5th-edition-players-guide/)
+
 ## Attributes and Skills
 
 Distributions count how many distinct traits have each rating. Remaining Skill ratings start at zero. Calculate Health and Willpower from the current Attribute ratings.
@@ -182,3 +184,34 @@ Iris Calder is a 15th-Generation Thin-blood fledgling and night bicycle mechanic
 | Final tracks | Health 7 (Stamina 3 + 3 + Fortitude 1 from Resilience), Willpower 5 (Composure 3 + Resolve 2), Humanity 7, Blood Potency 0, one Blood Surge die, and 0 XP spent or remaining. |
 
 The [fixture](../tests/fixtures/iris-calder.ts) and [Thin-blood tests](../tests/thin-blood-creation.test.ts) cover the hand calculations, incompatible selections, preserved draft inputs, and transfers. The browser walkthrough confirmed the unsupported-age warning and incompatible Lifelike and Dead Flesh pair, the completed review, a one-page US Letter print, a separate JSON backup restore and reload, and the read-only build link.
+
+## Player’s Guide source pack
+
+The initial pack covers the entries below. It uses the Core age profiles, dot budgets, and XP rules. Other Player’s Guide clans, Predator Types, Bane variants, Discipline powers, Oblivion and its Ceremonies, and supplemental Thin-blood options remain outside this catalog.
+
+| Option | Creation choices and effects | Player’s Guide reference |
+| --- | --- | --- |
+| Ministry | Obfuscate, Presence, and Protean are clan Disciplines. The Bane is Abhors the Light and the Compulsion is Transgression. | pp. 35–36 |
+| Extortionist | Choose Intimidation (Coercion) or Larceny (Security), and a dot of Dominate or Potence. Split three dots between Contacts and Resources. Choose the police or an escaped victim as a two-dot Enemy. | p. 107 |
+| Montero | Choose Leadership (Hunting Pack) or Stealth (Stakeout), and a dot of Dominate or Obfuscate. Add Retainers 2 and reduce Humanity by one. | p. 108 |
+| Pursuer | Choose Investigation (Profiling) or Stealth (Shadowing), and a dot of Animalism or Auspex. Add Bloodhound 1 and Contacts 1, and reduce Humanity by one. | pp. 108–109 |
+| Chimerstry | Obfuscate level 2 with Presence 1 as its Amalgam prerequisite. | p. 76 |
+| Fata Morgana | Obfuscate level 3 with Presence 2 as its Amalgam prerequisite. | p. 77 |
+
+The same age and grant restrictions apply to the additional Predator Types. Predator grants sit outside the base dot budgets. An Extortionist Resources grant contributes to the total Resources rating and its cap.
+
+## Elias Voss mixed-source fixture
+
+Elias Voss is a 13th-Generation Ministry neonate and night market broker in *The Closing Bell*, Embraced in 2001. His Ambition is to keep the market in local hands and his Desire is to return a borrowed key before dawn. The Chronicle Tenet is to keep bargains made in good faith. The Conviction “Keep the market open to outsiders” is tied to Tess Lark, a living stallholder.
+
+| Category | Choices and expected results |
+| --- | --- |
+| Attributes | Strength 2, Dexterity 3, Stamina 3, Charisma 4, Manipulation 2, Composure 3, Intelligence 1, Wits 2, Resolve 2. |
+| Balanced Skills | 3 in Larceny, Persuasion, and Stealth. 2 in Awareness, Insight, Intimidation, Streetwise, and Subterfuge. 1 in Athletics, Brawl, Drive, Etiquette, Investigation, Medicine, and Occult. All others start at 0. |
+| Clan | Obfuscate 2 with Core Cloak of Shadows and Player’s Guide Chimerstry. Presence 1 with Core Awe meets the Amalgam prerequisite. |
+| Predator Type | Extortionist grants Larceny (Security), Potence 1 with Core Lethal Body, Contacts 2, Resources 1, and Enemy (Escaped victim) 2. The free Specialty is Persuasion (Negotiation). |
+| Advantages and Flaws | Base Haven 2 + Mask 2 + Resources 3 = 7 Advantage dots. Stake Bait supplies 2 base Flaw dots. Grants bring Resources to 4, and the sheet to 10 Advantage and 4 Flaw dots. |
+| Starting XP | Buy Obfuscate 3 with Core Mask of a Thousand Faces for 15 XP, leaving 0. |
+| Final tracks | Health 6 (Stamina 3 + 3), Willpower 5 (Composure 3 + Resolve 2), Humanity 7, Blood Potency 1, Bane Severity 2, and two Blood Surge dice. |
+
+The [fixture](../tests/fixtures/elias-voss.ts) and [Player’s Guide tests](../tests/players-guide.test.ts) check the calculations, Amalgam prerequisites, grant choices, and the Core-only result. Browser checks covered opt-in, a complete review, JSON restore and reload, and a read-only build link. Both previews flagged the disabled selections and named an unknown source pack.

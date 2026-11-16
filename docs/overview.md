@@ -13,7 +13,7 @@ Name a browser draft at any step to autosave it. Each saved character resumes at
 
 ## Release boundaries
 
-The first release covers one vampire at a time and the seven named core clans. The supported workflow includes manual entries where the core rules can represent the choice. Those entries carry a Storyteller review flag. The fledgling profile gives newly Embraced characters room to develop a Predator Type during play. The ancilla profile adds a larger starting XP and dot budget. Caitiff can choose any two Core Disciplines, use their own XP rate, and start with Suspect. Thin-blood creation covers the Core fledgling path. The opt-in Player’s Guide source pack is next. Drafts stay in the browser until players export or share them.
+The first release covers one vampire at a time and the seven named core clans. The supported workflow includes manual entries where the core rules can represent the choice. Those entries carry a Storyteller review flag. The fledgling profile gives newly Embraced characters room to develop a Predator Type during play. The ancilla profile adds a larger starting XP and dot budget. Caitiff can choose any two Core Disciplines, use their own XP rate, and start with Suspect. Thin-blood creation covers the Core fledgling path. The optional Player’s Guide pack adds a documented set of clan, Predator Type, and power choices. The post-creation XP advancement journal is next. Drafts stay in the browser until players export or share them.
 
 See [First-release verification](release-verification.md) for the browser, print, and public notice checks.
 

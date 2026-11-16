@@ -76,4 +76,12 @@ The brief shows evaluated mechanics and open rulings with generic labels for man
 
 **Consequences.** The sheet records the starting choices and leaves feeding-based temporary powers and later Alchemy advancement to play. Version 4 carries the structured choices in backups and mechanical links. Changing blood status preserves prior draft inputs for a switch back.
 
+## 10 Per-draft opt-in sources and preview behavior
+
+**Context.** The Core catalog is the default. A player can share a draft that depends on additional rules or switch a source off during creation.
+
+**Decision.** Store enabled source pack IDs with the draft and evaluate catalog selections under that manifest. Keep disabled selections in backups and retain supported mechanical options in links. If a preview receives a manifest with an unknown source pack, show the pack ID and withhold save or restore until the creator supports it.
+
+**Consequences.** Turning the Player’s Guide off leaves affected choices open and removes their effects. Re-enabling it replays the saved selections. Version 5 carries source data. Core-only characters keep their original format and rules.
+
 See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the full flow.
