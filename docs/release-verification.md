@@ -16,13 +16,26 @@ Verified the release candidate on 16 November 2026 with Node.js 24, Vite’s pro
 
 In the local production preview, Enter and Space on two Concept issues focused Ambition and Desire separately. Tab advanced from Ambition. The Skill distribution issue focused its heading. At 390 × 844, the base Flaws and Starting XP issues moved focus to their targets and scrolled them into view without horizontal overflow.
 
-Restoring [Mara Vale’s handoff draft](examples/mara-vale-handoff-draft.json) left one open issue and 6 starting XP. Brave’s one-page print preview showed **Draft · Open choices**. Following the XP issue and buying Drive 2 spent the final 6 XP, cleared the review list, and removed the label from the shared review and print sheet. Browser automation stopped before the second native print preview could be inspected.
+Restoring [Mara Vale’s handoff draft](examples/mara-vale-handoff-draft.json) left one open issue and 6 starting XP. Brave’s one-page print preview showed **Draft · Open choices**. Following the XP issue and buying Drive 2 spent the final 6 XP, cleared the review list, and removed the label from the shared review and print sheet. The [expanded print check](#expanded-character-sheet-printing) confirmed both states in PDFs.
 
 ## Live character summary
 
 In the local production preview at 1440 × 900, the summary sat beside the editor. Switching to Fledgling showed 0 starting XP and hid Predator Type. Switching back to Neonate and selecting Brujah and Alleycat showed Humanity 6. Setting Stamina to 3, Composure to 2, and Resolve to 3 showed Health 6 and Willpower 5. Completing the Conviction and Touchstone updated section progress.
 
 At 390 × 844, Tab reached the collapsed summary, Space opened it, and Enter closed it while keeping focus on the button. The open card fit above the editor without horizontal overflow. A copy of [Mara’s handoff draft](examples/mara-vale-handoff-draft.json) saved at **Advantages & XP** restored at that step. The summary showed Neonate, Brujah, Alleycat, Health 6, Willpower 5, Humanity 6, Blood Potency 1, 6 starting XP remaining, and 4 of 5 sections complete. Buying Drive 2 changed the balance to 0 and progress to 5 of 5. Both values persisted across a step change and a named-draft reload.
+
+## Expanded character sheet printing
+
+Rendered eight PDFs from the local Vite production build with Chrome’s print renderer. Each case used the app’s **Review & Print** screen loaded from a fixture in isolated browser storage. The tests set the paper size to US Letter or A4 and kept the app’s print margins and styles. Checked page dimensions and extracted text, then inspected the rendered pages for clipping, overlap, and page breaks.
+
+| Fixture | US Letter | A4 | Printed result |
+| --- | --- | --- | --- |
+| [Mara Vale](examples/mara-vale-handoff-draft.json), before her final purchase | 1 page | 1 page | **Draft · Open choices**, 9 starting XP spent, and 6 remaining. |
+| Mara Vale, after buying Drive 2 | 1 page | 1 page | Drive 2 and its 6 XP cost appeared. The balance was 15 spent and 0 remaining. The Draft marker was gone. |
+| [Iris Calder](v5-rules.md#iris-calder-thin-blood-fixture) | 1 page | 1 page | 15th Generation, Health 7, Willpower 5, Blood Potency 0, Fortitude 1 with Resilience, Fixatio and Haze, and all selected Thin-blood Merits and Flaws. |
+| [Mara Vale with advancement](v5-rules.md#mara-vale-advancement-fixture) | 1 page | 1 page | Health 7, both rank-three Discipline powers, the Catwalks Specialty, all four advancement purchases, and separate starting and advancement XP balances. The advancement total was 55 earned, 53 spent, and 2 remaining. |
+
+The initial advancement sheet split Beliefs & Relationships onto a second page on Letter and left just the Conviction and Touchstone on page two on A4. Tightening print spacing kept all of the fixture’s sections on one page at both sizes with the same text size. The print stylesheet also keeps Beliefs & Relationships together when the section fits on a page. Editing controls and the site footer stayed off the printed sheets.
 
 ## Public site
 

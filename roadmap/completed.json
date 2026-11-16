@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-17T00:19:09+11:00",
+  "updatedAt": "2026-11-17T00:26:20+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -231,6 +231,13 @@
       "group": "Guide usability",
       "notes": "Added a desktop summary and mobile disclosure powered by the existing evaluator. Verified live age, clan, Predator Type, track, XP, and progress changes across editing steps, Tab, Space, and Enter at 390 px, and all expected values when restoring and reloading the named Mara Vale draft.",
       "completedAt": "2026-11-17T00:19:09+11:00"
+    },
+    {
+      "id": "verify-expanded-character-sheet-print-output",
+      "title": "Verify print output for incomplete and expanded character builds",
+      "group": "Print verification",
+      "notes": "Verified eight PDFs from the production review screen. The Draft marker appeared before the final 6 XP purchase and cleared after it on Letter and A4. Tightened print spacing to avoid a nearly empty second page. Both the Thin-blood and advancement fixtures printed on one readable page per size with complete sections and expected ratings and XP.",
+      "completedAt": "2026-11-17T00:26:20+11:00"
     }
   ]
 }

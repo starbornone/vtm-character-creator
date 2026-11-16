@@ -68,10 +68,11 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 11. The [Storyteller brief preview](docs/getting-started.md#export-a-storyteller-brief) shows **Open Rulings** alongside the Markdown on desktop and above it on a narrow screen. The same rulings appear in the download with the selected narrative options.
 12. The two [JSON restore controls](docs/getting-started.md#back-up-and-restore-a-draft) identify a valid file meant for the other tool and name the matching control.
 13. The [live character summary](docs/getting-started.md#check-the-live-character-summary) shows key choices, current tracks, starting XP, and section progress while editing. It appears beside the desktop editor and opens through a labeled control on mobile.
+14. [Expanded print checks](docs/release-verification.md#expanded-character-sheet-printing) confirmed the Draft marker before and after Mara’s last purchase and verified the Thin-blood and advancement fixtures on US Letter and A4.
 
 ## Next priorities
 
-1. **Recheck print output for expanded character builds.** Compare actual print previews or PDFs of Mara’s sheet before and after resolving her final open choice. Then check a Thin-blood sheet and a completed sheet with advancement on US Letter and A4 for readable ratings, complete sections, and sensible page breaks. [Previous print checks](docs/release-verification.md#review-issue-navigation)
+The local guide, handoff, and print items are complete. The remaining roadmap items are deferred.
 
 ### Deferred external handoff feedback
 
