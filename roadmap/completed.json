@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T14:14:41+11:00",
+  "updatedAt": "2026-11-16T14:30:29+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -63,6 +63,13 @@
       "group": "Rules",
       "notes": "Support one clan and one eligible Predator Type with Discipline allocation, powers, mandatory grants, dependent choices, and validation.",
       "completedAt": "2026-11-16T14:14:41+11:00"
+    },
+    {
+      "id": "evaluate-advantages-flaws-and-starting-xp",
+      "title": "Evaluate Advantages, Flaws, and starting XP",
+      "group": "Rules",
+      "notes": "Track starting budgets and ordered purchases. Verify Generation, Humanity, Blood Potency, and the XP balance for the first fixture.",
+      "completedAt": "2026-11-16T14:30:29+11:00"
     }
   ]
 }

@@ -10,11 +10,12 @@ interface AllocationEditorProps<Id extends AttributeId | SkillId> {
   allocation: ReturnType<typeof evaluateTraitLedger>['attributes']
   onChange: (id: Id, rating: Rating | undefined) => void
   skillGrant?: { skill: SkillId; source: string }
+  finalRatings?: Partial<Record<Id, number>>
   children?: ReactNode
 }
 
 export function AllocationEditor<Id extends AttributeId | SkillId>({
-  kind, groups, values, allocation, onChange, skillGrant, children,
+  kind, groups, values, allocation, onChange, skillGrant, finalRatings, children,
 }: AllocationEditorProps<Id>) {
   const { slots, open, excess } = allocation
   const heading = kind === 'attributes' ? 'Attributes' : 'Skills'
@@ -53,12 +54,17 @@ export function AllocationEditor<Id extends AttributeId | SkillId>({
                 {group.ids.map(id => {
                   const current = values[id]
                   const overfilled = slots.some(slot => slot.rating === current && slot.remaining < 0)
+                  const granted = id === skillGrant?.skill ? 1 : 0
+                  const final = finalRatings?.[id] ?? 0
+                  const xpDots = final - (current ?? 0) - granted
 
                   return (
                     <div key={id} className="flex min-h-12 items-center justify-between gap-2 py-1.5">
                       <div>
                         <label htmlFor={id} className="text-sm font-medium">{traitLabel(id)}</label>
-                        {id === skillGrant?.skill && <p className="text-xs text-muted-foreground">1 total · {skillGrant.source} +1</p>}
+                        {(granted > 0 || xpDots > 0) && <p className="text-xs text-muted-foreground">
+                          {final || granted} total{granted > 0 && ` · ${skillGrant?.source} +1`}{xpDots > 0 && ` · XP +${xpDots}`}
+                        </p>}
                       </div>
                       <select
                         id={id}

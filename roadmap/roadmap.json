@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T14:14:41+11:00",
+  "updatedAt": "2026-11-16T14:30:29+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -9,12 +9,6 @@
     "summary": "A planned browser-based Vampire: The Masquerade V5 creator for standard clan neonates with a live rules ledger, local drafts, and printable sheets."
   },
   "items": [
-    {
-      "id": "evaluate-advantages-flaws-and-starting-xp",
-      "title": "Evaluate Advantages, Flaws, and starting XP",
-      "group": "Rules",
-      "notes": "Track starting budgets and ordered purchases. Verify Generation, Humanity, Blood Potency, and the XP balance for the first fixture."
-    },
     {
       "id": "complete-first-character-guide",
       "title": "Complete the first character guide and print sheet",

@@ -48,12 +48,13 @@ interface ClanPathEditorProps {
   draft: ClanPathDraft
   path: ReturnType<typeof evaluateClanPath>
   predatorGrant: ReturnType<typeof evaluateTraitLedger>['specialties']['predatorGrant']
+  finalRatings?: Partial<Record<DisciplineId, number>>
   onChange: (update: Partial<ClanPathDraft>) => void
 }
 
 const disciplineChoices = (ids: readonly DisciplineId[], excluded?: string) => ids.map(id => ({ id, label: disciplines[id], disabled: id === excluded }))
 
-export function ClanPathEditor({ draft, path, predatorGrant, onChange }: ClanPathEditorProps) {
+export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onChange }: ClanPathEditorProps) {
   const { clan, predator, clanSlots, predatorSlot, humanity, ledger } = path
   const grantLabel = predatorGrant && (predatorGrant.kind === 'skill-dot'
     ? `${traitLabel(predatorGrant.skill)} +1 · Skill dot from ${predator?.name}`
@@ -116,10 +117,14 @@ export function ClanPathEditor({ draft, path, predatorGrant, onChange }: ClanPat
         </div>
 
         {clan && <dl aria-label="Discipline totals" className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-          {ledger.map(row => <div className="rounded-lg bg-background/60 px-3 py-2" key={row.discipline}>
-            <dt className="font-medium">{disciplines[row.discipline]}</dt>
-            <dd className="mt-0.5 text-sm text-muted-foreground">{row.total} total · {clan.name} {row.clanDots} · {predator?.name ?? 'Predator Type'} {row.predatorDots}</dd>
-          </div>)}
+          {ledger.map(row => {
+            const total = finalRatings?.[row.discipline] ?? row.total
+            const xpDots = total - row.total
+            return <div className="rounded-lg bg-background/60 px-3 py-2" key={row.discipline}>
+              <dt className="font-medium">{disciplines[row.discipline]}</dt>
+              <dd className="mt-0.5 text-sm text-muted-foreground">{total} total · {clan.name} {row.clanDots} · {predator?.name ?? 'Predator Type'} {row.predatorDots}{xpDots > 0 && ` · XP +${xpDots}`}</dd>
+            </div>
+          })}
         </dl>}
       </CardContent>
     </Card>
