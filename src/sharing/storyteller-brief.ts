@@ -9,6 +9,7 @@ export const briefNarrativeSections = {
 } as const
 
 export type BriefNarrative = Partial<Record<keyof typeof briefNarrativeSections, boolean>>
+export const noOpenRulings = 'None outstanding.'
 
 function inline(value: string | number) {
   return String(value).trim().replace(/\s*[\r\n]+\s*/g, ' ')
@@ -21,7 +22,7 @@ function details(rows: readonly Detail[]) {
   return rows.flatMap(([label, value]) => value === undefined || value === '' ? [] : [`- **${label}:** ${inline(value)}`])
 }
 
-export function makeStorytellerBrief(draft: CharacterDraft, narrative: BriefNarrative = {}) {
+export function buildStorytellerBrief(draft: CharacterDraft, narrative: BriefNarrative = {}) {
   const { sheet, pending, starting, advancement } = evaluateCharacter(draft, { includeCustomText: narrative.custom === true })
   const { identity, tracks, relationships, thinBlood } = sheet
   const lines = ['# Storyteller Brief', '', 'Vampire: The Masquerade · Fifth Edition', '']
@@ -87,21 +88,23 @@ export function makeStorytellerBrief(draft: CharacterDraft, narrative: BriefNarr
     ...sheet.advancement.purchases.map(entry => `- ${inline(entry.label)} · ${entry.cost} XP`),
   ])
 
-  const rulings: string[] = []
+  const rulings: { label: string; text: string }[] = []
   for (const step of guideSteps) {
     if (step.id === 'clan' || step.id === 'traits' || step.id === 'starting') {
-      for (const issue of pending[step.id]) rulings.push(`- **${step.title}:** ${inline(issue)}`)
+      for (const issue of pending[step.id]) rulings.push({ label: step.title, text: issue })
     }
   }
   for (const entry of starting.entries) {
-    if (entry.issue) rulings.push(`- **XP purchase:** ${inline(entry.label)} · ${inline(entry.issue)}`)
+    if (entry.issue) rulings.push({ label: 'XP purchase', text: `${entry.label} · ${entry.issue}` })
   }
-  if (advancement?.paused) rulings.push('- **Advancement XP:** Resume the journal after resolving the open creation choices.')
+  if (advancement?.paused) rulings.push({ label: 'Advancement XP', text: 'Resume the journal after resolving the open creation choices.' })
   for (const entry of advancement?.entries ?? []) {
-    if (entry.issue) rulings.push(`- **Advancement purchase:** ${inline(entry.label)} · ${inline(entry.issue)}`)
+    if (entry.issue) rulings.push({ label: 'Advancement purchase', text: `${entry.label} · ${entry.issue}` })
   }
-  for (const review of new Set(sheet.reviews)) rulings.push(`- **Storyteller review:** ${inline(review)}`)
-  section('## Open Rulings', rulings.length ? rulings : ['None outstanding.'])
+  for (const review of new Set(sheet.reviews)) rulings.push({ label: 'Storyteller review', text: review })
+  section('## Open Rulings', rulings.length
+    ? rulings.map(({ label, text }) => `- **${label}:** ${inline(text)}`)
+    : [noOpenRulings])
 
   if (narrative.motivations) section('## Ambition & Desire', details([['Ambition', identity.ambition], ['Desire', identity.desire]]))
   if (narrative.convictions) section('## Convictions & Touchstones', relationships.convictions.flatMap(pair =>
@@ -112,5 +115,9 @@ export function makeStorytellerBrief(draft: CharacterDraft, narrative: BriefNarr
     ['Sire', relationships.sire], ['Coterie', relationships.coterie], ['Chronicle Tenets', relationships.tenets],
   ]))
 
-  return lines.join('\n')
+  return { markdown: lines.join('\n'), rulings }
+}
+
+export function makeStorytellerBrief(draft: CharacterDraft, narrative: BriefNarrative = {}) {
+  return buildStorytellerBrief(draft, narrative).markdown
 }

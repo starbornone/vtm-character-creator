@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { initialCharacterDraft, type CharacterDraft } from '../src/rules/character-guide.ts'
-import { makeStorytellerBrief } from '../src/sharing/storyteller-brief.ts'
+import { buildStorytellerBrief, makeStorytellerBrief } from '../src/sharing/storyteller-brief.ts'
 import { maraCharacter } from './fixtures/mara-vale.ts'
 
 test('the default brief keeps evaluated mechanics and omits authored text', () => {
@@ -65,15 +65,23 @@ test('an unfinished brief reports mechanical choices and rejected XP separately 
   const draft: CharacterDraft = {
     ...initialCharacterDraft,
     starting: {
-      ...initialCharacterDraft.starting, purchases: [{ kind: 'specialty', id: 'brawl', name: 'Private XP Specialty' }],
+      ...initialCharacterDraft.starting, purchases: [{ kind: 'specialty', id: 'brawl', name: '[Private XP Specialty]' }],
     },
   }
-  const brief = makeStorytellerBrief(draft)
+  const { markdown: brief, rulings } = buildStorytellerBrief(draft)
   assert.match(brief, /\*\*Health:\*\* Unassigned/)
   assert.match(brief, /0 XP spent · 15 XP remaining/)
   assert.match(brief, /## Open Rulings[\s\S]+Choose a clan\./)
   assert.match(brief, /\*\*XP purchase:\*\* Brawl Specialty · This Skill needs at least one dot\./)
   assert.doesNotMatch(brief, /Private XP Specialty|fill in character name/i)
+  assert.deepEqual(rulings.find(({ label }) => label === 'XP purchase'), {
+    label: 'XP purchase', text: 'Brawl Specialty · This Skill needs at least one dot.',
+  })
+  const custom = buildStorytellerBrief(draft, { custom: true })
+  assert.deepEqual(custom.rulings.find(({ label }) => label === 'XP purchase'), {
+    label: 'XP purchase', text: 'Brawl ([Private XP Specialty]) · This Skill needs at least one dot.',
+  })
+  assert.ok(custom.markdown.includes('- **XP purchase:** Brawl (\\[Private XP Specialty\\]) · This Skill needs at least one dot.'))
 })
 
 test('opt-in text is escaped before becoming Markdown', () => {
