@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T23:07:28+11:00",
+  "updatedAt": "2026-11-16T23:13:55+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -13,7 +13,7 @@
       "id": "review-player-storyteller-handoffs",
       "title": "Review sample handoffs with a player and a Storyteller",
       "group": "Product feedback",
-      "notes": "Prepare a sample Storyteller brief and coterie plan from fictional fixtures. Walk through sharing, review, and plan restore with a player and a Storyteller. Record the feedback and any evidence gaps in the release verification record, then rank actionable follow-ups."
+      "notes": "The fictional Storyteller brief, coterie plan, and starting character draft are ready. Internal Chromium walkthrough verified the Markdown download, coterie restore, reload, and preservation of the open draft. The release verification record contains the walkthroughs and preliminary usability findings. Player and Storyteller feedback is pending. Collect it and use it to rank follow-ups before completing this item."
     },
     {
       "id": "scope-private-storyteller-workspace",
