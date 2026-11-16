@@ -66,6 +66,11 @@ export interface RatingSlot {
   remaining: number
 }
 
+interface GrantedSpecialty {
+  skill: SkillId
+  name: string
+}
+
 function evaluateAllocation(values: TraitRatings<string>, capacity: Record<Rating, number>) {
   const assigned = Object.values(values)
   const slots: RatingSlot[] = ratings.map(rating => {
@@ -80,13 +85,19 @@ function evaluateAllocation(values: TraitRatings<string>, capacity: Record<Ratin
   }
 }
 
-function evaluateSpecialties(draft: TraitDraft, skillSlots: readonly RatingSlot[]) {
+function evaluateSpecialties(draft: TraitDraft, skillSlots: readonly RatingSlot[], grant?: GrantedSpecialty) {
   const overfilled = new Set(skillSlots.filter(slot => slot.remaining < 0).map(slot => slot.rating))
   const ratedSkills = skillIds.filter(id => draft.skills[id] !== undefined)
   const eligibleSkills = ratedSkills.filter(id => {
     const rating = draft.skills[id]
     return rating !== undefined && !overfilled.has(rating)
   })
+  // Core p. 149. A Predator Type grants a dot in an unrated Skill instead of a Specialty.
+  const predatorGrant = grant && {
+    ...grant,
+    kind: draft.skills[grant.skill] === undefined ? 'skill-dot' as const
+      : eligibleSkills.includes(grant.skill) ? 'specialty' as const : 'pending' as const,
+  }
   const firstDotSlots = specialtySkills.filter(id => draft.skills[id] !== undefined).map(skill => ({
     skill,
     name: (draft.firstDotSpecialties[skill] ?? '').trim(),
@@ -96,22 +107,24 @@ function evaluateSpecialties(draft: TraitDraft, skillSlots: readonly RatingSlot[
   const firstDot = firstDotSlots.find(slot => slot.skill === skill)
   const selectedRating = skill ? draft.skills[skill] : undefined
   const choiceName = name.trim()
+  const predatorSpecialty = predatorGrant?.kind === 'specialty' && predatorGrant.skill === skill ? predatorGrant : undefined
+  const reservedNames = [firstDot?.name, predatorSpecialty?.name]
   let issue: 'unrated' | 'overfilled' | 'limit' | 'duplicate' | undefined
 
   // Core pp. 159–160. Craft can have more Specialties than its rating.
   if (skill && selectedRating === undefined) issue = 'unrated'
   else if (skill && !eligibleSkills.includes(skill)) issue = 'overfilled'
-  else if (firstDot && skill !== 'craft' && selectedRating === 1) issue = 'limit'
-  else if (firstDot?.name && firstDot.name.toLowerCase() === choiceName.toLowerCase()) issue = 'duplicate'
+  else if (selectedRating !== undefined && skill !== 'craft' && Number(Boolean(firstDot)) + Number(Boolean(predatorSpecialty)) >= selectedRating) issue = 'limit'
+  else if (choiceName && reservedNames.some(value => value?.toLowerCase() === choiceName.toLowerCase())) issue = 'duplicate'
 
   const completed = firstDotSlots.filter(slot => slot.active && slot.name).length + Number(Boolean(skill && choiceName && !issue))
-  return { firstDotSlots, eligibleSkills, freeIssue: issue, completed, total: firstDotSlots.length + 1 }
+  return { firstDotSlots, eligibleSkills, freeIssue: issue, completed, total: firstDotSlots.length + 1, predatorGrant }
 }
 
-export function evaluateTraitLedger(draft: TraitDraft) {
+export function evaluateTraitLedger(draft: TraitDraft, grantedSpecialty?: GrantedSpecialty) {
   const attributes = evaluateAllocation(draft.attributes, attributeCapacity)
   const skills = evaluateAllocation(draft.skills, skillDistributions[draft.distribution].capacity)
-  const specialties = evaluateSpecialties(draft, skills.slots)
+  const specialties = evaluateSpecialties(draft, skills.slots, grantedSpecialty)
 
   // Core pp. 136, 155–157. Wait for each contributing Attribute in a partial draft.
   const { stamina, composure, resolve } = draft.attributes

@@ -1,21 +1,34 @@
 import { useReducer } from 'react'
 import { traitGroups } from '@/catalog/traits'
 import { AllocationEditor } from '@/components/AllocationEditor'
+import { ClanPathEditor } from '@/components/ClanPathEditor'
 import { SpecialtyEditor } from '@/components/SpecialtyEditor'
-import { editTraits, evaluateTraitLedger, initialTraitDraft, skillDistributionIds, skillDistributions } from '@/rules/trait-ledger'
+import { evaluateClanPath, initialClanPath, type ClanPathDraft } from '@/rules/clan-path'
+import { editTraits, evaluateTraitLedger, initialTraitDraft, skillDistributionIds, skillDistributions, type TraitAction } from '@/rules/trait-ledger'
 
 const attributeGroups = traitGroups.map(({ name, attributes }) => ({ name, ids: attributes }))
 const skillGroups = traitGroups.map(({ name, skills }) => ({ name, ids: skills }))
+const initialDraft = { traits: initialTraitDraft, clanPath: initialClanPath }
+
+type CharacterAction = TraitAction | { type: 'clan-path'; update: Partial<ClanPathDraft> }
+
+function editDraft(draft: typeof initialDraft, action: CharacterAction) {
+  return action.type === 'clan-path'
+    ? { ...draft, clanPath: { ...draft.clanPath, ...action.update } }
+    : { ...draft, traits: editTraits(draft.traits, action) }
+}
 
 export function App() {
-  const [draft, dispatch] = useReducer(editTraits, initialTraitDraft)
-  const { attributes, skills, specialties, health, willpower } = evaluateTraitLedger(draft)
+  const [draft, dispatch] = useReducer(editDraft, initialDraft)
+  const path = evaluateClanPath(draft.clanPath)
+  const { attributes, skills, specialties, health, willpower } = evaluateTraitLedger(draft.traits, path.grantedSpecialty)
+  const { predatorGrant } = specialties
 
   return (
     <main className="mx-auto max-w-6xl space-y-5 px-4 py-8 sm:px-8 sm:py-12">
       <header className="border-l-2 border-primary pl-4 sm:pl-5">
         <p className="text-sm font-medium text-muted-foreground">Vampire: The Masquerade Fifth Edition</p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-balance sm:text-5xl">Attribute &amp; Skill Ledger</h1>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-balance sm:text-5xl">Character Creator</h1>
       </header>
 
       <dl aria-live="polite" className="grid grid-cols-2 overflow-hidden rounded-xl border border-border bg-card">
@@ -34,22 +47,23 @@ export function App() {
       <AllocationEditor
         kind="attributes"
         groups={attributeGroups}
-        values={draft.attributes}
+        values={draft.traits.attributes}
         allocation={attributes}
         onChange={(id, rating) => dispatch({ type: 'attribute', id, rating })}
       />
       <AllocationEditor
         kind="skills"
         groups={skillGroups}
-        values={draft.skills}
+        values={draft.traits.skills}
         allocation={skills}
+        skillGrant={predatorGrant?.kind === 'skill-dot' && path.predator ? { skill: predatorGrant.skill, source: path.predator.name } : undefined}
         onChange={(id, rating) => dispatch({ type: 'skill', id, rating })}
       >
         <label className="grid gap-1.5 text-sm">
           Skill distribution
           <select
             className="ledger-field"
-            value={draft.distribution}
+            value={draft.traits.distribution}
             onChange={event => {
               const distribution = skillDistributionIds.find(id => id === event.target.value)
               if (distribution) dispatch({ type: 'distribution', distribution })
@@ -59,7 +73,8 @@ export function App() {
           </select>
         </label>
       </AllocationEditor>
-      <SpecialtyEditor draft={draft} specialties={specialties} dispatch={dispatch} />
+      <SpecialtyEditor draft={draft.traits} specialties={specialties} dispatch={dispatch} />
+      <ClanPathEditor draft={draft.clanPath} path={path} predatorGrant={predatorGrant} onChange={update => dispatch({ type: 'clan-path', update })} />
       <footer className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-border pt-4 text-sm text-muted-foreground">
         <a className="text-foreground underline underline-offset-4 hover:text-rose-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-300" href="https://astralarchives.games/">
           Return to Astral Archives

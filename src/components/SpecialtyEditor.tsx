@@ -6,8 +6,8 @@ import type { evaluateTraitLedger, TraitAction, TraitDraft } from '@/rules/trait
 const specialtyIssues = {
   unrated: 'Assign at least one dot to this Skill to use its Specialty.',
   overfilled: 'Resolve the overfilled rating before using this Specialty.',
-  limit: 'This Skill has one dot and already has its first-dot Specialty. Raise the Skill or choose another.',
-  duplicate: 'Choose a different name from the first-dot Specialty on this Skill.',
+  limit: 'This Skill already has as many granted Specialties as dots. Raise the Skill or choose another.',
+  duplicate: 'Choose a different name from the Specialty already granted on this Skill.',
 }
 
 interface SpecialtyEditorProps {

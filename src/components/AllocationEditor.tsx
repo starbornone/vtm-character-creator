@@ -9,11 +9,12 @@ interface AllocationEditorProps<Id extends AttributeId | SkillId> {
   values: TraitRatings<Id>
   allocation: ReturnType<typeof evaluateTraitLedger>['attributes']
   onChange: (id: Id, rating: Rating | undefined) => void
+  skillGrant?: { skill: SkillId; source: string }
   children?: ReactNode
 }
 
 export function AllocationEditor<Id extends AttributeId | SkillId>({
-  kind, groups, values, allocation, onChange, children,
+  kind, groups, values, allocation, onChange, skillGrant, children,
 }: AllocationEditorProps<Id>) {
   const { slots, open, excess } = allocation
   const heading = kind === 'attributes' ? 'Attributes' : 'Skills'
@@ -55,7 +56,10 @@ export function AllocationEditor<Id extends AttributeId | SkillId>({
 
                   return (
                     <div key={id} className="flex min-h-12 items-center justify-between gap-2 py-1.5">
-                      <label htmlFor={id} className="text-sm font-medium">{traitLabel(id)}</label>
+                      <div>
+                        <label htmlFor={id} className="text-sm font-medium">{traitLabel(id)}</label>
+                        {id === skillGrant?.skill && <p className="text-xs text-muted-foreground">1 total · {skillGrant.source} +1</p>}
+                      </div>
                       <select
                         id={id}
                         className="ledger-field min-w-18"

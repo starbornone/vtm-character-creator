@@ -2,23 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { skillIds, traitGroups } from '../src/catalog/traits.ts'
 import { editTraits, evaluateTraitLedger, initialTraitDraft, type TraitDraft } from '../src/rules/trait-ledger.ts'
-
-// Base allocation for Mara Vale in docs/v5-rules.md.
-const mara: TraitDraft = {
-  distribution: 'balanced',
-  attributes: {
-    strength: 4, dexterity: 2, stamina: 3,
-    charisma: 3, manipulation: 2, composure: 2,
-    intelligence: 1, wits: 2, resolve: 3,
-  },
-  skills: {
-    athletics: 3, brawl: 3, streetwise: 3,
-    awareness: 2, insight: 2, intimidation: 2, larceny: 2, persuasion: 2,
-    craft: 1, drive: 1, etiquette: 1, investigation: 1, melee: 1, subterfuge: 1, technology: 1,
-  },
-  firstDotSpecialties: { craft: 'Carpentry' },
-  freeSpecialty: { skill: 'athletics', name: 'Climbing' },
-}
+import { mara } from './fixtures/mara-vale.ts'
 
 test('Mara Vale fills both distributions and derives her Health and Willpower', () => {
   const ledger = evaluateTraitLedger(mara)

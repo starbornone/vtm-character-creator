@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T14:08:03+11:00",
+  "updatedAt": "2026-11-16T14:14:41+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -56,6 +56,13 @@
       "group": "Foundation",
       "notes": "Add a Vampire-themed SVG icon and verify that the production page references it.",
       "completedAt": "2026-11-16T14:08:03+11:00"
+    },
+    {
+      "id": "build-first-clan-and-predator-type",
+      "title": "Build the first clan and Predator Type path",
+      "group": "Rules",
+      "notes": "Support one clan and one eligible Predator Type with Discipline allocation, powers, mandatory grants, dependent choices, and validation.",
+      "completedAt": "2026-11-16T14:14:41+11:00"
     }
   ]
 }
