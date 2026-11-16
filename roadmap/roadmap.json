@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T23:31:44+11:00",
+  "updatedAt": "2026-11-16T23:35:04+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -10,10 +10,28 @@
   },
   "items": [
     {
+      "id": "jump-to-open-character-choices",
+      "title": "Jump from review issues to the affected character choices",
+      "group": "Guide usability",
+      "notes": "Complete the field navigation described in PLAN.md. Link each actionable open choice in Review & Print to the corresponding field or option group, with focus on arrival. Verify keyboard and phone-width use with multiple open choices in one step, and confirm that fixing the final blocker updates the review and printed Draft marker."
+    },
+    {
+      "id": "surface-open-rulings-in-brief-preview",
+      "title": "Show open rulings alongside the Storyteller brief preview",
+      "group": "Local handoff usability",
+      "notes": "Use the internal walkthrough in docs/release-verification.md. Show open rulings without requiring a scroll through the Markdown. Verify on mobile and by keyboard that Mara's unspent starting XP is easy to find, the visible rulings match the downloaded brief, and narrative remains opt-in."
+    },
+    {
+      "id": "route-mismatched-json-handoffs",
+      "title": "Point players to the matching JSON restore control",
+      "group": "Local handoff usability",
+      "notes": "When a valid character backup is selected in the coterie planner, point to Browser drafts. When a valid coterie handoff is selected in Browser drafts, point to Coterie & Domain. Verify both directions with the documented sample files. Wrong-format and malformed files must leave the current draft, step, coterie plan, and saved libraries intact."
+    },
+    {
       "id": "review-player-storyteller-handoffs",
       "title": "Review sample handoffs with a player and a Storyteller",
       "group": "Product feedback",
-      "notes": "Deferred at the maintainer’s request. The sample brief, coterie plan, and starting draft are ready. Internal Chromium walkthrough verified download, restore, reload, and preservation of the open draft. Resume the player and Storyteller walkthroughs in the release verification record and use their feedback to rank follow-ups."
+      "notes": "Deferred at the maintainer’s request. The sample brief, coterie plan, and starting draft are ready. Internal Chromium walkthrough verified download, restore, reload, and preservation of the open draft. Resume the player and Storyteller walkthroughs in the release verification record and use their feedback to rank follow-ups. The hosted pilot remains deferred pending this feedback and a separate decision."
     },
     {
       "id": "verify-foundry-v5-actor-import",

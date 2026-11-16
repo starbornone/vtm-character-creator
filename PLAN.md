@@ -63,17 +63,24 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 6. The searchable [V5 table reference](docs/getting-started.md#look-up-v5-rules) covers creation budgets, XP costs, Discipline prerequisites, and derived tracks with book and page references. Players can open it from any creation step and return to the same draft.
 7. The [Character Relationship Map](docs/getting-started.md#map-a-characters-relationships) starts with the recorded sire, coterie, and Touchstones. Players can add people and labeled connections. The map travels with the full draft backup.
 8. The [Coterie and Domain planner](docs/getting-started.md#plan-a-coterie-and-domain) organizes several characters in a named browser plan. Players can preview and transfer the shared purpose, Domain ratings, member names, and selected relationship details as JSON. Restoring a plan creates a separate copy and leaves individual character drafts intact.
+9. The [local handoff review prototype](docs/storyteller-workspace.md#prototype-walkthrough) demonstrates submission, review, replacement, export, and withdrawal with one fictional Storyteller and two players.
 
 ## Next priorities
 
-The [local handoff review prototype](docs/storyteller-workspace.md#prototype-walkthrough) demonstrates submission, review, replacement, export, and withdrawal with one fictional Storyteller and two players. A hosted pilot is deferred until player and Storyteller feedback clarifies what the inbox would add to the current file handoffs.
+1. **Jump from an open choice to its editor.** Review & Print currently links to the start of each step. Let players go straight to the field or group that needs attention, with focus in the right place for keyboard use. Verify that fixing the choice updates both review and the printed Draft marker.
+2. **Make open rulings visible in the Storyteller brief preview.** The internal walkthrough found that a Storyteller has to scroll past the mechanics to find unresolved choices on mobile. Show the rulings alongside the preview and check them against the Markdown download with narrative options off and on. [Internal handoff walkthrough](docs/release-verification.md#internal-walkthrough)
+3. **Guide players to the right JSON restore control.** When a valid character backup or coterie plan is opened in the other tool, name the matching restore control. Verify both directions and confirm that choosing a wrong or malformed file leaves the open draft and plan intact. [Internal handoff walkthrough](docs/release-verification.md#internal-walkthrough)
 
 ### Deferred external handoff feedback
 
 The fictional sample brief, coterie plan, and walkthroughs are ready. Internal verification checked what is shared, plan restore, and reopening the same draft and step. Resume with the [handoff review record](docs/release-verification.md#player-and-storyteller-handoff-review) to capture player and Storyteller observations and rank follow-up fixes.
 
+### Deferred hosted pilot
+
+Keep using the local prototype for demonstration. Revisit a hosted inbox once player and Storyteller feedback clarifies what it would add to the current file handoffs. [Pilot decision](docs/storyteller-workspace.md#pilot-decision)
+
 ### Deferred Foundry compatibility check
 
 Resume when a disposable Foundry V5 test world or paired vampire actor exports are available. The candidate is the World of Darkness 5e community system (`wod5e`) 5.3.29 with Foundry 14.368. Compare a sample vampire export with its re-export after import and record which fields and embedded items survive. Queue exporter implementation once the round-trip establishes a supported target and field mapping. [World of Darkness 5e package](https://foundryvtt.com/packages/wod5e/) · [Foundry actor import and export](https://foundryvtt.com/article/actors/#importing-from-json-files)
 
-The [ordered roadmap](roadmap/roadmap.json) tracks the discovery and feedback work.
+The [ordered roadmap](roadmap/roadmap.json) tracks the local improvements and deferred reviews.
