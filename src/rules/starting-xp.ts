@@ -9,6 +9,11 @@ import { specialtySkills, type evaluateTraitLedger, type TraitDraft } from './tr
 
 export const attributeIds = traitGroups.flatMap(({ attributes }): readonly AttributeId[] => attributes)
 
+// Core p. 137. Rates multiply the new rating unless the cost is flat or per dot added.
+export const experienceCosts = {
+  attribute: 5, skill: 3, specialty: 3, clanDiscipline: 5, caitiffDiscipline: 6, otherDiscipline: 7, advantagePerDot: 3, bloodPotency: 10,
+} as const
+
 // Core p. 216 and Renegade's Blood Potency Correction.
 export const bloodEffects = {
   0: { baneSeverity: 0, bloodSurge: 1 },
@@ -179,14 +184,14 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase, advanc
       const current = state.attributes[purchase.id]
       if (!current) return { issue: 'Assign the starting Attribute first.' }
       if (purchase.to !== current + 1 || purchase.to > 5) return { issue: 'Raise the Attribute one dot at a time, up to 5.' }
-      return checkBudget(purchase.to * 5)
+      return checkBudget(purchase.to * experienceCosts.attribute)
     }
     case 'skill': {
       if (state.unresolvedSkills.includes(purchase.id)) return { issue: 'Resolve this Skill’s base allocation first.' }
       const current = state.skills[purchase.id] ?? 0
       if (purchase.to !== current + 1 || purchase.to > 5) return { issue: 'Raise the Skill one dot at a time, up to 5.' }
       if (current === 0 && specialtySkills.some(id => id === purchase.id) && !purchase.specialty?.trim()) return { issue: 'Name the Specialty granted by the first dot.' }
-      return checkBudget(purchase.to * 3)
+      return checkBudget(purchase.to * experienceCosts.skill)
     }
     case 'specialty': {
       if (state.unresolvedSkills.includes(purchase.id)) return { issue: 'Resolve this Skill’s base allocation first.' }
@@ -197,7 +202,7 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase, advanc
       if (!name) return { issue: 'Name the Specialty.' }
       if (existing.some(value => value.toLowerCase() === name)) return { issue: 'This Skill already has that Specialty.' }
       if (purchase.id !== 'craft' && existing.length >= rating) return { issue: 'This Skill has reached its Specialty limit.' }
-      return checkBudget(3)
+      return checkBudget(experienceCosts.specialty)
     }
     case 'discipline': {
       const power = allDisciplinePowers[purchase.id].find(option => option.id === purchase.power)
@@ -208,13 +213,14 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase, advanc
         issue: state.isCaitiff ? 'Complete the starting powers for this Discipline first.' : 'Choose a clan Discipline or complete its Predator Type power first.',
       }
       if (purchase.to !== current + 1 || purchase.to > 5) return { issue: 'Raise the Discipline one dot at a time, up to 5.' }
-      const multiplier = state.isCaitiff ? 6 : state.clanDisciplines.includes(purchase.id) ? 5 : 7
+      const inClan = state.clanDisciplines.includes(purchase.id)
+      const multiplier = state.isCaitiff ? experienceCosts.caitiffDiscipline : inClan ? experienceCosts.clanDiscipline : experienceCosts.otherDiscipline
       const price = checkBudget(purchase.to * multiplier)
       if (price.issue) return price
       if (state.isCaitiff && current === 0 && !purchase.caitiffLearning) {
         return { ...price, issue: 'Confirm the blood-tasting and learning requirements for this Discipline. Core pp. 107, 244.' }
       }
-      if (advancing && !state.isThinBlood && !state.isCaitiff && multiplier === 7 && current === 0 && !purchase.outOfClanLearning) {
+      if (advancing && !state.isThinBlood && !state.isCaitiff && !inClan && current === 0 && !purchase.outOfClanLearning) {
         return { ...price, issue: 'Confirm the blood-tasting and learning requirements for this Discipline. Core p. 244.' }
       }
       if (!power || power.level > purchase.to || state.powers.includes(power.id)) return { ...price, issue: 'Choose an eligible new power for this dot.' }
@@ -230,12 +236,12 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase, advanc
       if (option.dots.find(dots => dots > current) !== purchase.to) return { issue: 'Choose the next listed Advantage rating.' }
       if (state.flaws.some(id => flawConflict(id, purchase.id))) return { issue: 'This Advantage conflicts with a selected Flaw.' }
       if (purchase.id === 'unbondable' && state.powers.includes('lingering-kiss')) return { issue: 'Unbondable conflicts with Lingering Kiss.' }
-      return checkBudget(3 * (purchase.to - current))
+      return checkBudget(experienceCosts.advantagePerDot * (purchase.to - current))
     }
     case 'blood-potency':
       if (purchase.to !== state.bloodPotency + 1 || purchase.to > state.maxBloodPotency) return { issue: 'Raise Blood Potency one dot at a time, within the Generation limit.' }
       if (state.predatorId === 'farmer' && purchase.to >= 3) return { issue: 'Farmer requires Blood Potency below 3.' }
-      return checkBudget(purchase.to * 10)
+      return checkBudget(purchase.to * experienceCosts.bloodPotency)
   }
 }
 

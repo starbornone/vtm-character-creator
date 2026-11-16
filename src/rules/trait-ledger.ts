@@ -5,7 +5,7 @@ export type Rating = (typeof ratings)[number]
 export type TraitRatings<Id extends string> = Partial<Record<Id, Rating | undefined>>
 
 // V5 Core Rulebook, p. 136. Each capacity counts traits at exactly that rating.
-const attributeCapacity = { 4: 1, 3: 3, 2: 4, 1: 1 }
+export const attributeCapacity = { 4: 1, 3: 3, 2: 4, 1: 1 }
 export const skillDistributions = {
   'jack-of-all-trades': { name: 'Jack of All Trades', capacity: { 4: 0, 3: 1, 2: 8, 1: 10 } },
   balanced: { name: 'Balanced', capacity: { 4: 0, 3: 3, 2: 5, 1: 7 } },

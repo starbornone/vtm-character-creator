@@ -14,6 +14,7 @@ import { SpecialtyEditor } from '@/components/SpecialtyEditor'
 import { StartingExperienceEditor } from '@/components/StartingExperienceEditor'
 import { StartingOptionsEditor } from '@/components/StartingOptionsEditor'
 import { StorytellerBrief } from '@/components/StorytellerBrief'
+import { TableReference } from '@/components/TableReference'
 import { useBrowserDrafts } from '@/drafts/use-browser-drafts'
 import { chronicleSettings, evaluateCharacter, guideSteps, type GuideStep } from '@/rules/character-guide'
 import { skillDistributionIds, skillDistributions } from '@/rules/trait-ledger'
@@ -87,9 +88,12 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
 
   return (
     <main className="creator-shell mx-auto max-w-6xl space-y-5 px-4 py-8 sm:px-8 sm:py-12">
-      <header className="border-l-2 border-primary pl-4 print:hidden sm:pl-5">
-        <p className="text-sm font-medium text-muted-foreground">Vampire: The Masquerade Fifth Edition</p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-balance sm:text-5xl">Character Creator</h1>
+      <header className="flex flex-wrap items-end justify-between gap-x-5 gap-y-3 border-l-2 border-primary pl-4 print:hidden sm:pl-5">
+        <div>
+          <p className="text-sm font-medium text-muted-foreground">Vampire: The Masquerade Fifth Edition</p>
+          <h1 className="mt-1 text-3xl font-semibold tracking-tight text-balance sm:text-5xl">Character Creator</h1>
+        </div>
+        <TableReference />
       </header>
 
       <DraftControls
