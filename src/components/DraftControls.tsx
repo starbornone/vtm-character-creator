@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import type { DraftLibrary } from '@/drafts/browser-drafts'
+import type { DraftSnapshot } from '@/drafts/draft-backup'
+import { BackupRestore } from '@/components/BackupRestore'
 import { Card, CardContent } from '@/components/ui/card'
 
 interface DraftControlsProps {
@@ -11,9 +13,10 @@ interface DraftControlsProps {
   onSave: (name: string) => string | undefined
   onSwitch: (id: string | null) => boolean
   onDownload: () => void
+  onRestore: (draft: DraftSnapshot) => { restored: boolean; issue?: string }
 }
 
-export function DraftControls({ library, activeId, name, dirty, issue, onSave, onSwitch, onDownload }: DraftControlsProps) {
+export function DraftControls({ library, activeId, name, dirty, issue, onSave, onSwitch, onDownload, onRestore }: DraftControlsProps) {
   const [label, setLabel] = useState(name)
   const [selectedId, setSelectedId] = useState(library.activeId ?? '')
   const [nameIssue, setNameIssue] = useState<string>()
@@ -66,6 +69,7 @@ export function DraftControls({ library, activeId, name, dirty, issue, onSave, o
             }
           }}>New draft</button>
           <button type="button" className="guide-button" onClick={onDownload}>Download current draft</button>
+          <BackupRestore library={library} onRestore={onRestore} />
         </div>
       </CardContent>
     </Card>

@@ -65,6 +65,11 @@ export function App() {
           return true
         }}
         onDownload={drafts.download}
+        onRestore={snapshot => {
+          const result = drafts.restore(snapshot)
+          if (result.restored) requestAnimationFrame(() => panel.current?.focus())
+          return result
+        }}
       />
 
       <nav aria-label="Character creation steps" className="print:hidden">

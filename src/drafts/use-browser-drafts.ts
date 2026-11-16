@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react'
 import { editCharacter, initialCharacterDraft, type CharacterAction, type GuideStep } from '../rules/character-guide.ts'
 import {
-  browserStorage, draftNameError, loadDraftLibrary, saveDraftLibrary, serializeDraftDownload, withSavedDraft,
-  type DraftLibrary, type DraftSnapshot, type NamedDraft,
+  appendRestoredDraft, browserStorage, draftNameError, loadDraftLibrary, saveDraftLibrary, withSavedDraft,
+  type DraftLibrary, type NamedDraft,
 } from './browser-drafts.ts'
+import { serializeDraftDownload, type DraftSnapshot } from './draft-backup.ts'
 
 type OpenDraft = DraftSnapshot & { id?: string }
 
@@ -16,6 +17,8 @@ interface DraftSession {
 }
 
 const blankDraft: OpenDraft = { name: '', step: 'concept', character: initialCharacterDraft }
+const newDraftId = () => crypto.getRandomValues(new Uint32Array(4)).join('-')
+const canLeaveDraft = (session: DraftSession) => !session.dirty || window.confirm('Leave this draft and discard its unsaved changes?')
 
 function startSession(): DraftSession {
   const result = loadDraftLibrary(browserStorage)
@@ -67,7 +70,7 @@ export function useBrowserDrafts() {
     const trimmed = name.trim()
     const issue = draftNameError(current.library, trimmed, current.open.id)
     if (issue) return issue
-    const id = current.open.id ?? crypto.getRandomValues(new Uint32Array(4)).join('-')
+    const id = current.open.id ?? newDraftId()
     saveNamed(current, { ...current.open, id, name: trimmed })
   }
 
@@ -76,13 +79,22 @@ export function useBrowserDrafts() {
     if (id === current.open.id) return false
     const open = id === null ? blankDraft : current.library.drafts.find(draft => draft.id === id)
     if (!open) return false
-    if (current.dirty && !window.confirm('Leave this draft and discard its unsaved changes?')) return false
+    if (!canLeaveDraft(current)) return false
     // A blank session has no active pointer to clear.
     if (id === null && current.library.activeId === null) {
       show({ ...current, open, dirty: false })
       return true
     }
     return persist(current, { ...current.library, activeId: id }, open)
+  }
+
+  function restore(snapshot: DraftSnapshot): { restored: boolean; issue?: string } {
+    const current = latest.current
+    const copy = appendRestoredDraft(current.library, snapshot, newDraftId())
+    if (!copy.draft) return { restored: false, issue: copy.issue }
+    if (!canLeaveDraft(current)) return { restored: false }
+    const restored = persist(current, copy.library, copy.draft)
+    return restored ? { restored } : { restored, issue: latest.current.issue }
   }
 
   function download() {
@@ -98,5 +110,5 @@ export function useBrowserDrafts() {
     setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
 
-  return { ...session, dispatch, goTo, save, switchDraft, download }
+  return { ...session, dispatch, goTo, save, switchDraft, download, restore }
 }

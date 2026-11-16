@@ -1,15 +1,7 @@
-import { guideSteps, type CharacterDraft, type GuideStep } from '../rules/character-guide.ts'
-import { isCharacterDraft, isRecord } from './draft-inputs.ts'
+import { draftRuleset, draftSchemaVersion, isDraftSnapshot, type DraftSnapshot } from './draft-backup.ts'
+import { isRecord } from './draft-inputs.ts'
 
 export const draftLibraryKey = 'vtm-character-creator:drafts'
-const schemaVersion = 1
-const ruleset = 'vtm-v5'
-
-export interface DraftSnapshot {
-  name: string
-  step: GuideStep
-  character: CharacterDraft
-}
 
 export interface NamedDraft extends DraftSnapshot {
   id: string
@@ -28,16 +20,13 @@ export const browserStorage: GetStorage = () => window.localStorage
 const emptyLibrary: DraftLibrary = { activeId: null, drafts: [] }
 
 function isNamedDraft(value: unknown): value is NamedDraft {
-  return isRecord(value) && typeof value.id === 'string' && value.id.length > 0
-    && typeof value.name === 'string' && value.name.trim().length > 0
-    && guideSteps.some(step => step.id === value.step)
-    && isCharacterDraft(value.character)
+  return isRecord(value) && typeof value.id === 'string' && value.id.length > 0 && isDraftSnapshot(value)
 }
 
 function parseLibrary(raw: string): DraftLibrary | undefined {
   try {
     const value: unknown = JSON.parse(raw)
-    if (!isRecord(value) || value.schemaVersion !== schemaVersion || value.ruleset !== ruleset) return
+    if (!isRecord(value) || value.schemaVersion !== draftSchemaVersion || value.ruleset !== draftRuleset) return
     const { activeId, drafts } = value
     if (!Array.isArray(drafts) || !drafts.every(isNamedDraft) || new Set(drafts.map(draft => draft.id)).size !== drafts.length) return
     if (activeId !== null && (typeof activeId !== 'string' || !drafts.some(draft => draft.id === activeId))) return
@@ -65,7 +54,7 @@ export function saveDraftLibrary(getStorage: GetStorage, library: DraftLibrary, 
     if (storage.getItem(draftLibraryKey) !== previous) {
       return { issue: 'Browser drafts changed or could not be read. Download your current draft before reloading.' }
     }
-    const saved = JSON.stringify({ schemaVersion, ruleset, ...library })
+    const saved = JSON.stringify({ schemaVersion: draftSchemaVersion, ruleset: draftRuleset, ...library })
     storage.setItem(draftLibraryKey, saved)
     return { saved }
   } catch {
@@ -83,6 +72,19 @@ export function withSavedDraft(library: DraftLibrary, draft: NamedDraft): DraftL
   return { activeId: draft.id, drafts: exists ? library.drafts.map(entry => entry.id === draft.id ? draft : entry) : [...library.drafts, draft] }
 }
 
-export function serializeDraftDownload(draft: DraftSnapshot): string {
-  return JSON.stringify({ format: 'vtm-character-creator-draft', schemaVersion, ruleset, draft }, null, 2) + '\n'
+export function suggestRestoreName(library: DraftLibrary, original: string) {
+  if (!draftNameError(library, original)) return original
+  let copy = `${original} (copy)`
+  let number = 2
+  while (draftNameError(library, copy)) copy = `${original} (copy ${number++})`
+  return copy
+}
+
+export function appendRestoredDraft(library: DraftLibrary, snapshot: DraftSnapshot, id: string) {
+  const name = snapshot.name.trim()
+  const issue = draftNameError(library, name)
+  if (issue) return { issue }
+  if (library.drafts.some(draft => draft.id === id)) return { issue: 'Could not assign a fresh draft ID. Retry restoring the backup.' }
+  const draft: NamedDraft = { name, step: snapshot.step, character: snapshot.character, id }
+  return { draft, library: { activeId: id, drafts: [...library.drafts, draft] } }
 }

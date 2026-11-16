@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
-  draftLibraryKey, draftNameError, loadDraftLibrary, saveDraftLibrary, serializeDraftDownload, withSavedDraft,
+  draftLibraryKey, draftNameError, loadDraftLibrary, saveDraftLibrary, withSavedDraft,
   type DraftLibrary, type GetStorage, type NamedDraft,
 } from '../src/drafts/browser-drafts.ts'
+import { serializeDraftDownload } from '../src/drafts/draft-backup.ts'
 import { evaluateCharacter, initialCharacterDraft } from '../src/rules/character-guide.ts'
 import { maraCharacter } from './fixtures/mara-vale.ts'
 
