@@ -1,4 +1,5 @@
-import { clanChoices, corePredators, disciplineIds, disciplines, startingRituals, type DisciplineId, type DotGrant } from '@/catalog/clan-path'
+import { clanChoices, predatorChoices as predatorCatalog, disciplineIds, disciplines, startingRituals, type DisciplineId, type DotGrant } from '@/catalog/clan-path'
+import { playersGuideDisabled, powerSource, sourceEnabled } from '@/catalog/source-packs'
 import { traitLabel } from '@/catalog/traits'
 import { manualOptionId, predatorRestriction, type ClanPathDraft, type evaluateClanPath, type ManualClan, type ManualPredator, type PowerSlot } from '@/rules/clan-path'
 import type { evaluateTraitLedger } from '@/rules/trait-ledger'
@@ -10,7 +11,6 @@ import { Card, CardContent } from '@/components/ui/card'
 type Path = ReturnType<typeof evaluateClanPath>
 
 const manualChoice = { id: manualOptionId, label: 'Manual entry', source: 'Storyteller review' }
-const ancestryChoices = [...clanChoices.map(clan => ({ id: clan.id, label: clan.name, source: clan.source })), manualChoice]
 const disciplineChoices = (ids: readonly DisciplineId[], excluded?: string) => ids.map(id => ({ id, label: disciplines[id], disabled: id === excluded }))
 const ritualChoices = startingRituals.map(ritual => ({ id: ritual.id, label: ritual.name, source: `Core p. ${ritual.page}` }))
 const emptyClan: ManualClan = { name: '', source: '', disciplines: [], bane: '', compulsion: '' }
@@ -81,14 +81,14 @@ function PowerChoice({ slot, label, onChange }: { slot: PowerSlot; label: string
     id: power.id,
     label: `${power.name} · Level ${power.level}${power.issue === 'amalgam' && power.amalgam ? ` · Requires ${disciplines[power.amalgam.discipline]} ${power.amalgam.dots}`
       : power.issue === 'duplicate' ? ' · Already chosen' : power.issue === 'level' ? ' · Rating too low' : ''}`,
-    source: `Core p. ${power.page}`,
+    source: powerSource(power),
     disabled: Boolean(power.issue) && power.id !== slot.selectedId,
   }))
 
   return (
     <div className="min-w-0 space-y-1">
       <CatalogSelect label={label} value={slot.selectedId} choices={choices} invalid={Boolean(slot.issue)} onChange={onChange} />
-      {slot.issue && <p className="text-xs text-rose-300">Choose an eligible power for this dot.</p>}
+      {slot.issue && <p className="text-xs text-rose-300">{slot.issue === 'source' ? playersGuideDisabled : 'Choose an eligible power for this dot.'}</p>}
     </div>
   )
 }
@@ -130,8 +130,12 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, useFl
   const grantLabel = predatorGrant && (predatorGrant.kind === 'skill-dot'
     ? `${traitLabel(predatorGrant.skill)} +1 · Skill dot while the Skill is unrated`
     : `${traitLabel(predatorGrant.skill)} (${predatorGrant.name})${predatorGrant.kind === 'pending' ? ' · Resolve the Skill rating or competing Specialty' : ' · Specialty'}`)
-  const predatorChoices = [...corePredators.map(option => {
-    const reason = predatorRestriction(clan?.id, option.id, path.profile.bloodPotency)
+  const ancestryChoices = [...clanChoices.filter(option => sourceEnabled(path.sourcePacks, option) || option.id === draft.clan).map(option => ({
+    id: option.id, label: option.name, source: option.source, disabled: !sourceEnabled(path.sourcePacks, option),
+  })), manualChoice]
+  const predatorChoices = [...predatorCatalog.filter(option => sourceEnabled(path.sourcePacks, option) || option.id === draft.predatorType).map(option => {
+    const available = sourceEnabled(path.sourcePacks, option)
+    const reason = available ? predatorRestriction(clan?.id, option.id, path.profile.bloodPotency) : 'Source pack disabled'
     return { id: option.id, label: reason ? `${option.name} · ${reason}` : option.name, source: option.source, disabled: Boolean(reason) }
   }), manualChoice]
   const grantSummary = [
@@ -153,10 +157,11 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, useFl
               : (path.complete && predatorGrant?.kind !== 'pending' ? 'Clan and Predator Type choices complete' : 'Choose a clan, Predator Type, and their grants.')}
           </p>
         </div>
+        {(path.clanUnavailable || path.predatorUnavailable) && <p role="status" className="text-sm text-rose-300">{playersGuideDisabled}</p>}
         <div className="grid items-start gap-5 lg:grid-cols-2">
           <fieldset className="min-w-0 space-y-3 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Clan or blood status</legend>
-            <CatalogSelect searchable label="Starting clan" value={draft.clan} choices={ancestryChoices} onChange={clan => onChange({ clan })} />
+            <CatalogSelect searchable label="Starting clan" value={draft.clan} choices={ancestryChoices} invalid={path.clanUnavailable} onChange={clan => onChange({ clan })} />
             {draft.clan === manualOptionId && <ManualClanFields entry={draft.manualClan ?? emptyClan} onChange={manualClan => onChange({ manualClan })} />}
             {thinBlood && <ThinBloodEditor draft={draft.thinBlood ?? initialThinBlood} rules={thinBlood} ageIssue={path.ageIssue}
               useFledgling={useFledgling} onChange={update => onChange({ thinBlood: { ...(draft.thinBlood ?? initialThinBlood), ...update } })} />}
@@ -182,7 +187,7 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, useFl
 
           {predatorAllowed ? <fieldset className="min-w-0 space-y-3 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Predator Type</legend>
-            <CatalogSelect searchable label="Starting Predator Type" value={draft.predatorType} choices={predatorChoices} disabled={!clan} invalid={Boolean(path.predatorIssue)} onChange={predatorType => onChange({ predatorType })} />
+            <CatalogSelect searchable label="Starting Predator Type" value={draft.predatorType} choices={predatorChoices} disabled={!clan} invalid={path.predatorUnavailable || Boolean(path.predatorIssue)} onChange={predatorType => onChange({ predatorType })} />
             {!clan && <p className="text-sm text-muted-foreground">Choose a clan to unlock this choice.</p>}
             {path.predatorIssue && <p className="text-sm text-rose-300">{path.predatorIssue}</p>}
             {draft.predatorType === manualOptionId && clan && <ManualPredatorFields entry={draft.manualPredator ?? emptyPredator} onChange={manualPredator => onChange({ manualPredator })} />}

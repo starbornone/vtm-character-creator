@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { disciplineIds, disciplinePowers, disciplines } from '@/catalog/clan-path'
+import { allDisciplinePowers, disciplineIds, disciplines } from '@/catalog/clan-path'
+import { powerSource, sourceEnabled } from '@/catalog/source-packs'
 import { advantageIds, startingAdvantages } from '@/catalog/starting-options'
 import { skillIds, traitLabel } from '@/catalog/traits'
 import { CatalogSelect } from '@/components/CatalogSelect'
@@ -84,7 +85,7 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
   const purchase = purchaseFor(kind, target, name, build.final, confirmedLearning)
   const quote = purchase ? quotePurchase(build.final, purchase) : undefined
   const needsName = kind === 'specialty' || (purchase?.kind === 'skill' && purchase.to === 1 && specialtySkills.some(id => id === purchase.id))
-  const powers = purchase?.kind === 'discipline' ? disciplinePowers[purchase.id].filter(power => power.level <= purchase.to && !build.final.powers.includes(power.id)) : []
+  const powers = purchase?.kind === 'discipline' ? allDisciplinePowers[purchase.id].filter(power => sourceEnabled(build.final.sourcePacks, power) && power.level <= purchase.to && !build.final.powers.includes(power.id)) : []
 
   function move(index: number, offset: number) {
     const next = [...purchases]
@@ -120,7 +121,7 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
           {purchase?.kind === 'discipline' && <label className="grid gap-1 text-sm">New Discipline power
             <select className="ledger-field" value={name} onChange={event => setName(event.target.value)}>
               <option value="">Choose…</option>
-              {powers.map(power => <option key={power.id} value={power.id}>{power.name} · Core p. {power.page}</option>)}
+              {powers.map(power => <option key={power.id} value={power.id}>{power.name} · {powerSource(power)}</option>)}
             </select>
           </label>}
           {build.isCaitiff && purchase?.kind === 'discipline' && purchase.to === 1 && <label className="flex items-center gap-2 text-sm sm:col-span-3">

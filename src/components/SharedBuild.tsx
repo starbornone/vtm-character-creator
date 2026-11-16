@@ -63,7 +63,8 @@ export function SharedBuild({ hash, library, onClose, onSave }: SharedBuildProps
   if (decoded.issue !== undefined) return (
     <main className="mx-auto max-w-4xl space-y-4 px-4 py-8 sm:px-8">
       <h1 className="text-3xl font-semibold">Shared mechanical build</h1>
-      <p role="alert" className="text-rose-300">{decoded.issue}</p>
+      {decoded.unavailableSources && <h2 className="font-medium">Unavailable sources</h2>}
+      <p role="alert" className="break-words text-rose-300">{decoded.issue}</p>
       {returnButton}
     </main>
   )

@@ -10,7 +10,7 @@ interface BackupRestoreProps {
 
 type Selection =
   | { status: 'reading' }
-  | { status: 'error'; issue: string }
+  | { status: 'error' | 'unavailable'; issue: string }
   | { status: 'preview'; draft: DraftSnapshot; name: string; issue?: string }
 
 function focusPreview(heading: HTMLHeadingElement | null) {
@@ -38,7 +38,7 @@ export function BackupRestore({ library, onRestore }: BackupRestoreProps) {
     try {
       const result = readDraftBackup(await file.text())
       if (current !== request.current) return
-      if (result.issue !== undefined) setSelection({ status: 'error', issue: result.issue })
+      if (result.issue !== undefined) setSelection({ status: result.unavailableSources ? 'unavailable' : 'error', issue: result.issue })
       else setSelection({ status: 'preview', draft: result.draft, name: suggestRestoreName(library, result.draft.name) })
     } catch {
       if (current === request.current) setSelection({ status: 'error', issue: 'Could not read this backup file. Choose it again to retry.' })
@@ -65,6 +65,13 @@ export function BackupRestore({ library, onRestore }: BackupRestoreProps) {
         </div>
       )}
       {selection?.status === 'error' && <p role="alert" className="w-full text-sm text-rose-300">{selection.issue}</p>}
+      {selection?.status === 'unavailable' && (
+        <section aria-labelledby="unavailable-backup-heading" className="w-full space-y-3 rounded-lg border border-border p-3 sm:p-4">
+          <h3 ref={focusPreview} tabIndex={-1} id="unavailable-backup-heading" className="font-semibold">Backup preview</h3>
+          <p role="alert" className="break-words text-sm text-rose-300">{selection.issue}</p>
+          <button type="button" className="guide-button" onClick={cancel}>Cancel restore</button>
+        </section>
+      )}
       {selection?.status === 'preview' && (
         <section aria-labelledby="backup-preview-heading" className="w-full min-w-0 space-y-3 rounded-lg border border-border p-3 sm:p-4">
           <h3 ref={focusPreview} tabIndex={-1} id="backup-preview-heading" className="font-semibold">Backup preview</h3>
@@ -90,7 +97,7 @@ export function BackupRestore({ library, onRestore }: BackupRestoreProps) {
 }
 
 function BackupSummary({ draft }: { draft: DraftSnapshot }) {
-  const { sheet, pending } = evaluateCharacter(draft.character)
+  const { sheet, pending, sourceIssues } = evaluateCharacter(draft.character)
   const step = guideSteps.find(option => option.id === draft.step)
   const openSteps = guideSteps.filter(option => option.id !== 'review' && pending[option.id].length > 0)
   const details = [
@@ -100,6 +107,7 @@ function BackupSummary({ draft }: { draft: DraftSnapshot }) {
     ['Age profile', sheet.identity.ageProfile],
     ['Clan', sheet.identity.clan],
     ['Predator Type', sheet.identity.predator],
+    ['Source pack', sheet.sourcePack],
     ['Resume at', step?.title],
     ['Status', sheet.draft ? `Draft · ${openSteps.length} open ${openSteps.length === 1 ? 'section' : 'sections'}` : 'Complete'],
   ]
@@ -113,6 +121,7 @@ function BackupSummary({ draft }: { draft: DraftSnapshot }) {
           </div>
         ))}
       </dl>
+      {sourceIssues.map(issue => <p key={issue} role="status" className="text-sm text-rose-300">{issue}</p>)}
       {sheet.reviews.length > 0 && <p className="text-sm text-muted-foreground">Includes Storyteller review notes.</p>}
     </>
   )

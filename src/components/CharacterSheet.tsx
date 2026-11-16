@@ -31,7 +31,7 @@ export function CharacterSheet({ sheet, mechanicalOnly = false }: { sheet: Sheet
       <Details rows={[
         ['Chronicle', mechanicalOnly ? undefined : identity.chronicle], ['Age profile', identity.ageProfile], ['Clan', identity.clan], ['Predator Type', identity.predator],
         ['Generation', identity.generation && `${identity.generation}th`], ['Embraced', mechanicalOnly ? undefined : identity.embraced],
-        ['Clan Bane', sheet.bane], ['Compulsion', sheet.compulsion],
+        ['Source pack', sheet.sourcePack], ['Clan Bane', sheet.bane], ['Compulsion', sheet.compulsion],
       ]} />
       <dl className="sheet-tracks" aria-label="Character tracks">
         {tracksAndExperience.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}

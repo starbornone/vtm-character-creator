@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { playersGuide } from '@/catalog/source-packs'
 import { traitGroups } from '@/catalog/traits'
 import { AllocationEditor } from '@/components/AllocationEditor'
 import { CharacterSheet } from '@/components/CharacterSheet'
@@ -51,7 +52,7 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
   const { dispatch } = drafts
   const panel = useRef<HTMLDivElement>(null)
   const shouldFocus = useRef(false)
-  const { ageProfile, path, traits, starting, tracks, sheet, pending } = evaluateCharacter(draft)
+  const { ageProfile, path, traits, starting, tracks, sheet, pending, sourceIssues } = evaluateCharacter(draft)
   const { attributes, skills, specialties } = traits
   const { health, willpower } = tracks
   const { predatorGrant } = specialties
@@ -110,8 +111,20 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
       </nav>
 
       <div ref={panel} tabIndex={-1} role="region" aria-label={`${guideSteps[index].title} step`} className="space-y-4 focus:outline-none print:hidden">
-        {step === 'concept' && <ConceptEditor draft={draft.concept} onChange={update => dispatch({ type: 'concept', update })}
-          ageProfile={ageProfile} onAgeProfile={profile => dispatch({ type: 'age-profile', profile })} />}
+        {step === 'concept' && <>
+          <ConceptEditor draft={draft.concept} onChange={update => dispatch({ type: 'concept', update })}
+            ageProfile={ageProfile} onAgeProfile={profile => dispatch({ type: 'age-profile', profile })} />
+          <fieldset className="space-y-2 rounded-xl border border-border bg-card p-5 sm:p-7">
+            <legend className="px-2 font-semibold">Rule sources</legend>
+            <label className="flex min-h-9 items-center gap-2 text-sm">
+              <input type="checkbox" className="size-4 accent-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300"
+                checked={path.sourcePacks.includes(playersGuide.id)} onChange={event => dispatch({ type: 'players-guide', enabled: event.target.checked })} />
+              Enable Player’s Guide
+            </label>
+            <p className="text-sm text-muted-foreground">Core is always available. The Player’s Guide adds selected clans, Predator Types, and powers to this draft.</p>
+            {sourceIssues.map(issue => <p key={issue} role="status" className="text-sm text-rose-300">{issue}</p>)}
+          </fieldset>
+        </>}
         {step === 'traits' && <>
             <dl aria-live="polite" className="grid grid-cols-2 overflow-hidden rounded-xl border border-border bg-card">
               <div className="border-r border-border px-4 py-3 sm:px-6">

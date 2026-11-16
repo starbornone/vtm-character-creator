@@ -38,7 +38,7 @@ export function makeStorytellerBrief(draft: CharacterDraft, narrative: BriefNarr
     ['Age profile', identity.ageProfile], ['Clan', identity.clan ?? 'Unassigned'],
     ['Predator Type', starting.profile.predatorAllowed ? identity.predator ?? 'Unassigned' : undefined],
     ['Generation', identity.generation ? `${identity.generation}th` : 'Unassigned'],
-    ['Clan Bane', sheet.bane], ['Compulsion', sheet.compulsion],
+    ['Source pack', sheet.sourcePack], ['Clan Bane', sheet.bane], ['Compulsion', sheet.compulsion],
   ]))
 
   section('### Tracks', details([
