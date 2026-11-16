@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T23:13:55+11:00",
+  "updatedAt": "2026-11-16T23:16:52+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -10,16 +10,16 @@
   },
   "items": [
     {
-      "id": "review-player-storyteller-handoffs",
-      "title": "Review sample handoffs with a player and a Storyteller",
-      "group": "Product feedback",
-      "notes": "The fictional Storyteller brief, coterie plan, and starting character draft are ready. Internal Chromium walkthrough verified the Markdown download, coterie restore, reload, and preservation of the open draft. The release verification record contains the walkthroughs and preliminary usability findings. Player and Storyteller feedback is pending. Collect it and use it to rank follow-ups before completing this item."
-    },
-    {
       "id": "scope-private-storyteller-workspace",
       "title": "Scope a private Storyteller workspace",
       "group": "Chronicle discovery",
       "notes": "Use the handoff feedback to identify shared chronicle work that the current planner and portable files leave unresolved. Record the first useful workflow, player and Storyteller access, data ownership, export and deletion expectations, and a decision on whether to pursue implementation."
+    },
+    {
+      "id": "review-player-storyteller-handoffs",
+      "title": "Review sample handoffs with a player and a Storyteller",
+      "group": "Product feedback",
+      "notes": "Deferred at the maintainer’s request. The sample brief, coterie plan, and starting draft are ready. Internal Chromium walkthrough verified download, restore, reload, and preservation of the open draft. Resume the player and Storyteller walkthroughs in the release verification record and use their feedback to rank follow-ups."
     },
     {
       "id": "verify-foundry-v5-actor-import",

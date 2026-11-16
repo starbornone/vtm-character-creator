@@ -66,8 +66,11 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 
 ## Next priorities
 
-1. **Review handoffs with a player and a Storyteller.** The fictional sample brief, coterie plan, and walkthroughs are ready. Internal verification checked what is shared, plan restore, and reopening the same draft and step. Use the [handoff review record](docs/release-verification.md#player-and-storyteller-handoff-review) to capture player and Storyteller feedback and rank follow-up fixes.
-2. **Scope a private Storyteller workspace.** Use the walkthrough findings to identify which shared chronicle tasks still need a workspace. Describe what players and Storytellers can see and change, who owns the chronicle data, and what export and deletion mean. Capture the smallest useful workflow and a decision on whether to pursue it.
+**Scope a private Storyteller workspace.** Use the walkthrough findings to identify which shared chronicle tasks still need a workspace. Describe what players and Storytellers can see and change, who owns the chronicle data, and what export and deletion mean. Capture the smallest useful workflow and a decision on whether to pursue it.
+
+### Deferred external handoff feedback
+
+The fictional sample brief, coterie plan, and walkthroughs are ready. Internal verification checked what is shared, plan restore, and reopening the same draft and step. Resume with the [handoff review record](docs/release-verification.md#player-and-storyteller-handoff-review) to capture player and Storyteller observations and rank follow-up fixes.
 
 ### Deferred Foundry compatibility check
 

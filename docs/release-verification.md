@@ -49,7 +49,9 @@ Rehearsed both walkthroughs on 16 November 2026 in the Chromium production previ
 
 ### Review status
 
+External walkthroughs are deferred. The sample files and internal findings are ready for review when this work resumes.
+
 | Reviewer role | Status | Feedback |
 | --- | --- | --- |
-| Player | Awaiting walkthrough | Pending |
-| Storyteller | Awaiting walkthrough | Pending |
+| Player | Deferred | Pending |
+| Storyteller | Deferred | Pending |
