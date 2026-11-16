@@ -9,6 +9,7 @@ import { ChroniclePresets } from '@/components/ChroniclePresets'
 import { ClanPathEditor } from '@/components/ClanPathEditor'
 import { DraftControls } from '@/components/DraftControls'
 import { ConceptEditor, RelationshipEditor } from '@/components/NarrativeEditors'
+import { RelationshipMap } from '@/components/RelationshipMap'
 import { ShareBuildControls, SharedBuild } from '@/components/SharedBuild'
 import { SpecialtyEditor } from '@/components/SpecialtyEditor'
 import { StartingExperienceEditor } from '@/components/StartingExperienceEditor'
@@ -199,7 +200,11 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
             <StartingOptionsEditor draft={draft.starting} build={starting} onChange={update => dispatch({ type: 'starting', update })} />
             <StartingExperienceEditor build={starting} purchases={draft.starting.purchases} onChange={purchases => dispatch({ type: 'starting', update: { purchases } })} />
         </>}
-        {step === 'relationships' && <RelationshipEditor draft={draft.relationships} onChange={update => dispatch({ type: 'relationships', update })} />}
+        {step === 'relationships' && <>
+          <RelationshipEditor draft={draft.relationships} onChange={update => dispatch({ type: 'relationships', update })} />
+          <RelationshipMap key={id ?? 'unnamed'} characterName={draft.concept.name} relationships={draft.relationships}
+            map={draft.relationshipMap} onChange={map => dispatch({ type: 'relationship-map', map })} />
+        </>}
         {step === 'review' && (
           <section className="space-y-4 rounded-xl border border-border bg-card p-5 sm:p-7" aria-labelledby="review-heading">
             <div className="flex flex-wrap items-start justify-between gap-3">

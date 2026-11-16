@@ -99,6 +99,8 @@ export function BackupRestore({ library, onRestore }: BackupRestoreProps) {
 
 function BackupSummary({ draft }: { draft: DraftSnapshot }) {
   const { sheet, pending, sourceIssues } = evaluateCharacter(draft.character)
+  const map = draft.character.relationshipMap
+  const mapSummary = map && `${map.people.length} added ${map.people.length === 1 ? 'person' : 'people'} · ${map.connections.length} ${map.connections.length === 1 ? 'connection' : 'connections'}`
   const step = guideSteps.find(option => option.id === draft.step)
   const openSteps = guideSteps.filter(option => option.id !== 'review' && pending[option.id].length > 0)
   const details = [
@@ -110,6 +112,7 @@ function BackupSummary({ draft }: { draft: DraftSnapshot }) {
     ['Predator Type', sheet.identity.predator],
     ['Source pack', sheet.sourcePack],
     ['Resume at', step?.title],
+    ['Relationship Map', mapSummary],
     ['Status', sheet.draft ? `Draft · ${openSteps.length} open ${openSteps.length === 1 ? 'section' : 'sections'}` : 'Complete'],
     ['Advancement XP', sheet.advancement && `${sheet.advancement.earned} earned · ${sheet.advancement.spent} spent · ${sheet.advancement.remaining} remaining${sheet.advancement.paused ? ' · Paused' : ''}`],
   ]

@@ -6,6 +6,7 @@ import { skillIds } from '../catalog/traits.ts'
 import { isXpAward } from '../rules/advancement.ts'
 import type { CharacterDraft } from '../rules/character-guide.ts'
 import { ageProfileIds, startingGenerations } from '../rules/creation-profiles.ts'
+import { endpointKey, isRecordedMapKind, type MapEndpoint } from '../rules/relationship-map.ts'
 import { attributeIds, bloodPotencyRatings } from '../rules/starting-xp.ts'
 import { ratings, skillDistributionIds, specialtySkills } from '../rules/trait-ledger.ts'
 
@@ -90,10 +91,41 @@ function isAdvancement(value: unknown) {
     && Array.isArray(value.purchases) && value.purchases.every(purchase => isPurchase(purchase, true))
 }
 
+function isMapId(value: unknown): value is string {
+  return typeof value === 'string' && /^[a-z0-9-]{1,64}$/.test(value)
+}
+
+function isMapText(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0
+}
+
+function isMapEndpoint(value: unknown, people: ReadonlySet<string>): value is MapEndpoint {
+  if (!isRecord(value)) return false
+  if (value.kind === 'character') return true
+  if (value.kind === 'person') return isMapId(value.id) && people.has(value.id)
+  return isRecordedMapKind(value.kind) && isMapText(value.name)
+}
+
+function isRelationshipMap(value: unknown) {
+  if (!isRecord(value) || !Array.isArray(value.people) || !Array.isArray(value.connections)) return false
+  const people = new Set<string>()
+  for (const person of value.people) {
+    if (!isRecord(person) || !isMapId(person.id) || !isMapText(person.name) || people.has(person.id)) return false
+    people.add(person.id)
+  }
+  const connections = new Set<string>()
+  for (const edge of value.connections) {
+    if (!isRecord(edge) || !isMapId(edge.id) || !isMapText(edge.label) || connections.has(edge.id)
+      || !isMapEndpoint(edge.from, people) || !isMapEndpoint(edge.to, people) || endpointKey(edge.from) === endpointKey(edge.to)) return false
+    connections.add(edge.id)
+  }
+  return true
+}
+
 // Check the stored input shape. The rules evaluator handles unfinished and invalid choices.
 export function isCharacterDraft(value: unknown): value is CharacterDraft {
   if (!isRecord(value)) return false
-  const { ageProfile, sourcePacks, concept, relationships, traits, clanPath, starting, advancement } = value
+  const { ageProfile, sourcePacks, concept, relationships, relationshipMap, traits, clanPath, starting, advancement } = value
   const selectedProfile = ageProfileIds.find(id => id === ageProfile)
   if (ageProfile !== undefined && !selectedProfile) return false
   if (sourcePacks !== undefined && !isSourcePacks(sourcePacks)) return false
@@ -107,4 +139,5 @@ export function isCharacterDraft(value: unknown): value is CharacterDraft {
     && isRecord(traits.freeSpecialty) && (traits.freeSpecialty.skill === '' || oneOf(traits.freeSpecialty.skill, skillIds))
     && isString(traits.freeSpecialty.name) && isClanPath(clanPath) && isStarting(starting)
     && (advancement === undefined || isAdvancement(advancement))
+    && (relationshipMap === undefined || isRelationshipMap(relationshipMap))
 }

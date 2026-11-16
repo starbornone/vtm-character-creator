@@ -5,6 +5,7 @@ import { traitGroups, traitLabel } from '../catalog/traits.ts'
 import { evaluateAdvancement, type AdvancementDraft } from './advancement.ts'
 import { evaluateClanPath, initialClanPath, manualOptionId, type ClanPathDraft } from './clan-path.ts'
 import { ageProfiles, defaultAgeProfile, type AgeProfileId } from './creation-profiles.ts'
+import type { RelationshipMapDraft } from './relationship-map.ts'
 import { bloodEffects, evaluateStartingBuild, initialStartingDraft, type StartingDraft } from './starting-xp.ts'
 import { deriveTracks, editTraits, evaluateTraitLedger, initialTraitDraft, type TraitAction, type TraitDraft } from './trait-ledger.ts'
 
@@ -49,6 +50,7 @@ export interface CharacterDraft {
   sourcePacks?: string[]
   concept: ConceptDraft
   relationships: RelationshipDraft
+  relationshipMap?: RelationshipMapDraft
   traits: TraitDraft
   clanPath: ClanPathDraft
   starting: StartingDraft
@@ -70,6 +72,7 @@ export type CharacterAction = TraitAction
   | { type: 'chronicle-preset'; settings: ChronicleSettings }
   | { type: 'concept'; update: Partial<ConceptDraft> }
   | { type: 'relationships'; update: Partial<RelationshipDraft> }
+  | { type: 'relationship-map'; map: RelationshipMapDraft }
   | { type: 'clan-path'; update: Partial<ClanPathDraft> }
   | { type: 'starting'; update: Partial<StartingDraft> }
   | { type: 'advancement'; journal: AdvancementDraft }
@@ -93,6 +96,7 @@ export function editCharacter(draft: CharacterDraft, action: CharacterAction): C
     }
     case 'concept': return { ...draft, concept: { ...draft.concept, ...action.update } }
     case 'relationships': return { ...draft, relationships: { ...draft.relationships, ...action.update } }
+    case 'relationship-map': return { ...draft, relationshipMap: action.map.people.length || action.map.connections.length ? action.map : undefined }
     case 'clan-path': return { ...draft, clanPath: { ...draft.clanPath, ...action.update } }
     case 'starting': return { ...draft, starting: { ...draft.starting, ...action.update } }
     case 'advancement': return { ...draft, advancement: action.journal.awards.length || action.journal.purchases.length ? action.journal : undefined }

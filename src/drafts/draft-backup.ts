@@ -11,7 +11,8 @@ const caitiffDraftSchemaVersion = 3
 const thinBloodDraftSchemaVersion = 4
 const sourceDraftSchemaVersion = 5
 const advancementDraftSchemaVersion = 6
-const draftSchemaVersions = [legacyDraftSchemaVersion, profiledDraftSchemaVersion, caitiffDraftSchemaVersion, thinBloodDraftSchemaVersion, sourceDraftSchemaVersion, advancementDraftSchemaVersion]
+const relationshipMapDraftSchemaVersion = 7
+const draftSchemaVersions = [legacyDraftSchemaVersion, profiledDraftSchemaVersion, caitiffDraftSchemaVersion, thinBloodDraftSchemaVersion, sourceDraftSchemaVersion, advancementDraftSchemaVersion, relationshipMapDraftSchemaVersion]
 export const draftRuleset = 'vtm-v5'
 const backupFormat = 'vtm-character-creator-draft'
 
@@ -22,6 +23,7 @@ export interface DraftSnapshot {
 }
 
 export function draftSchemaVersionFor(snapshots: readonly DraftSnapshot[]) {
+  if (snapshots.some(({ character }) => character.relationshipMap !== undefined)) return relationshipMapDraftSchemaVersion
   if (snapshots.some(({ character }) => character.advancement !== undefined)) return advancementDraftSchemaVersion
   if (snapshots.some(({ character }) => character.sourcePacks !== undefined || usesPlayersGuideSelections(character.clanPath, character.starting.purchases))) {
     return sourceDraftSchemaVersion
@@ -68,15 +70,16 @@ export function readDraftBackup(raw: string): BackupResult {
   }
 
   if (!isRecord(value) || value.format !== backupFormat) return { issue: 'Choose a Character Creator draft backup.' }
-  if (!draftSchemaVersions.some(version => version === value.schemaVersion)) return { issue: 'This draft backup version is unsupported.' }
+  const { schemaVersion } = value
+  if (typeof schemaVersion !== 'number' || !draftSchemaVersions.includes(schemaVersion)) return { issue: 'This draft backup version is unsupported.' }
   if (value.ruleset !== draftRuleset) return { issue: 'This draft backup uses an unsupported ruleset.' }
-  if ((value.schemaVersion === sourceDraftSchemaVersion || value.schemaVersion === advancementDraftSchemaVersion) && isRecord(value.draft) && isRecord(value.draft.character)) {
+  if (schemaVersion >= sourceDraftSchemaVersion && isRecord(value.draft) && isRecord(value.draft.character)) {
     const packs = value.draft.character.sourcePacks
     const unavailable = isSourcePacks(packs) ? unavailableSourcePacks(packs) : []
     if (unavailable.length) return { issue: unavailableSourceMessage(unavailable), unavailableSources: unavailable }
   }
   if (!isDraftSnapshot(value.draft)) return { issue: 'The draft name, guide step, or character inputs are missing or invalid.' }
-  if (value.schemaVersion !== draftSchemaVersionFor([value.draft])) return { issue: 'The character inputs do not match this draft backup version.' }
+  if (schemaVersion !== draftSchemaVersionFor([value.draft])) return { issue: 'The character inputs do not match this draft backup version.' }
 
   const { name, step, character } = value.draft
   return { draft: { name: name.trim(), step, character } }
