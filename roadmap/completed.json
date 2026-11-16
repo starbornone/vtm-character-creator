@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T21:17:19+11:00",
+  "updatedAt": "2026-11-16T21:45:01+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -154,6 +154,13 @@
       "group": "Catalog",
       "notes": "Added the Ministry, Extortionist, Montero, Pursuer, Chimerstry, and Fata Morgana with source references, grants, and prerequisites. Verified Elias Voss through browser review, JSON restore and reload, and a mechanical link. Both previews distinguished disabled selections from unknown source IDs. Core remains the default.",
       "completedAt": "2026-11-16T21:17:19+11:00"
+    },
+    {
+      "id": "add-xp-advancement-journal",
+      "title": "Add a post-creation XP advancement journal",
+      "group": "Advancement",
+      "notes": "Added earned XP awards and ordered purchases on top of the completed creation build. Verified Mara Vale’s 55 earned XP, 53 spent, and 2 remaining in Review & Print, including Amalgam purchase order, award removal, a pause after editing creation, named draft reload, and restoring the downloaded JSON as a separate draft. The sheet and Storyteller brief show advancement alongside starting XP. Mechanical links continue to share the creation build.",
+      "completedAt": "2026-11-16T21:45:01+11:00"
     }
   ]
 }

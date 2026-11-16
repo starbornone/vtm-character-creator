@@ -84,4 +84,10 @@ The brief shows evaluated mechanics and open rulings with generic labels for man
 
 **Consequences.** Turning the Player’s Guide off leaves affected choices open and removes their effects. Re-enabling it replays the saved selections. Version 5 carries source data. Core-only characters keep their original format and rules.
 
+## 11 Replay earned XP from the creation build
+
+**Decision.** Use the live completed creation build as the journal baseline. Keep XP awards and ordered advancement purchases in a separate ledger and validate each against the preceding valid entries. Require confirmation for the first dot of a new out-of-clan Discipline and preserve pending purchases and awards through creation edits.
+
+**Consequences.** The guide can still edit creation details. If a required choice becomes open, the journal pauses until creation is complete again. Print and the Storyteller brief use the current applied ratings and separate XP totals. Version 6 backups carry the whole journal, and mechanical links share the creation build.
+
 See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the full flow.

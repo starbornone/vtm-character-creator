@@ -1,19 +1,12 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T21:17:19+11:00",
+  "updatedAt": "2026-11-16T21:45:01+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
     "status": "active",
-    "summary": "A browser-based Vampire: The Masquerade V5 creator with the named Core clans, Caitiff, Thin-bloods, and an opt-in Player’s Guide pack."
+    "summary": "A browser-based Vampire: The Masquerade V5 creator with the named Core clans, Caitiff, Thin-bloods, an opt-in Player’s Guide pack, and post-creation XP advancement."
   },
-  "items": [
-    {
-      "id": "add-xp-advancement-journal",
-      "title": "Add a post-creation XP advancement journal",
-      "group": "Advancement",
-      "notes": "Start from a finished character and track earned XP, ordered purchases, and remaining XP separately from starting allocations. Verify dependent purchases, undo or removal, reload, and a backup round-trip with a hand-checked advancement fixture."
-    }
-  ]
+  "items": []
 }

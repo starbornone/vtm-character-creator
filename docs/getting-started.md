@@ -31,7 +31,7 @@ Drafts belong to the current browser and site address. If saving fails, the last
 
 ## Back up and restore a draft
 
-Select **Download current draft** to save a JSON backup of the character and current step, including an unfinished or unnamed character. The backup includes narrative fields and Storyteller notes.
+Select **Download current draft** to save a JSON backup of the character and current step, including an unfinished or unnamed character. The backup includes narrative fields, Storyteller notes, and the XP advancement journal when present.
 
 Select **Choose JSON backup** and open the file. Review the character, saved step, and completion status in **Backup preview**. Edit **New draft name** if desired, then select **Restore as new draft**. The copy opens at its saved step and the existing drafts remain in the library. If the original name is already taken, the preview suggests a name with a copy suffix.
 
@@ -39,15 +39,21 @@ The guide reports malformed files, unsupported versions or rulesets, and invalid
 
 ## Share a mechanical build
 
-In **Review & Print**, select **Share mechanical build** and copy the link. Anyone with the link can open a read-only sheet showing the included ratings, catalog choices, and starting XP. The link leaves out draft and character names, chronicle details, relationships, notes, custom Specialty names, and manual entries.
+In **Review & Print**, select **Share mechanical build** and copy the link. Anyone with the link can open a read-only sheet showing the included creation ratings, catalog choices, and starting XP. The link leaves out the advancement journal, draft and character names, chronicle details, relationships, notes, custom Specialty names, and manual entries.
 
 The preview identifies omitted choices that need to be re-entered. Select **Save as new draft** to add an editable copy to your own browser library. The copy starts at **Concept** so you can add its name and story. Use a [JSON backup](#back-up-and-restore-a-draft) when you want to share the full draft.
 
 ## Export a Storyteller brief
 
-In **Review & Print**, select **Storyteller brief**. The Markdown preview includes evaluated mechanics, starting XP, and open rulings such as unresolved mechanical choices, rejected XP purchases, and manual options that need Storyteller review.
+In **Review & Print**, select **Storyteller brief**. The Markdown preview includes evaluated mechanics, starting and advancement XP, and open rulings such as unresolved mechanical choices, rejected XP purchases, and manual options that need Storyteller review.
 
 Choose the narrative sections you want to share. Character identity and chronicle, Ambition and Desire, Convictions and Touchstones, relationships and Chronicle Tenets, and custom names and Storyteller notes each start unchecked. Manual options and custom Specialties use generic labels in the default brief, while their ratings, costs, and review flags remain visible. Select **Download Markdown** to save the text shown in the preview as `storyteller-brief.md`.
+
+## Advance a finished character
+
+Finish the creation choices, then open **XP Advancement Journal** in **Review & Print**. Enter a whole-number XP award and select **Record XP**. Choose a purchase type and target to see the cost, then select **Add purchase**. Starting XP still belongs to the creation steps.
+
+Use **Earlier**, **Later**, or **Remove** to correct the journal. You can also remove an XP award. A purchase that loses a prerequisite or funding shows a reason and stays in the journal so you can fix it. Reopening a required creation choice pauses the journal until creation is complete again. The sheet shows the valid purchases and current ratings, and a named draft autosaves the journal. Use a JSON backup to restore a copy with its advancement.
 
 ## Enable the Player’s Guide
 

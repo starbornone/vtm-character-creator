@@ -14,6 +14,7 @@
 | `src/catalog/source-packs.ts`, `src/rules/creation-sources.ts` | Pack IDs, availability checks, and detection of packed selections in transfers. |
 | `src/components/CatalogSelect.tsx` | Keyboard-accessible search and native select for source-tagged catalogs. |
 | `src/catalog/starting-options.ts`, `src/rules/starting-xp.ts` | Starting Advantage and Flaw options, generation and Blood Potency, and ordered XP rules. |
+| `src/rules/advancement.ts`, `src/components/AdvancementJournal.tsx` | Earned XP awards and ordered purchases against the finished creation build. |
 | `src/rules/character-guide.ts`, `src/components/CharacterSheet.tsx` | Shared draft evaluation, review issues, and the printable sheet. |
 | `src/drafts/`, `src/components/DraftControls.tsx` | Draft input validation, browser storage, recovery download, and draft controls. |
 | `src/drafts/draft-backup.ts`, `src/components/BackupRestore.tsx` | Versioned backup format, file validation, and restore preview. |
@@ -41,6 +42,8 @@ For Thin-blood rules, run the [Thin-blood tests](../tests/thin-blood-creation.te
 For catalog changes, run the [catalog tests](../tests/core-catalog.test.ts) and try a second path in the browser. Search by name and page, switch clans with a Predator Type already selected, and confirm that a manual entry’s source or note reaches **Storyteller Review**.
 
 For source packs, run the [Player’s Guide tests](../tests/players-guide.test.ts). Try [Elias Voss](v5-rules.md#elias-voss-mixed-source-fixture) with the pack on, off, and on again. Open backups and links with the pack enabled, disabled, and with an unknown pack ID in a version 5 source manifest. Confirm that a supported disabled pack leaves open choices and that the unknown source preview offers no save action.
+
+For advancement, run the [journal tests](../tests/advancement.test.ts) and follow [Mara’s advancement fixture](v5-rules.md#mara-vale-advancement-fixture). Move Potence 3 before Presence 3, then move it back. Remove and re-record the 25 XP award. Verify the balance and Health after each change, then reload a named draft and preview and restore its JSON backup.
 
 For draft changes, run the [browser storage tests](../tests/browser-drafts.test.ts), save two characters at different steps, and reload after switching between them. Force a write failure on the local draft key and confirm that the last save persists, the current edits appear in the download, and a retry succeeds when writes resume.
 

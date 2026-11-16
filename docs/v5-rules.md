@@ -90,6 +90,23 @@ The [ledger test](../tests/trait-ledger.test.ts) exercises the base allocation a
 
 The [catalog tests](../tests/core-catalog.test.ts) cover every named clan and Predator Type, including a complete Tremere Bagger path, out-of-clan XP, grant budgets, and Storyteller review entries.
 
+## Mara Vale advancement fixture
+
+The journal uses the XP costs on Core p. 137 and starts from Mara’s finished sheet with 15 starting XP spent. It covers Attribute and Skill dots, Specialties, existing catalog Advantages and Discipline powers, and Blood Potency within the supported Generation caps. A new out-of-clan Discipline needs player confirmation of the learning requirements (Core pp. 107, 231, 244). A Thin-blood can raise their permanent Discipline Affinity at the out-of-clan rate (Core p. 183). Ritual and Alchemy formula purchases, feeding-based temporary powers, and powers beyond the existing catalog are outside this journal’s coverage.
+
+Record awards of 20, 25, and 10 XP for 55 earned XP. Begin with Presence 2, Potence 2, Stamina 3, and Stealth 2, including starting purchases and grants.
+
+| Advancement purchase | Cost | XP left |
+| --- | ---: | ---: |
+| Presence 3 with Dread Gaze | 15 | 40 |
+| Potence 3 with Spark of Rage | 15 | 25 |
+| Stamina 4 | 20 | 5 |
+| Stealth Specialty, Catwalks | 3 | 2 |
+
+Spark of Rage requires Presence 3 when purchased (Core pp. 244, 265, 267). Move it above Dread Gaze and it stops applying, leaving Potence 2 and 17 XP. Remove Dread Gaze entirely and 32 XP remain. Restore the order and remove the 25 XP award to fund only the two Discipline purchases. Restoring the award brings Health back to 7 and leaves 2 XP. Starting XP stays at 15 spent and 0 remaining throughout.
+
+The [fixture](../tests/fixtures/mara-vale-advancement.ts) and [journal tests](../tests/advancement.test.ts) verify those totals, paused creation choices, backup restore, reload, link scope, and Specialty privacy in the brief. Blood Potency advances at ten times the new rating with the Generation cap from Core p. 214 and the [corrected Blood Potency table](https://renegadegamestudios.com/content/File%20Storage%20for%20site/VTM/BloodPotencyTable.pdf).
+
 ## Rowan Pike fledgling fixture
 
 For the newly Embraced standard-clan path, Core pp. 137 and 140 give 12th or 13th Generation, Blood Potency 1, and 0 starting XP. Use Humanity 7, the base 7 Advantage and 2 Flaw dots, and the usual clan Discipline allocation (Core pp. 136–137). Core pp. 149 and 175 describe leaving Predator Type for play for many fledglings. This path uses that option, so no Predator grants or Humanity adjustments apply. Blood Potency 1 gives two Blood Surge dice and Bane Severity 2 under the correction to Core p. 216.
