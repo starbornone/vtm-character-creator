@@ -5,6 +5,7 @@ import { traitGroups } from '@/catalog/traits'
 import { AdvancementJournal } from '@/components/AdvancementJournal'
 import { AllocationEditor } from '@/components/AllocationEditor'
 import { CharacterSheet } from '@/components/CharacterSheet'
+import { CharacterSummary } from '@/components/CharacterSummary'
 import { ChroniclePresets } from '@/components/ChroniclePresets'
 import { ClanPathEditor } from '@/components/ClanPathEditor'
 import { CoteriePlanner } from '@/components/CoteriePlanner'
@@ -75,6 +76,7 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
   const previous = guideSteps[index - 1]
   const next = guideSteps[index + 1]
   const openSteps = editSteps.filter(option => openChoices[option.id].length > 0)
+  const completedSections = editSteps.length - openSteps.length
 
   useEffect(() => {
     const request = focusRequest.current
@@ -141,113 +143,117 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
         </ol>
       </nav>
 
-      <div ref={panel} tabIndex={-1} role="region" aria-label={`${guideSteps[index].title} step`} className="space-y-4 focus:outline-none print:hidden">
-        {step === 'concept' && <>
-          <ConceptEditor draft={draft.concept} onChange={update => dispatch({ type: 'concept', update })}
-            ageProfile={ageProfile} onAgeProfile={profile => dispatch({ type: 'age-profile', profile })} />
-          <fieldset id="rule-sources" tabIndex={-1} className="rounded-xl border border-border bg-card px-5 pt-1 pb-5 sm:px-7 sm:pb-7">
-            <legend className="px-2 font-semibold"><span className="guide-action"><BookOpen aria-hidden="true" />Rule sources</span></legend>
-            <label className="flex min-h-9 items-center gap-2 text-sm">
-              <input id="enable-players-guide" type="checkbox" className="size-4 accent-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300"
-                checked={path.sourcePacks.includes(playersGuide.id)} onChange={event => dispatch({ type: 'players-guide', enabled: event.target.checked })} />
-              Enable Player’s Guide
-            </label>
-            <p className="mt-2 text-sm text-muted-foreground">Core is always available. The Player’s Guide adds selected clans, Predator Types, and powers to this draft.</p>
-            {sourceIssues.map(issue => <p key={issue} role="status" className="mt-2 text-sm text-rose-300">{issue}</p>)}
-          </fieldset>
-          <ChroniclePresets key={id ?? 'unnamed'} settings={chronicleSettings(draft)}
-            onApply={settings => dispatch({ type: 'chronicle-preset', settings })} />
-        </>}
-        {step === 'traits' && <>
-            <dl aria-live="polite" className="grid grid-cols-2 overflow-hidden rounded-xl border border-border bg-card">
-              <div className="border-r border-border px-4 py-3 sm:px-6">
-                <dt className="text-sm font-medium text-muted-foreground">Health</dt>
-                <dd className="mt-1 text-3xl font-semibold tabular-nums">{health.total ?? '—'}</dd>
-                <dd className="mt-1 text-sm text-muted-foreground">Stamina ({health.stamina ?? '—'}) + 3{health.resilience > 0 ? ` + Resilience (${health.resilience})` : ''}{health.stamina !== traits.health.stamina ? ' · includes XP' : ''}</dd>
-              </div>
-              <div className="px-4 py-3 sm:px-6">
-                <dt className="text-sm font-medium text-muted-foreground">Willpower</dt>
-                <dd className="mt-1 text-3xl font-semibold tabular-nums">{willpower.total ?? '—'}</dd>
-                <dd className="mt-1 text-sm text-muted-foreground">Composure ({willpower.composure ?? '—'}) + Resolve ({willpower.resolve ?? '—'}){willpower.total !== traits.willpower.total ? ' · includes XP' : ''}</dd>
-              </div>
-            </dl>
-
-            <AllocationEditor
-              kind="attributes"
-              groups={attributeGroups}
-              values={draft.traits.attributes}
-              allocation={attributes}
-              finalRatings={starting.final.attributes}
-              onChange={(id, rating) => dispatch({ type: 'attribute', id, rating })}
-            />
-            <AllocationEditor
-              kind="skills"
-              groups={skillGroups}
-              values={draft.traits.skills}
-              allocation={skills}
-              finalRatings={starting.final.skills}
-              skillGrant={predatorGrant?.kind === 'skill-dot' && path.predator ? { skill: predatorGrant.skill, source: path.predator.name } : undefined}
-              onChange={(id, rating) => dispatch({ type: 'skill', id, rating })}
-            >
-              <label className="grid gap-1.5 text-sm">
-                Skill distribution
-                <select
-                  className="ledger-field"
-                  value={draft.traits.distribution}
-                  onChange={event => {
-                    const distribution = skillDistributionIds.find(id => id === event.target.value)
-                    if (distribution) dispatch({ type: 'distribution', distribution })
-                  }}
-                >
-                  {skillDistributionIds.map(id => <option key={id} value={id}>{skillDistributions[id].name}</option>)}
-                </select>
+      <div className={`print:hidden ${step !== 'review' ? 'grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_15rem]' : ''}`}>
+        {step !== 'review' && <CharacterSummary sheet={sheet} predatorAllowed={path.profile.predatorAllowed}
+          completedSections={completedSections} totalSections={editSteps.length} />}
+        <div ref={panel} tabIndex={-1} role="region" aria-label={`${guideSteps[index].title} step`} className="min-w-0 space-y-4 focus:outline-none lg:col-start-1 lg:row-start-1">
+          {step === 'concept' && <>
+            <ConceptEditor draft={draft.concept} onChange={update => dispatch({ type: 'concept', update })}
+              ageProfile={ageProfile} onAgeProfile={profile => dispatch({ type: 'age-profile', profile })} />
+            <fieldset id="rule-sources" tabIndex={-1} className="rounded-xl border border-border bg-card px-5 pt-1 pb-5 sm:px-7 sm:pb-7">
+              <legend className="px-2 font-semibold"><span className="guide-action"><BookOpen aria-hidden="true" />Rule sources</span></legend>
+              <label className="flex min-h-9 items-center gap-2 text-sm">
+                <input id="enable-players-guide" type="checkbox" className="size-4 accent-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300"
+                  checked={path.sourcePacks.includes(playersGuide.id)} onChange={event => dispatch({ type: 'players-guide', enabled: event.target.checked })} />
+                Enable Player’s Guide
               </label>
-            </AllocationEditor>
-            <SpecialtyEditor draft={draft.traits} specialties={specialties} dispatch={dispatch} />
-        </>}
-        {step === 'clan' && <ClanPathEditor draft={draft.clanPath} path={path} predatorGrant={predatorGrant} finalRatings={starting.final.disciplines} useFledgling={() => dispatch({ type: 'age-profile', profile: 'fledgling' })} onChange={update => dispatch({ type: 'clan-path', update })} />}
-        {step === 'starting' && <>
-            <StartingOptionsEditor draft={draft.starting} build={starting} onChange={update => dispatch({ type: 'starting', update })} />
-            <StartingExperienceEditor build={starting} purchases={draft.starting.purchases} onChange={purchases => dispatch({ type: 'starting', update: { purchases } })} />
-        </>}
-        {step === 'relationships' && <>
-          <RelationshipEditor draft={draft.relationships} onChange={update => dispatch({ type: 'relationships', update })} />
-          <RelationshipMap key={id ?? 'unnamed'} characterName={draft.concept.name} relationships={draft.relationships}
-            map={draft.relationshipMap} onChange={map => dispatch({ type: 'relationship-map', map })} />
-        </>}
-        {step === 'review' && (
-          <section className="space-y-4 rounded-xl border border-border bg-card p-5 sm:p-7" aria-labelledby="review-heading">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <h2 id="review-heading" className="text-2xl font-semibold tracking-tight">Review &amp; Print</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{sheet.draft ? 'Open choices remain. The printed sheet will be marked Draft.' : sheet.reviews.length ? 'Starting choices are filled in. See the Storyteller review notes on the sheet.' : 'All starting choices are resolved.'}</p>
-              </div>
-              <button type="button" className="guide-button guide-action guide-button-primary" onClick={() => window.print()}><Printer aria-hidden="true" />Print character sheet</button>
-            </div>
-            <ShareBuildControls key={id ?? 'unnamed'} draft={draft} />
-            <StorytellerBrief key={`brief-${id ?? 'unnamed'}`} draft={draft} />
-            {openSteps.length > 0 && <ul aria-label="Open choices" className="grid gap-3 sm:grid-cols-2">
-              {openSteps.map(option => <li key={option.id} className="rounded-lg border border-border px-3 py-2">
-                <h3 className="font-medium">{option.title}</h3>
-                <ul className="mt-1 space-y-1 text-sm">
-                  {openChoices[option.id].map(({ message, target }) => <li key={message}>
-                    <button type="button" className="min-h-10 text-left text-rose-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-rose-300"
-                      onClick={() => goTo(target.step, target.id)}>{message}</button>
-                  </li>)}
-                </ul>
-              </li>)}
-            </ul>}
-          </section>
-        )}
-        {step === 'review' && (
-          <AdvancementJournal key={id ?? 'unnamed'} journal={draft.advancement} result={advancement} creationComplete={!sheet.draft}
-            onChange={journal => dispatch({ type: 'advancement', journal })} />
-        )}
+              <p className="mt-2 text-sm text-muted-foreground">Core is always available. The Player’s Guide adds selected clans, Predator Types, and powers to this draft.</p>
+              {sourceIssues.map(issue => <p key={issue} role="status" className="mt-2 text-sm text-rose-300">{issue}</p>)}
+            </fieldset>
+            <ChroniclePresets key={id ?? 'unnamed'} settings={chronicleSettings(draft)}
+              onApply={settings => dispatch({ type: 'chronicle-preset', settings })} />
+          </>}
+          {step === 'traits' && <>
+              <dl aria-live="polite" className="grid grid-cols-2 overflow-hidden rounded-xl border border-border bg-card">
+                <div className="border-r border-border px-4 py-3 sm:px-6">
+                  <dt className="text-sm font-medium text-muted-foreground">Health</dt>
+                  <dd className="mt-1 text-3xl font-semibold tabular-nums">{health.total ?? '—'}</dd>
+                  <dd className="mt-1 text-sm text-muted-foreground">Stamina ({health.stamina ?? '—'}) + 3{health.resilience > 0 ? ` + Resilience (${health.resilience})` : ''}{health.stamina !== traits.health.stamina ? ' · includes XP' : ''}</dd>
+                </div>
+                <div className="px-4 py-3 sm:px-6">
+                  <dt className="text-sm font-medium text-muted-foreground">Willpower</dt>
+                  <dd className="mt-1 text-3xl font-semibold tabular-nums">{willpower.total ?? '—'}</dd>
+                  <dd className="mt-1 text-sm text-muted-foreground">Composure ({willpower.composure ?? '—'}) + Resolve ({willpower.resolve ?? '—'}){willpower.total !== traits.willpower.total ? ' · includes XP' : ''}</dd>
+                </div>
+              </dl>
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>{previous && <button type="button" className="guide-button guide-action" onClick={() => goTo(previous.id)}><ArrowLeft aria-hidden="true" />Back to {previous.title}</button>}</div>
-          <p className="text-sm text-muted-foreground">{editSteps.length - openSteps.length} of {editSteps.length} sections complete</p>
-          {next && <button type="button" className="guide-button guide-action guide-button-primary" onClick={() => goTo(next.id)}>Continue to {next.title}<ArrowRight aria-hidden="true" /></button>}
+              <AllocationEditor
+                kind="attributes"
+                groups={attributeGroups}
+                values={draft.traits.attributes}
+                allocation={attributes}
+                finalRatings={starting.final.attributes}
+                onChange={(id, rating) => dispatch({ type: 'attribute', id, rating })}
+              />
+              <AllocationEditor
+                kind="skills"
+                groups={skillGroups}
+                values={draft.traits.skills}
+                allocation={skills}
+                finalRatings={starting.final.skills}
+                skillGrant={predatorGrant?.kind === 'skill-dot' && path.predator ? { skill: predatorGrant.skill, source: path.predator.name } : undefined}
+                onChange={(id, rating) => dispatch({ type: 'skill', id, rating })}
+              >
+                <label className="grid gap-1.5 text-sm">
+                  Skill distribution
+                  <select
+                    className="ledger-field"
+                    value={draft.traits.distribution}
+                    onChange={event => {
+                      const distribution = skillDistributionIds.find(id => id === event.target.value)
+                      if (distribution) dispatch({ type: 'distribution', distribution })
+                    }}
+                  >
+                    {skillDistributionIds.map(id => <option key={id} value={id}>{skillDistributions[id].name}</option>)}
+                  </select>
+                </label>
+              </AllocationEditor>
+              <SpecialtyEditor draft={draft.traits} specialties={specialties} dispatch={dispatch} />
+          </>}
+          {step === 'clan' && <ClanPathEditor draft={draft.clanPath} path={path} predatorGrant={predatorGrant} finalRatings={starting.final.disciplines} useFledgling={() => dispatch({ type: 'age-profile', profile: 'fledgling' })} onChange={update => dispatch({ type: 'clan-path', update })} />}
+          {step === 'starting' && <>
+              <StartingOptionsEditor draft={draft.starting} build={starting} onChange={update => dispatch({ type: 'starting', update })} />
+              <StartingExperienceEditor build={starting} purchases={draft.starting.purchases} onChange={purchases => dispatch({ type: 'starting', update: { purchases } })} />
+          </>}
+          {step === 'relationships' && <>
+            <RelationshipEditor draft={draft.relationships} onChange={update => dispatch({ type: 'relationships', update })} />
+            <RelationshipMap key={id ?? 'unnamed'} characterName={draft.concept.name} relationships={draft.relationships}
+              map={draft.relationshipMap} onChange={map => dispatch({ type: 'relationship-map', map })} />
+          </>}
+          {step === 'review' && (
+            <section className="space-y-4 rounded-xl border border-border bg-card p-5 sm:p-7" aria-labelledby="review-heading">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h2 id="review-heading" className="text-2xl font-semibold tracking-tight">Review &amp; Print</h2>
+                  <p className="mt-1 text-sm text-muted-foreground">{sheet.draft ? 'Open choices remain. The printed sheet will be marked Draft.' : sheet.reviews.length ? 'Starting choices are filled in. See the Storyteller review notes on the sheet.' : 'All starting choices are resolved.'}</p>
+                </div>
+                <button type="button" className="guide-button guide-action guide-button-primary" onClick={() => window.print()}><Printer aria-hidden="true" />Print character sheet</button>
+              </div>
+              <ShareBuildControls key={id ?? 'unnamed'} draft={draft} />
+              <StorytellerBrief key={`brief-${id ?? 'unnamed'}`} draft={draft} />
+              {openSteps.length > 0 && <ul aria-label="Open choices" className="grid gap-3 sm:grid-cols-2">
+                {openSteps.map(option => <li key={option.id} className="rounded-lg border border-border px-3 py-2">
+                  <h3 className="font-medium">{option.title}</h3>
+                  <ul className="mt-1 space-y-1 text-sm">
+                    {openChoices[option.id].map(({ message, target }) => <li key={message}>
+                      <button type="button" className="min-h-10 text-left text-rose-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-rose-300"
+                        onClick={() => goTo(target.step, target.id)}>{message}</button>
+                    </li>)}
+                  </ul>
+                </li>)}
+              </ul>}
+            </section>
+          )}
+          {step === 'review' && (
+            <AdvancementJournal key={id ?? 'unnamed'} journal={draft.advancement} result={advancement} creationComplete={!sheet.draft}
+              onChange={journal => dispatch({ type: 'advancement', journal })} />
+          )}
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>{previous && <button type="button" className="guide-button guide-action" onClick={() => goTo(previous.id)}><ArrowLeft aria-hidden="true" />Back to {previous.title}</button>}</div>
+            <p className="text-sm text-muted-foreground">{completedSections} of {editSteps.length} sections complete</p>
+            {next && <button type="button" className="guide-button guide-action guide-button-primary" onClick={() => goTo(next.id)}>Continue to {next.title}<ArrowRight aria-hidden="true" /></button>}
+          </div>
         </div>
       </div>
 
