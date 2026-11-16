@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-17T00:45:41+11:00",
+  "updatedAt": "2026-11-17T00:48:28+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -9,6 +9,18 @@
     "summary": "A browser-based Vampire: The Masquerade V5 creator with Core and optional Player’s Guide choices, XP advancement, chronicle presets, a searchable rules reference, and local character and coterie planning tools."
   },
   "items": [
+    {
+      "id": "archive-browser-drafts",
+      "title": "Archive and reopen named browser drafts",
+      "group": "Browser drafts",
+      "notes": "Add a reversible archive for named browser drafts so alternate builds can leave the active picker. Preserve IDs, character inputs, and saved steps. Define what opens when the active draft is archived. Verify both library views after reload, reopening the archived draft, and preservation on a failed or stale write."
+    },
+    {
+      "id": "add-tzimisce-creation",
+      "title": "Add Tzimisce to the opt-in Player’s Guide catalog",
+      "group": "Rules coverage",
+      "notes": "Cite the pinned V5 printing and applicable errata. Add the default clan choices, a field for the Grounded charge, and the Protean power prerequisites needed for a starting build. Verify a hand-checked fixture through review, print, backup restore, and a mechanical build link. Verify the link carries eligible powers and excludes the charge text. Check Core, Ministry, and Ravnos fixtures and pack opt-in behavior."
+    },
     {
       "id": "review-player-storyteller-handoffs",
       "title": "Review sample handoffs with a player and a Storyteller",

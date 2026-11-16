@@ -74,7 +74,8 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 
 ## Next priorities
 
-The Ravnos catalog expansion is complete. The remaining roadmap items are deferred.
+1. **Archive and reopen browser drafts.** Give players a reversible way to put alternate builds away after duplicating them. Move an archived draft out of the active picker and let players reopen it with the same ID, inputs, and saved step. Verify the behavior across reload, including archiving the open draft and handling a failed write. [Browser draft workflow](docs/getting-started.md#save-and-reopen-browser-drafts)
+2. **Add Tzimisce creation to the opt-in Player’s Guide catalog.** Use the pinned V5 printing to add the clan, record its Grounded charge, and check prerequisites for starting powers such as Vicissitude. Verify a hand-checked build through review, print, and backup restore. Confirm that a mechanical build link keeps the ratings and powers while leaving the charge text private, and that Core, Ministry, and Ravnos builds still evaluate as before. [Rules sources and fixtures](docs/v5-rules.md) · [Renegade’s V5 Player’s Guide](https://renegadegamestudios.com/pdf-vampire-the-masquerade-roleplaying-game-5th-edition-players-guide/)
 
 ### Deferred external handoff feedback
 
