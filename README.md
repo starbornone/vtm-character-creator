@@ -18,6 +18,8 @@ Share a read-only build link with another player or Storyteller. The link carrie
 
 Preview and download a Storyteller brief with the build’s mechanics, open rulings, and the narrative sections you choose. See [Export a Storyteller brief](docs/getting-started.md#export-a-storyteller-brief).
 
+Try the [local handoff review prototype](docs/storyteller-workspace.md#prototype-walkthrough) with fictional player and Storyteller roles.
+
 ## Run locally
 
 With Node.js 24 or later, run `npm ci` and `npm run dev` from the repository root. Open the URL printed by Vite. Run `npm run build` to type-check and build the production files.

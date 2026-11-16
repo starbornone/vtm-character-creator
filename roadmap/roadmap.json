@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T23:18:36+11:00",
+  "updatedAt": "2026-11-16T23:31:44+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -9,12 +9,6 @@
     "summary": "A browser-based Vampire: The Masquerade V5 creator with Core and optional Player’s Guide choices, XP advancement, chronicle presets, a searchable rules reference, and local character and coterie planning tools."
   },
   "items": [
-    {
-      "id": "prototype-private-handoff-review",
-      "title": "Prototype private handoff review with fictional data",
-      "group": "Chronicle discovery",
-      "notes": "Use local role views to demonstrate one invite-only chronicle, a previewed Storyteller brief snapshot, a review response, resubmission, per-handoff export, and withdrawal. Walk the flow with one Storyteller and two fictional players, then record whether to pursue a hosted pilot. Use docs/storyteller-workspace.md for the scope."
-    },
     {
       "id": "review-player-storyteller-handoffs",
       "title": "Review sample handoffs with a player and a Storyteller",

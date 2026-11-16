@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T23:18:36+11:00",
+  "updatedAt": "2026-11-16T23:31:44+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -196,6 +196,13 @@
       "group": "Chronicle discovery",
       "notes": "Defined an invite-only chronicle inbox for previewed brief snapshots and a Storyteller review response. Documented role access, player control of character data, per-handoff export, withdrawal, member removal, and chronicle deletion. The next priority is a local prototype with fictional roles to inform a hosted pilot decision. External handoff feedback is deferred.",
       "completedAt": "2026-11-16T23:18:36+11:00"
+    },
+    {
+      "id": "prototype-private-handoff-review",
+      "title": "Prototype private handoff review with fictional data",
+      "group": "Chronicle discovery",
+      "notes": "Verified one fictional Storyteller and two players in the local browser: invitations, role visibility, submission, review, replacement with revised XP, per-handoff JSON export, and withdrawal without affecting the other player. Documented the walkthrough and deferred a hosted pilot pending player and Storyteller feedback.",
+      "completedAt": "2026-11-16T23:31:44+11:00"
     }
   ]
 }

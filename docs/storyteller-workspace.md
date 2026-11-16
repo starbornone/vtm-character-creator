@@ -30,6 +30,20 @@ The player controls the original character and which brief snapshot to share. Th
 - **Leave or remove a member.** Revoke access and remove that player’s submissions and associated reviews from the chronicle. Other members and their handoffs stay available. Previously issued invitations for the removed member must be revoked or invalidated. A later invitation starts a new membership.
 - **Delete a chronicle.** After owner confirmation, remove the chronicle, memberships, invitations, submissions, and responses from the active workspace. Downloaded files remain with their recipients. Before using real data, document backup retention and check that recovering from a backup does not reopen deleted content or restore revoked access.
 
-## Next decision
+## Prototype walkthrough
 
-Prototype the invitation, submission, requested-change, and withdrawal flow with fictional characters and roles using the [existing samples](release-verification.md#player-and-storyteller-handoff-review). Keep the prototype local. Verify that it makes the review decision and the effects of export and withdrawal clear, including from a second player’s view. A local prototype can exercise the workflow and expected access rules. A hosted pilot would also need authorization checks with two players and two chronicles, including attempts to open another player’s handoff, access after removal, stale reviews, and deletion after restore. Decide whether to build that pilot after reviewing the prototype. The implementation and hosting choices remain open.
+Open **Handoff prototype** in the creator header. It uses fictional roles and the [review samples](release-verification.md#player-and-storyteller-handoff-review). The demo state lives in the current tab and resets on reload.
+
+1. As **Storyteller**, invite Mara Vale and Rowan Pike. Switch to each player and accept their invitation.
+2. As Mara, preview the brief and send it. As Rowan, check that Mara’s brief is absent from his view, then preview and send his own.
+3. As the Storyteller, review both entries. Accept Rowan’s and request that Mara spend her remaining 6 XP.
+4. As Mara, spend the sample XP on Drive, preview the replacement, and send it. The new snapshot returns to **Awaiting review**. The previous response is cleared.
+5. Accept the replacement as the Storyteller. Download its handoff JSON and check the shared Markdown, status, and response. As Mara, confirm withdrawal. Check that Rowan’s handoff remains available.
+
+The local browser walkthrough confirmed that each player saw only their own handoff, while the Storyteller reviewed both. Mara’s replacement showed 0 XP remaining and cleared the first review. The downloaded JSON contained the new review and mechanics without the identity section, which Mara had left unchecked on the replacement. Withdrawing removed Mara’s handoff and export from both views without affecting Rowan’s accepted handoff. Closing returned to the same creator step; reloading cleared the demo. No external participants were involved.
+
+## Pilot decision
+
+Keep the local prototype and defer a hosted pilot until a player and a Storyteller have reviewed the [sample handoffs](release-verification.md#player-and-storyteller-handoff-review). Use their feedback to decide whether a hosted inbox solves a problem that file handoffs leave open.
+
+The role switcher is a demonstration, so a hosted pilot would also need authorization checks with separate accounts and two chronicles, including direct access to another player’s handoff, revoked access, stale reviews, and deletion after restore.

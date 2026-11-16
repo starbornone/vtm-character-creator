@@ -57,4 +57,6 @@ Version 1 remains available for neonate data that fits the original format. Vers
 
 [`src/sharing/storyteller-brief.ts`](../src/sharing/storyteller-brief.ts) uses the evaluated sheet, open mechanical choices, and rejected XP entries to generate Markdown. The evaluator can hide custom labels and Storyteller notes in the brief while preserving ratings, grants, and costs. Narrative sections are added only when selected. The browser shows and downloads the same Markdown string.
 
+[`src/components/HandoffPrototype.tsx`](../src/components/HandoffPrototype.tsx) uses the same brief generator with fictional drafts. [`src/prototype/handoff-review.ts`](../src/prototype/handoff-review.ts) holds the demo’s role checks, invitation state, revision checks, and single-handoff JSON export. Prototype state lives in React memory and is independent of the character and coterie libraries. See the [workspace scope and walkthrough](storyteller-workspace.md#prototype-walkthrough).
+
 For a new catalog entry, add the source reference, stable ID, and structured effects. For a rules change, update the evaluator and its hand-checked fixtures, then verify the result in the guide and print review. For a transfer change, check round-trips and unsupported input before altering the export format. See [Decisions](decisions.md) and [Development](development.md).

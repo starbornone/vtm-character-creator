@@ -66,7 +66,7 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 
 ## Next priorities
 
-**Prototype private handoff review.** The [workspace scope](docs/storyteller-workspace.md) defines an invite-only chronicle inbox for reviewing a player’s submitted brief, including who can read it and what export and deletion mean. Use fictional data and local role views to test submission, requested changes, and withdrawal before deciding whether to build a hosted pilot.
+The [local handoff review prototype](docs/storyteller-workspace.md#prototype-walkthrough) demonstrates submission, review, replacement, export, and withdrawal with one fictional Storyteller and two players. A hosted pilot is deferred until player and Storyteller feedback clarifies what the inbox would add to the current file handoffs.
 
 ### Deferred external handoff feedback
 
