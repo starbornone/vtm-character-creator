@@ -70,7 +70,8 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 
 ## Next priorities
 
-The local guide and handoff improvements are complete. The remaining roadmap items are deferred.
+1. **Add a live character summary across the editing steps.** Put the compact summary beside the editor on desktop and behind a labeled disclosure on mobile, as planned for the guide. Show the age profile, clan or blood status, applicable Predator Type, key tracks, starting XP balance, and section progress using the existing evaluator. Verify updates across steps and after restoring a named draft.
+2. **Recheck print output for expanded character builds.** Compare actual print previews or PDFs of Mara’s sheet before and after resolving her final open choice. Then check a Thin-blood sheet and a completed sheet with advancement on US Letter and A4 for readable ratings, complete sections, and sensible page breaks. [Previous print checks](docs/release-verification.md#review-issue-navigation)
 
 ### Deferred external handoff feedback
 
@@ -84,4 +85,4 @@ Keep using the local prototype for demonstration. Revisit a hosted inbox once pl
 
 Resume when a disposable Foundry V5 test world or paired vampire actor exports are available. The candidate is the World of Darkness 5e community system (`wod5e`) 5.3.29 with Foundry 14.368. Compare a sample vampire export with its re-export after import and record which fields and embedded items survive. Queue exporter implementation once the round-trip establishes a supported target and field mapping. [World of Darkness 5e package](https://foundryvtt.com/packages/wod5e/) · [Foundry actor import and export](https://foundryvtt.com/article/actors/#importing-from-json-files)
 
-The [ordered roadmap](roadmap/roadmap.json) tracks the local improvements and deferred reviews.
+The [ordered roadmap](roadmap/roadmap.json) lists the local work first and keeps deferred items at the end.
