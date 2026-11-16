@@ -2,7 +2,7 @@
 
 ## Project
 
-The Vampire: The Masquerade Character Creator (`vtm-character-creator`) is a planned V5 browser guide for standard clan neonates. It will take a player from concept through starting XP to a rules-checked character sheet and an optional Storyteller handoff. Use Vite, React, TypeScript, Tailwind CSS, and shadcn/ui as specified in the [product plan](PLAN.md).
+The Vampire: The Masquerade Character Creator (`vtm-character-creator`) is a V5 browser guide for standard-clan neonates and newly Embraced fledglings. It takes a player from concept through starting choices to a rules-checked character sheet and an optional Storyteller handoff. Use Vite, React, TypeScript, Tailwind CSS, and shadcn/ui as specified in the [product plan](PLAN.md).
 
 ## Layout
 

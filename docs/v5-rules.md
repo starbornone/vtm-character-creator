@@ -1,4 +1,4 @@
-# V5 rules baseline and neonate fixture
+# V5 rules baseline and hand-checked fixtures
 
 The first playable build uses the English V5 Core Rulebook, Renegade Game Studios’ 2022 second printing. **Core** below refers to the printed page numbers in that book. Renegade’s hardcover listing identifies the updated text as incorporating the earlier Core Rulebook errata and the V5 Companion errata. [Renegade Core Rulebook](https://renegadegamestudios.com/vampire-the-masquerade-5th-edition-roleplaying-game-core-rulebook/)
 
@@ -33,7 +33,7 @@ The ten Predator Types are Alleycat, Bagger, Blood Leech, Cleaver, Consensualist
 | Scene Queen | Choose Disliked outside the scene or Prey Exclusion for another scene. | p. 178 |
 | Nosferatu | The Bane supplies Repulsive outside the base Flaw budget. The sheet flags the Siren’s Beautiful grant for Storyteller review and excludes it from the total. | pp. 85, 178–179 |
 
-Manual options record a source or table note. The evaluator applies the supported starting dot and grant structure and exposes the entry for Storyteller review. The published clan and Predator catalogs remain scoped to standard Core neonates. Caitiff, Thin-bloods, and other age profiles have separate starting rules.
+Manual options record a source or table note. The evaluator applies the supported starting dot and grant structure and exposes the entry for Storyteller review. The clan catalog serves standard-clan neonates and fledglings. The Predator catalog is available to neonates. Caitiff, Thin-bloods, and other age profiles have separate starting rules.
 
 ## Hand-checked fixture
 
@@ -87,3 +87,20 @@ The finished sheet shows Stealth 2 and Drive 2. The base allocation stays Balanc
 The [ledger test](../tests/trait-ledger.test.ts) exercises the base allocation and its two Specialties. The [clan path test](../tests/clan-path.test.ts) verifies the third Specialty, Potence increase, Contacts, and Humanity adjustment. The [starting XP test](../tests/starting-xp.test.ts) verifies the final budgets, generation, Blood Potency, and purchases, including what happens when purchases are reordered. The [guide test](../tests/character-guide.test.ts) checks that the shared review and print model contains Mara’s narrative, final ratings, powers, and applied purchases.
 
 The [catalog tests](../tests/core-catalog.test.ts) cover every named clan and Predator Type, including a complete Tremere Bagger path, out-of-clan XP, grant budgets, and Storyteller review entries.
+
+## Rowan Pike fledgling fixture
+
+For the newly Embraced standard-clan path, Core pp. 137 and 140 give 12th or 13th Generation, Blood Potency 1, and 0 starting XP. Use Humanity 7, the base 7 Advantage and 2 Flaw dots, and the usual clan Discipline allocation (Core pp. 136–137). Core pp. 149 and 175 describe leaving Predator Type for play for many fledglings. This path uses that option, so no Predator grants or Humanity adjustments apply. Blood Potency 1 gives two Blood Surge dice and Bane Severity 2 under the correction to Core p. 216.
+
+Rowan Pike is a Gangrel night courier in *Last Stop at the River*, Embraced in 2024. Rowan’s Ambition is to keep a safe route through the city and Desire is to deliver the lost letter before dawn. Rowan’s sire is Lena Moss. The Chronicle Tenet is to protect those who shelter you. The Conviction “Never abandon a companion” is tied to Taylor Reed, a living courier.
+
+| Category | Choices and expected results |
+| --- | --- |
+| Attributes | Strength 2, Dexterity 3, Stamina 3, Charisma 2, Manipulation 1, Composure 3, Intelligence 2, Wits 4, Resolve 2. |
+| Balanced Skills | 3 in Athletics, Awareness, and Survival. 2 in Animal Ken, Brawl, Insight, Stealth, and Streetwise. 1 in Craft, Drive, Etiquette, Investigation, Medicine, Melee, and Persuasion. All others start at 0. |
+| Specialties | Craft (Saddlery) from Craft’s first dot and Survival (Urban trails) as the free Specialty. |
+| Clan | Fortitude 2 with Resilience and Toughness, plus Protean 1 with Eyes of the Beast. The Gangrel Bane is Bestial Features and its Compulsion is Feral Impulses (Core pp. 69–71, 210, 244, 258, 270). |
+| Advantages and Flaws | Haven 2 + Mask 2 + Resources 3 = 7 Advantage dots. Stake Bait supplies 2 Flaw dots (Core pp. 136, 182, 186–188, 192–193). |
+| Final tracks | 12th Generation, Health 8 (Stamina 3 + 3 + Fortitude 2 from Resilience), Willpower 5 (Composure 3 + Resolve 2), Humanity 7, Blood Potency 1, Bane Severity 2, two Blood Surge dice, and 0 XP spent or remaining. |
+
+The [fixture](../tests/fixtures/rowan-pike.ts) and [creation profile tests](../tests/creation-profiles.test.ts) verify the evaluated sheet, inactive Predator Type and XP choices, and fledgling and neonate transfers. The browser walkthrough matched the calculation through review, a one-page US Letter print, reload, backup restore, and the read-only mechanical link.

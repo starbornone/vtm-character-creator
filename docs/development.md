@@ -18,15 +18,18 @@
 | `src/drafts/draft-backup.ts`, `src/components/BackupRestore.tsx` | Versioned backup format, file validation, and restore preview. |
 | `src/sharing/build-link.ts`, `src/components/SharedBuild.tsx` | Mechanical allowlist, versioned URL fragment, and read-only recipient preview. |
 | `src/sharing/storyteller-brief.ts`, `src/components/StorytellerBrief.tsx` | Markdown brief, open rulings, and narrative opt-in preview. |
-| `tests/fixtures/mara-vale.ts`, `tests/` | Shared neonate fixture and rules regression tests. |
+| `src/rules/creation-profiles.ts` | Starting generation, Blood Potency, Predator access, and budgets by age profile. |
+| `tests/fixtures/`, `tests/` | Shared hand-checked character fixtures and rules regression tests. |
 
 Start from a [roadmap item](../roadmap/roadmap.json) and read the relevant section of the [plan](../PLAN.md). For documentation changes, follow the relative links from the edited pages and parse the three roadmap files if any changed. Check schema values, matching project metadata, timestamps, and unique IDs across all three files. Review the diff for unrelated edits.
 
 Install dependencies with `npm ci`. Use `npm run dev` while editing, `npm test` for the rules tests, and `npm run build` for the type check and production bundle. Use `npm run typecheck` for a standalone TypeScript check and `npm run preview` after building to serve `dist/` locally. See [Getting started](getting-started.md) for the local smoke check.
 
-Use the [pinned V5 rules and hand-checked neonate fixture](v5-rules.md) when encoding rules or catalog prerequisites. Prioritize tests for edition-specific math, dependent grants, invalidated selections, and XP purchase order. For edits to persistence or sharing, exercise unfinished drafts, malformed input, version mismatches, and narrative text exclusion from build links. Use [Architecture](architecture.md) for the planned module boundaries and [Contributing](contributing.md) for how to update the roadmap with a change.
+Use the [pinned V5 rules and hand-checked fixtures](v5-rules.md) when encoding rules or catalog prerequisites. Prioritize tests for edition-specific math, dependent grants, invalidated selections, and XP purchase order. For edits to persistence or sharing, exercise unfinished drafts, malformed input, version mismatches, and narrative text exclusion from build links. Use [Architecture](architecture.md) for the planned module boundaries and [Contributing](contributing.md) for how to update the roadmap with a change.
 
 For sheet changes, check the complete Mara Vale fixture in **Review & Print** and the browser’s print preview. Try a draft with a missing Touchstone or other open choice. Confirm that Draft appears and the review links back to the affected step.
+
+For age profile changes, run the [creation profile tests](../tests/creation-profiles.test.ts). Build [Rowan Pike](v5-rules.md#rowan-pike-fledgling-fixture) through review and print, reload the saved draft, restore the exported backup, and open its mechanical link. For the fledgling change, the browser also reopened a first-release Mara Vale draft, backup, and build link produced from the pre-fledgling code. Mara kept the Neonate profile, Alleycat grants, and 15 XP spent.
 
 For catalog changes, run the [catalog tests](../tests/core-catalog.test.ts) and try a second path in the browser. Search by name and page, switch clans with a Predator Type already selected, and confirm that a manual entry’s source or note reaches **Storyteller Review**.
 

@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T17:08:12+11:00",
+  "updatedAt": "2026-11-16T17:32:00+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -119,6 +119,13 @@
       "group": "Release",
       "notes": "Verified 45 tests, type checking, a production build, creation through restore and print at 1440 px and 390 px, and one-page US Letter and A4 sheets. Verified the Dark Pack logo, copyright and trademark notice, and unofficial designation on the live creator and shared build preview. External sample feedback remains pending in docs/release-verification.md.",
       "completedAt": "2026-11-16T16:47:22+11:00"
+    },
+    {
+      "id": "add-fledgling-creation",
+      "title": "Add standard-clan fledgling creation",
+      "group": "Creation profiles",
+      "notes": "Added the newly Embraced standard-clan fledgling profile. Verified Rowan Pike through review, a one-page US Letter print, browser reload, JSON backup restore, and the read-only mechanical link. Verified that the first-release Mara Vale browser draft, JSON backup, and build link retain the original neonate mechanics.",
+      "completedAt": "2026-11-16T17:32:00+11:00"
     }
   ]
 }

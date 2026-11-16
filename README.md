@@ -1,6 +1,6 @@
 # vtm-character-creator
 
-The Vampire: The Masquerade Character Creator is a free, unofficial browser guide for making V5 standard clan neonates. Build with the seven named Core Rulebook clans and ten Core Predator Types, then review and print the character sheet. Use manual entries for table-specific options and include their sources or notes for Storyteller review. See [the product plan](PLAN.md) for first-release scope and implementation milestones.
+The Vampire: The Masquerade Character Creator is a free, unofficial browser guide for making V5 characters from the seven named Core Rulebook clans. Create a newly Embraced fledgling or a neonate, then review and print the character sheet. Neonates choose from ten Core Predator Types and get 15 starting XP. Use manual entries for table-specific options and include their sources or notes for Storyteller review. See [the product plan](PLAN.md) for first-release scope and implementation milestones.
 
 Name a draft to autosave the character and resume at the last step in the same browser. You can download a JSON backup at any point, then preview it and restore it as a new draft. See [Getting started](docs/getting-started.md#back-up-and-restore-a-draft).
 

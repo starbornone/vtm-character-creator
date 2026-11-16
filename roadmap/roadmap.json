@@ -1,20 +1,14 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T17:10:52+11:00",
+  "updatedAt": "2026-11-16T17:32:00+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
     "status": "active",
-    "summary": "A browser-based Vampire: The Masquerade V5 creator for standard clan neonates with a live rules ledger, local drafts, and printable sheets."
+    "summary": "A browser-based Vampire: The Masquerade V5 creator for standard-clan neonates and newly Embraced fledglings with a live rules ledger, local drafts, and printable sheets."
   },
   "items": [
-    {
-      "id": "add-fledgling-creation",
-      "title": "Add standard-clan fledgling creation",
-      "group": "Creation profiles",
-      "notes": "Make age profile explicit and keep neonate as the default for first-release drafts, backups, and build links. Apply the pinned Core fledgling rules to starting budgets and Predator Type eligibility. Verify Mara Vale’s existing build and a hand-checked fledgling through review, print, and a backup round-trip."
-    },
     {
       "id": "add-ancilla-creation",
       "title": "Add standard-clan ancilla creation",

@@ -23,6 +23,8 @@ flowchart LR
   Draft --> Transfer[Autosave and export]
 ```
 
+[`src/rules/creation-profiles.ts`](../src/rules/creation-profiles.ts) defines the starting generation choices, Blood Potency, Advantage and Flaw budgets, Predator Type access, and XP budget by age profile. The reducer stores the profile on the draft. Missing profiles resolve to Neonate for first-release data. The evaluator excludes stored Predator choices and XP purchases for a fledgling, keeping the selections in the draft for a switch back to Neonate.
+
 The reducer also stores clan and Predator Type choices. [`src/rules/clan-path.ts`](../src/rules/clan-path.ts) resolves them against the [source-tagged catalog](../src/catalog/clan-path.ts), evaluates power slots by acquisition rank, and returns mandatory grants and the Discipline ledger. The Trait evaluator determines whether the Predator Specialty takes effect as a Specialty or as a separate Skill dot. Switching or clearing a choice preserves its saved powers for when the corresponding slot returns.
 
 Predator grant choices use stable IDs and are applied only while the current selection satisfies its eligibility and dot rules. The XP evaluator combines applicable grants with purchased ratings and preserves their origins for the sheet. A manual entry follows the standard clan or Predator Type allocation pattern, or uses part of the base Advantage or Flaw budget. The sheet includes the supplied source or note under **Storyteller Review**.
@@ -36,6 +38,8 @@ Predator grant choices use stable IDs and are applied only while the current sel
 [`src/drafts/draft-backup.ts`](../src/drafts/draft-backup.ts) handles the portable backup envelope. It carries `format`, `schemaVersion`, `ruleset`, and a snapshot of the name, step, and character inputs. Backup restore and browser storage use the same input validation. The preview evaluates the snapshot with the live rules engine. Confirmation allocates a fresh draft ID and saves the appended library and its active ID in one write.
 
 [`src/sharing/build-link.ts`](../src/sharing/build-link.ts) projects an explicit allowlist of mechanical IDs, ratings, and omission flags into a versioned URL fragment. The recipient validates the payload and runs the same evaluator with blank narrative fields. Manual choices and purchases that require a custom Specialty name use omission flags so the recipient knows what to enter again. The preview reads without writing to storage and uses the existing new-draft action when the recipient saves a copy.
+
+Neonate-only browser libraries, backups, and build links retain version 1. A browser library containing a fledgling, a fledgling backup, or a fledgling build link uses version 2. The app reads both versions. Full drafts retain paused Predator and XP inputs. The fledgling link projection omits those inputs and includes the profile and active mechanical choices.
 
 [`src/sharing/storyteller-brief.ts`](../src/sharing/storyteller-brief.ts) uses the evaluated sheet, open mechanical choices, and rejected XP entries to generate Markdown. The evaluator can hide custom labels and Storyteller notes in the brief while preserving ratings, grants, and costs. Narrative sections are added only when selected. The browser shows and downloads the same Markdown string.
 

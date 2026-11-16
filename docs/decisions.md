@@ -44,4 +44,12 @@ The brief shows evaluated mechanics and open rulings with generic labels for man
 
 **Consequences.** Players can print a work in progress and use the review to return to any step with open choices. Chronicle Tenets and coterie details are optional because they can depend on the table.
 
+## 6 Explicit age profiles and fledgling transfer compatibility
+
+**Context.** Core p. 149 allows many fledglings to develop a Predator Type during play. The first release assumed the Neonate profile in its draft and transfer formats.
+
+**Decision.** Support the newly Embraced standard-clan fledgling path. Use the 12th- or 13th-Generation starting options, Blood Potency 1, and 0 starting XP. Skip the Predator Type step’s feeding choices and grants. Keep saved Predator and XP inputs available when a player switches the draft back to Neonate.
+
+**Consequences.** First-release data keeps the same Neonate mechanics. Version 2 stores the fledgling choice so older clients can identify an unsupported format. Backups preserve paused inputs and mechanical links carry active mechanics.
+
 See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the full flow.

@@ -15,6 +15,12 @@ Open the **Local** URL printed by Vite. The dev server defaults to port `5173` a
 
 If npm reports a missing `package.json`, return to the repository root. For a registry or network error during `npm ci`, check access to the npm registry and retry. If your browser cannot connect, check that Vite is running and use its printed URL.
 
+## Choose an age profile
+
+In **Concept**, choose **Neonate** or **Fledgling**. Neonates choose an eligible Predator Type and have 15 starting XP. Choose **Fledgling** for a newly Embraced standard-clan character who will develop a Predator Type during play. The guide skips that choice and gives the character 0 starting XP. Both profiles start at 12th or 13th Generation and use the same base Attribute, Skill, Advantage, and Flaw allocations.
+
+If you switch a neonate to fledgling, the guide pauses the Predator Type choices and XP purchases. Switch back to **Neonate** to use them again. Browser drafts and JSON backups preserve those choices. Fledgling build links carry the active mechanics only. First-release drafts, backups, and links open as neonates.
+
 ## Save and reopen browser drafts
 
 Enter a **Draft name** and select **Save draft**. Once named, the character and current step autosave as you work. Reload the page to resume the last open saved draft. Use **New draft** for another character, or choose a name under **Saved drafts** and select **Open draft** to resume that character at its own last step. Edit the draft name and select **Save draft** to rename it.
@@ -49,7 +55,7 @@ Choose **Manual entry** in either picker for a table-specific clan or Predator T
 
 ## Build and print Mara Vale
 
-In **Concept**, enter Mara Vale, a former theater carpenter in *Last Call at the Lyric*, Embraced in 1998. Her Ambition is to secure a permanent home for the theater company. Her Desire is to find the missing stagehand tonight. Use **Continue** or the step navigation to move through the guide.
+In **Concept**, choose **Neonate** and enter Mara Vale, a former theater carpenter in *Last Call at the Lyric*, Embraced in 1998. Her Ambition is to secure a permanent home for the theater company. Her Desire is to find the missing stagehand tonight. Use **Continue** or the step navigation to move through the guide.
 
 Under **Clan & Predator Type**, choose Brujah and Alleycat. For Mara, put two clan dots in Presence and one in Potence. Choose Awe, Daunt, and Lethal Body. Give the Alleycat dot to Potence, choose Prowess, and select Brawl (Grappling). The ledger should show Presence 2, Potence 2, three dots of Criminal Contacts, and Humanity 6.
 
@@ -57,13 +63,19 @@ In **Attributes & Skills**, assign ratings using the slots for the selected dist
 
 Use the [neonate fixture’s base allocation](v5-rules.md#base-allocation) for a complete check. Mara fills both distributions and reaches Health 6 and Willpower 5. Choose Athletics (Climbing) for her free Specialty and Craft (Carpentry) for her first-dot Specialty. If you change distributions after assigning Skills, adjust any overfilled ratings shown in the ledger.
 
-Under **Advantages & Flaws**, choose 13th Generation, then set Beautiful 2, Haven 1, Mask 2, Resources 2, and Stake Bait. Mara uses all 7 base Advantage dots and all 2 Flaw dots. The Alleycat grant brings the Advantage total to 10. The character has Blood Potency 1 and Bane Severity 2.
+Under **Advantages & XP**, choose 13th Generation, then set Beautiful 2, Haven 1, Mask 2, Resources 2, and Stake Bait. Mara uses all 7 base Advantage dots and all 2 Flaw dots. The Alleycat grant brings the Advantage total to 10. The character has Blood Potency 1 and Bane Severity 2.
 
 Under **Starting XP**, select Skill and add Stealth twice, then add Drive. The journal should show 3, 6, and 6 XP spent, leaving 0. Move Stealth 2 above Stealth 1 to see why the earlier purchase is ineligible. Move it back to restore the results.
 
 In **Relationships**, enter Inez Varga as Mara’s sire and “Protect people who depend on you” as the Chronicle Tenet. Pair the Conviction “Keep my word” with Jo Reyes, the living stage manager, as her Touchstone.
 
 Open **Review & Print**. Mara’s sheet shows Health 6, Willpower 5, Humanity 6, Blood Potency 1, and 0 XP remaining. Use **Print character sheet** to open your browser’s print dialog, where you can print or save to PDF. The same sheet is available for an incomplete build with a **Draft** label. Open choices in the review link back to their steps.
+
+## Build and print Rowan Pike
+
+In **Concept**, choose **Fledgling**. Use [Rowan Pike’s fixture](v5-rules.md#rowan-pike-fledgling-fixture) to make a 12th-Generation Gangrel with Fortitude 2 and Protean 1. In **Clan & Predator Type**, complete the clan powers and continue directly to **Attributes & Skills**. In **Advantages & XP**, allocate the 7 Advantage and 2 Flaw dots. The starting XP section shows a budget of 0.
+
+Complete **Relationships** and open **Review & Print**. Rowan’s sheet shows Health 8, Willpower 5, Humanity 7, and Blood Potency 1. Verify the Fledgling label and print the sheet. You can also save a named draft, reload at **Review & Print**, and restore a downloaded backup as a second draft.
 
 ## Verify the production build
 
@@ -73,6 +85,6 @@ npm run build
 npm run preview
 ```
 
-The tests check Mara’s complete sheet, core path and grant rules, browser draft storage, JSON backup round-trips, the build link allowlist, and narrative opt-ins for the Storyteller brief. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
+The tests check Mara’s and Rowan’s complete sheets, age profile compatibility, core path and grant rules, browser draft storage, JSON backup round-trips, the build link allowlist, and narrative opt-ins for the Storyteller brief. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
 
 See the [overview](overview.md) for first-release scope and [Development](development.md) for contributor checks.
