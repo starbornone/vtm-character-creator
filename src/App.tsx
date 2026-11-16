@@ -7,6 +7,7 @@ import { AllocationEditor } from '@/components/AllocationEditor'
 import { CharacterSheet } from '@/components/CharacterSheet'
 import { ChroniclePresets } from '@/components/ChroniclePresets'
 import { ClanPathEditor } from '@/components/ClanPathEditor'
+import { CoteriePlanner } from '@/components/CoteriePlanner'
 import { DraftControls } from '@/components/DraftControls'
 import { ConceptEditor, RelationshipEditor } from '@/components/NarrativeEditors'
 import { RelationshipMap } from '@/components/RelationshipMap'
@@ -94,7 +95,10 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
           <p className="text-sm font-medium text-muted-foreground">Vampire: The Masquerade Fifth Edition</p>
           <h1 className="mt-1 text-3xl font-semibold tracking-tight text-balance sm:text-5xl">Character Creator</h1>
         </div>
-        <TableReference />
+        <div className="flex flex-wrap gap-2">
+          <TableReference />
+          <CoteriePlanner drafts={drafts.library.drafts} />
+        </div>
       </header>
 
       <DraftControls
