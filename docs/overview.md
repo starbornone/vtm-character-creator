@@ -1,6 +1,6 @@
 # Project overview
 
-The Vampire: The Masquerade Character Creator is in development for players preparing a V5 vampire and Storytellers reviewing the starting build. The app currently renders a starter screen. The proposed first release is a browser guide for standard clan neonates using the Core Rulebook. [Product plan](../PLAN.md)
+The Vampire: The Masquerade Character Creator is in development for players preparing a V5 vampire and Storytellers reviewing the starting build. You can allocate Attributes and Skills, choose Brujah and Alleycat, and see how those choices affect Disciplines, powers, Specialties, and Humanity. The proposed first release is a browser guide for standard clan neonates using the Core Rulebook. [Product plan](../PLAN.md)
 
 ## Planned player workflow
 

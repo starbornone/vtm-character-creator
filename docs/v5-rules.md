@@ -16,6 +16,7 @@ Distributions count how many distinct traits have each rating. Remaining Skill r
 | Balanced | Three Skills at 3, five at 2, seven at 1. | p. 136 |
 | Specialist | One Skill at 4, three at 3, three at 2, three at 1. | p. 136 |
 | Base Specialties | One freely assigned Specialty on a rated Skill. Each rated Academics, Craft, Performance, or Science also gets a Specialty when its first dot is assigned. | pp. 136, 145, 159–171 |
+| Specialty limit | Most Skills allow up to one Specialty per dot. Craft can have more Specialties than dots. | pp. 159–160 |
 
 ## Hand-checked fixture
 
@@ -50,6 +51,10 @@ The Attribute allocation fills all nine slots. The Balanced allocation fills all
 
 Presence provides a check on power eligibility. The second dot can take a distinct lower-level power, so Awe and Daunt are both valid at Presence 2. Verify the chosen power against its Discipline rating at acquisition. Core pp. 244, 267.
 
+Alleycat can grant Brawl (Grappling) or Intimidation (Stickups). If the selected Skill has zero base dots, grant one dot in the Skill in place of the Specialty. Keep it outside the starting distribution. On a rated Skill the granted Specialty counts toward the Skill’s Specialty limit. Core pp. 149, 159, 175–176.
+
+The available powers cover Celerity and Potence through the third dot and Presence through the second. Potence’s Spark of Rage requires Presence 3, which this starting path cannot reach. The Companion also restricts Lingering Kiss for characters with Unbondable. That restriction belongs to Advantage validation when Unbondable becomes selectable. Core pp. 244, 252–267 and Companion p. 62.
+
 ### Ordered starting XP
 
 Spend Skill XP at three times the new rating for each increase. This uses the Core experience costs and the neonate starting budget. Core pp. 130, 137.
@@ -62,4 +67,4 @@ Spend Skill XP at three times the new rating for each increase. This uses the Co
 
 The finished sheet shows Stealth 2 and Drive 2. The base allocation stays Balanced with Stealth 0 and Drive 1. Track the XP increases separately from the base Skill dots so the same fixture can verify both stages. The final sheet has Health 6, Willpower 5, Humanity 6, Blood Potency 1, Bane Severity 2, 10 total Advantage dots, 2 Flaw dots, and 0 XP left.
 
-Use the base allocation and its two Specialties to check the [Attribute and Skill ledger](../roadmap/roadmap.json). The third Specialty, Potence increase, Contacts, and Humanity adjustment exercise the Predator Type milestone. The ordered purchases exercise the starting XP milestone.
+The [ledger test](../tests/trait-ledger.test.ts) exercises the base allocation and its two Specialties. The [clan path test](../tests/clan-path.test.ts) verifies the third Specialty, Potence increase, Contacts, and Humanity adjustment. The ordered purchases describe the starting XP milestone.

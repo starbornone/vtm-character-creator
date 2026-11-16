@@ -8,11 +8,11 @@ The Vampire: The Masquerade Character Creator (`vtm-character-creator`) is a pla
 
 - [README.md](README.md) is the human entry point. [PLAN.md](PLAN.md) describes the player workflow and release scope.
 - [docs/](docs/) holds contributor documentation and the roadmap contract. [roadmap/](roadmap/) holds the ordered backlog and history.
-- [`src/main.tsx`](src/main.tsx) mounts the React app. [`src/App.tsx`](src/App.tsx) renders the starter screen. The [architecture](docs/architecture.md) describes the intended `src/rules/` and `src/catalog/` boundaries.
+- [`src/main.tsx`](src/main.tsx) mounts the React app. [`src/App.tsx`](src/App.tsx) renders the Attribute and Skill ledger and clan and Predator Type choices. The [architecture](docs/architecture.md) describes `src/rules/` and `src/catalog/`.
 
 ## Working agreements
 
-Use `npm ci` to install dependencies, `npm run dev` to start Vite, and `npm run build` to type-check and produce the static build. For documentation and roadmap changes, verify relative links, parse the changed JSON, and check whitespace. See [Getting started](docs/getting-started.md) for setup and [Development](docs/development.md) for change-specific checks.
+Use `npm ci` to install dependencies, `npm run dev` to start Vite, `npm test` to run the rules tests, and `npm run build` to type-check and produce the static build. For documentation and roadmap changes, verify relative links, parse the changed JSON, and check whitespace. See [Getting started](docs/getting-started.md) for setup and [Development](docs/development.md) for change-specific checks.
 
 ## Documentation
 
