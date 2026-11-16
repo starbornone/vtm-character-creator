@@ -195,12 +195,6 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
 
       <div className={step === 'review' ? 'sheet-panel' : 'sheet-panel hidden'}><CharacterSheet sheet={sheet} /></div>
 
-      <footer className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-border pt-4 text-sm text-muted-foreground print:hidden">
-        <a className="text-foreground underline underline-offset-4 hover:text-rose-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-300" href="https://astralarchives.games/">
-          Return to Astral Archives
-        </a>
-        <p>V5 Core Rulebook · Renegade second printing</p>
-      </footer>
     </main>
   )
 }
