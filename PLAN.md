@@ -31,7 +31,7 @@ Keep the engine in `src/rules/` and source-tagged catalogs in `src/catalog/`. Gi
 
 Represent base allocations, grants, and XP purchases explicitly. Each ledger entry identifies its origin and each validation issue points to the affected step or choice. Treat a missing required choice as incomplete, an illegal allocation as a rules error, and a manual or table-dependent entry as a Storyteller review item. When a player changes clan, Skill distribution, or Predator Type, preserve affected choices for review, exclude the ineligible ones from totals, and explain how to resolve them. The completion indicator, preview, and print view all use the same evaluated sheet.
 
-Pin the Core Rulebook printing and errata before entering the rule data. Verify the dot distributions, Specialty eligibility and grants, Discipline power levels and Amalgam prerequisites, Predator Type exceptions, generation and age defaults, starting budgets, and XP costs against those sources. Test order-sensitive XP purchases and Blood Potency limits. [Renegade’s updated Core Rulebook](https://renegadegamestudios.com/vampire-the-masquerade-5th-edition-roleplaying-game-core-rulebook/) · [Official Blood Potency update](https://renegadegamestudios.com/content/File%20Storage%20for%20site/VTM/BloodPotencyTable.pdf)
+Use the [pinned Core Rulebook printing, errata, and hand-checked neonate fixture](docs/v5-rules.md) when entering rule data. Verify additional dot allocations, Specialty eligibility and grants, Discipline power levels and Amalgam prerequisites, Predator Type exceptions, generation and age defaults, starting budgets, and XP costs against those sources as coverage expands. Test order-sensitive XP purchases and Blood Potency limits.
 
 ## Drafts, sharing, and print
 

@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T13:39:05+11:00",
+  "updatedAt": "2026-11-16T13:52:01+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -35,6 +35,13 @@
       "group": "Foundation",
       "notes": "Set up React, TypeScript, Tailwind CSS, and shadcn/ui. Record the supported runtime and working install, dev, and verification commands in Getting started.",
       "completedAt": "2026-11-16T13:39:05+11:00"
+    },
+    {
+      "id": "pin-v5-rules-sources",
+      "title": "Pin the V5 rules sources",
+      "group": "Rules",
+      "notes": "Select the Core Rulebook printing and applicable errata. Hand-check a standard clan neonate fixture and record the source for each rule used by the first build.",
+      "completedAt": "2026-11-16T13:52:01+11:00"
     }
   ]
 }

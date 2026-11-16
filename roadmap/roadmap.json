@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T13:39:05+11:00",
+  "updatedAt": "2026-11-16T13:52:01+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -9,12 +9,6 @@
     "summary": "A planned browser-based Vampire: The Masquerade V5 creator for standard clan neonates with a live rules ledger, local drafts, and printable sheets."
   },
   "items": [
-    {
-      "id": "pin-v5-rules-sources",
-      "title": "Pin the V5 rules sources",
-      "group": "Rules",
-      "notes": "Select the Core Rulebook printing and applicable errata. Hand-check a standard clan neonate fixture and record the source for each rule used by the first build."
-    },
     {
       "id": "build-attribute-skill-ledger",
       "title": "Build the Attribute and Skill ledger",
