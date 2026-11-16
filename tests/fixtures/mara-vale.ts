@@ -1,4 +1,5 @@
 import type { ClanPathDraft } from '../../src/rules/clan-path.ts'
+import type { StartingDraft } from '../../src/rules/starting-xp.ts'
 import type { TraitDraft } from '../../src/rules/trait-ledger.ts'
 
 // The first playable path in docs/v5-rules.md.
@@ -27,4 +28,15 @@ export const maraClanPath: ClanPathDraft = {
   predatorDiscipline: 'potence',
   predatorSpecialty: 'brawl',
   predatorPowers: { potence: 'prowess' },
+}
+
+export const maraStarting: StartingDraft = {
+  generation: 13,
+  advantages: { beautiful: 2, haven: 1, mask: 2, resources: 2 },
+  flaws: ['stake-bait'],
+  purchases: [
+    { kind: 'skill', id: 'stealth', to: 1 },
+    { kind: 'skill', id: 'stealth', to: 2 },
+    { kind: 'skill', id: 'drive', to: 2 },
+  ],
 }

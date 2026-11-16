@@ -15,7 +15,7 @@ export type SkillDistribution = keyof typeof skillDistributions
 export const skillDistributionIds = Object.keys(skillDistributions) as SkillDistribution[]
 
 // The first dot grants a Specialty (Core pp. 145, 159–171).
-const specialtySkills = ['academics', 'craft', 'performance', 'science'] as const
+export const specialtySkills = ['academics', 'craft', 'performance', 'science'] as const
 type SpecialtySkill = (typeof specialtySkills)[number]
 
 export interface TraitDraft {
@@ -121,18 +121,18 @@ function evaluateSpecialties(draft: TraitDraft, skillSlots: readonly RatingSlot[
   return { firstDotSlots, eligibleSkills, freeIssue: issue, completed, total: firstDotSlots.length + 1, predatorGrant }
 }
 
+export function deriveTracks(attributes: Partial<Record<AttributeId, number>>) {
+  // Core pp. 136, 155–157. Wait for each contributing Attribute in a partial draft.
+  const { stamina, composure, resolve } = attributes
+  return {
+    health: { stamina, total: stamina === undefined ? undefined : stamina + 3 },
+    willpower: { composure, resolve, total: composure === undefined || resolve === undefined ? undefined : composure + resolve },
+  }
+}
+
 export function evaluateTraitLedger(draft: TraitDraft, grantedSpecialty?: GrantedSpecialty) {
   const attributes = evaluateAllocation(draft.attributes, attributeCapacity)
   const skills = evaluateAllocation(draft.skills, skillDistributions[draft.distribution].capacity)
   const specialties = evaluateSpecialties(draft, skills.slots, grantedSpecialty)
-
-  // Core pp. 136, 155–157. Wait for each contributing Attribute in a partial draft.
-  const { stamina, composure, resolve } = draft.attributes
-  return {
-    attributes,
-    skills,
-    specialties,
-    health: { stamina, total: stamina === undefined ? undefined : stamina + 3 },
-    willpower: { composure, resolve, total: composure === undefined || resolve === undefined ? undefined : composure + resolve },
-  }
+  return { attributes, skills, specialties, ...deriveTracks(draft.attributes) }
 }

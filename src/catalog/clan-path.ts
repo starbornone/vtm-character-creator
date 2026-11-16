@@ -16,7 +16,7 @@ export interface DisciplinePower {
   amalgam?: { discipline: DisciplineId; dots: number }
 }
 
-// Core pp. 252–267. These levels cover the dots available in this path.
+// Core pp. 252–268. These levels cover the dots available in this path, including starting XP.
 export const disciplinePowers: Record<DisciplineId, readonly DisciplinePower[]> = {
   celerity: [
     { id: 'cats-grace', name: 'Cat’s Grace', level: 1, page: 252 },
@@ -37,6 +37,8 @@ export const disciplinePowers: Record<DisciplineId, readonly DisciplinePower[]> 
     { id: 'awe', name: 'Awe', level: 1, page: 267 },
     { id: 'daunt', name: 'Daunt', level: 1, page: 267 },
     { id: 'lingering-kiss', name: 'Lingering Kiss', level: 2, page: 267 },
+    { id: 'dread-gaze', name: 'Dread Gaze', level: 3, page: 268 },
+    { id: 'entrancement', name: 'Entrancement', level: 3, page: 268 },
   ],
 }
 
