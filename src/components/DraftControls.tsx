@@ -1,6 +1,6 @@
-import { ChevronDown, Download, FilePlus, FolderOpen, Save } from 'lucide-react'
-import { useState } from 'react'
-import type { DraftLibrary } from '@/drafts/browser-drafts'
+import { ChevronDown, Copy, Download, FilePlus, FolderOpen, Save } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { suggestCopyName, type DraftLibrary } from '@/drafts/browser-drafts'
 import type { DraftSnapshot } from '@/drafts/draft-backup'
 import { BackupRestore } from '@/components/BackupRestore'
 import { Card, CardContent } from '@/components/ui/card'
@@ -15,6 +15,7 @@ interface DraftControlsProps {
   onSwitch: (id: string | null) => boolean
   onDownload: () => void
   onRestore: (draft: DraftSnapshot) => { restored: boolean; issue?: string }
+  onDuplicate: (name: string) => string | undefined
 }
 
 export function DraftControls(props: DraftControlsProps) {
@@ -38,7 +39,7 @@ export function DraftControls(props: DraftControlsProps) {
   )
 }
 
-function DraftFields({ library, activeId, name, dirty, issue, onSave, onSwitch, onDownload, onRestore }: DraftControlsProps) {
+function DraftFields({ library, activeId, name, dirty, issue, onSave, onSwitch, onDownload, onRestore, onDuplicate }: DraftControlsProps) {
   const [label, setLabel] = useState(name)
   const [selectedId, setSelectedId] = useState(library.activeId ?? '')
   const [nameIssue, setNameIssue] = useState<string>()
@@ -85,7 +86,55 @@ function DraftFields({ library, activeId, name, dirty, issue, onSave, onSwitch, 
         }}><FilePlus aria-hidden="true" />New draft</button>
         <button type="button" className="guide-button guide-action" onClick={onDownload}><Download aria-hidden="true" />Download current draft</button>
         <BackupRestore library={library} onRestore={onRestore} />
+        {library.drafts.some(draft => draft.id === activeId) && (
+          <DuplicateDraft suggestedName={suggestCopyName(library, name)} onDuplicate={onDuplicate} />
+        )}
       </div>
     </CardContent>
   )
+}
+
+function focusCopyName(input: HTMLInputElement | null) {
+  input?.focus()
+}
+
+function DuplicateDraft({ suggestedName, onDuplicate }: {
+  suggestedName: string
+  onDuplicate: DraftControlsProps['onDuplicate']
+}) {
+  const [name, setName] = useState<string>()
+  const [issue, setIssue] = useState<string>()
+  const trigger = useRef<HTMLButtonElement>(null)
+
+  function cancel() {
+    setName(undefined)
+    setIssue(undefined)
+    trigger.current?.focus()
+  }
+
+  return <>
+    <button ref={trigger} type="button" className="guide-button guide-action" aria-expanded={name !== undefined}
+      onClick={() => name === undefined ? setName(suggestedName) : cancel()}>
+      <Copy aria-hidden="true" />Duplicate draft
+    </button>
+    {name !== undefined && (
+      <form className="flex w-full flex-wrap items-end gap-2 rounded-lg border border-border p-3 sm:p-4"
+        aria-label="Duplicate current draft" onSubmit={event => {
+          event.preventDefault()
+          setIssue(onDuplicate(name))
+        }}>
+        <label className="grid min-w-40 flex-1 gap-1 text-sm">
+          Copy name
+          <input ref={focusCopyName} className="ledger-field w-full" value={name}
+            aria-describedby={issue ? 'draft-copy-issue' : undefined} onChange={event => {
+              setName(event.target.value)
+              setIssue(undefined)
+            }} />
+        </label>
+        <button type="submit" className="guide-button guide-button-primary">Save copy</button>
+        <button type="button" className="guide-button" onClick={cancel}>Cancel copy</button>
+        {issue && <p id="draft-copy-issue" role="alert" className="w-full text-sm text-rose-300">{issue}</p>}
+      </form>
+    )}
+  </>
 }

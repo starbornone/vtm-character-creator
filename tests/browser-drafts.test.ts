@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
-  draftLibraryKey, draftNameError, loadDraftLibrary, saveDraftLibrary, withSavedDraft,
+  appendRestoredDraft, draftLibraryKey, draftNameError, loadDraftLibrary, saveDraftLibrary, suggestCopyName, withSavedDraft,
   type DraftLibrary, type GetStorage, type NamedDraft,
 } from '../src/drafts/browser-drafts.ts'
 import { serializeDraftDownload } from '../src/drafts/draft-backup.ts'
-import { evaluateCharacter, initialCharacterDraft } from '../src/rules/character-guide.ts'
+import { editCharacter, evaluateCharacter, initialCharacterDraft } from '../src/rules/character-guide.ts'
 import { maraCharacter } from './fixtures/mara-vale.ts'
 
 const maraDraft: NamedDraft = { id: 'mara', name: 'Mara Vale', step: 'review', character: maraCharacter }
@@ -83,6 +83,41 @@ test('quota failures leave the last saved draft intact and the current draft can
   block(false)
   assert.ok(saveDraftLibrary(storage, unsaved, first.saved).saved)
   assert.equal(loadDraftLibrary(storage).library.drafts[0].step, 'relationships')
+})
+
+test('a draft copy keeps the working inputs and step and saves separately from the original', () => {
+  const { storage, block } = memoryStorage()
+  const library = withSavedDraft({ activeId: null, drafts: [] }, maraDraft)
+  const { saved } = saveDraftLibrary(storage, library, null)
+  assert.ok(saved)
+
+  const desire = 'Try a different approach'
+  const working = {
+    ...maraDraft, step: 'relationships' as const,
+    character: editCharacter(maraDraft.character, { type: 'concept', update: { desire } }),
+  }
+  const name = suggestCopyName(library, working.name)
+  const copy = appendRestoredDraft(library, { ...working, name }, 'mara-copy')
+  assert.ok(copy.draft)
+  block(true)
+  assert.match(saveDraftLibrary(storage, copy.library, saved).issue ?? '', /Could not save/)
+  assert.equal(storage().getItem(draftLibraryKey), saved)
+  assert.deepEqual(loadDraftLibrary(storage).library, library)
+
+  block(false)
+  const created = saveDraftLibrary(storage, copy.library, saved)
+  assert.ok(created.saved)
+  const reloaded = loadDraftLibrary(storage)
+  assert.equal(reloaded.library.activeId, 'mara-copy')
+  assert.equal(suggestCopyName(reloaded.library, working.name), 'Mara Vale (copy 2)')
+  assert.deepEqual(reloaded.library.drafts, [maraDraft, { ...working, id: 'mara-copy', name: 'Mara Vale (copy)' }])
+
+  const edited = withSavedDraft(reloaded.library, { ...copy.draft, step: 'traits' })
+  assert.ok(saveDraftLibrary(storage, edited, reloaded.saved).saved)
+  const reopened = loadDraftLibrary(storage)
+  assert.deepEqual(reopened.library.drafts[0], maraDraft)
+  assert.equal(reopened.library.drafts[1].step, 'traits')
+  assert.equal(reopened.library.drafts[1].character.concept.desire, desire)
 })
 
 test('blocked, malformed and unsupported storage falls back without overwriting saved data', () => {

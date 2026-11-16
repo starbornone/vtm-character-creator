@@ -75,6 +75,10 @@ export function withSavedDraft(library: DraftLibrary, draft: NamedDraft): DraftL
 
 export function suggestRestoreName(library: DraftLibrary, original: string) {
   if (!draftNameError(library, original)) return original
+  return suggestCopyName(library, original)
+}
+
+export function suggestCopyName(library: DraftLibrary, original: string) {
   let copy = `${original} (copy)`
   let number = 2
   while (draftNameError(library, copy)) copy = `${original} (copy ${number++})`
@@ -85,7 +89,7 @@ export function appendRestoredDraft(library: DraftLibrary, snapshot: DraftSnapsh
   const name = snapshot.name.trim()
   const issue = draftNameError(library, name)
   if (issue) return { issue }
-  if (library.drafts.some(draft => draft.id === id)) return { issue: 'Could not assign a fresh draft ID. Retry restoring the backup.' }
+  if (library.drafts.some(draft => draft.id === id)) return { issue: 'Could not assign a fresh draft ID. Try again.' }
   const draft: NamedDraft = { name, step: snapshot.step, character: snapshot.character, id }
   return { draft, library: { activeId: id, drafts: [...library.drafts, draft] } }
 }

@@ -37,14 +37,17 @@ export function useBrowserDrafts() {
     setSession(next)
   }
 
-  function persist(current: DraftSession, library: DraftLibrary, open: OpenDraft, keepOnError = false) {
+  function writeLibrary(current: DraftSession, library: DraftLibrary, open: OpenDraft) {
     const result = saveDraftLibrary(browserStorage, library, current.saved)
-    if (result.issue !== undefined) {
-      show({ ...current, ...(keepOnError ? { open, dirty: true } : {}), issue: result.issue })
-      return false
-    }
+    if (result.issue !== undefined) return result.issue
     show({ library, saved: result.saved, open, dirty: false })
-    return true
+  }
+
+  function persist(current: DraftSession, library: DraftLibrary, open: OpenDraft, keepOnError = false) {
+    const issue = writeLibrary(current, library, open)
+    if (issue === undefined) return true
+    show({ ...current, ...(keepOnError ? { open, dirty: true } : {}), issue })
+    return false
   }
 
   function saveNamed(current: DraftSession, open: NamedDraft) {
@@ -98,6 +101,14 @@ export function useBrowserDrafts() {
     return restored ? { restored } : { restored, issue: latest.current.issue }
   }
 
+  function duplicate(name: string) {
+    const current = latest.current
+    if (!current.library.drafts.some(draft => draft.id === current.open.id)) return 'Save the current draft before duplicating it.'
+    const copy = appendRestoredDraft(current.library, { ...current.open, name }, newDraftId())
+    if (!copy.draft) return copy.issue
+    return writeLibrary(current, copy.library, copy.draft)
+  }
+
   function download() {
     const { open } = latest.current
     const name = open.name || open.character.concept.name.trim() || 'Untitled draft'
@@ -105,5 +116,5 @@ export function useBrowserDrafts() {
     downloadTextFile(serializeDraftDownload({ name, step: open.step, character: open.character }), `${stem || 'character'}-draft.json`, 'application/json')
   }
 
-  return { ...session, dispatch, goTo, save, switchDraft, download, restore }
+  return { ...session, dispatch, goTo, save, switchDraft, download, restore, duplicate }
 }

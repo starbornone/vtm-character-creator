@@ -122,6 +122,11 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
           return true
         }}
         onDownload={drafts.download}
+        onDuplicate={copyName => {
+          const issue = drafts.duplicate(copyName)
+          if (issue === undefined) requestAnimationFrame(() => panel.current?.focus())
+          return issue
+        }}
         onRestore={snapshot => {
           const result = drafts.restore(snapshot)
           if (result.restored) requestAnimationFrame(() => panel.current?.focus())
