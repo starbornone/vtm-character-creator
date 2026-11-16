@@ -36,3 +36,11 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+@layer components {
+  .ledger-field {
+    @apply min-h-9 min-w-0 rounded-md border border-border bg-background px-2.5 py-1.5 text-sm text-foreground;
+    @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 disabled:text-muted-foreground;
+    @apply aria-invalid:border-rose-400;
+  }
+}

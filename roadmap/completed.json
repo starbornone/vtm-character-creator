@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T13:52:01+11:00",
+  "updatedAt": "2026-11-16T14:03:51+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -42,6 +42,13 @@
       "group": "Rules",
       "notes": "Select the Core Rulebook printing and applicable errata. Hand-check a standard clan neonate fixture and record the source for each rule used by the first build.",
       "completedAt": "2026-11-16T13:52:01+11:00"
+    },
+    {
+      "id": "build-attribute-skill-ledger",
+      "title": "Build the Attribute and Skill ledger",
+      "group": "Rules",
+      "notes": "Evaluate dot distributions, Specialties, Health, and Willpower and expose the available slots and sources of each total.",
+      "completedAt": "2026-11-16T14:03:51+11:00"
     }
   ]
 }
