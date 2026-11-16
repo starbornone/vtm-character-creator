@@ -23,6 +23,14 @@ Switching profiles checks the selected Generation, dot budgets, and XP journal a
 
 The info buttons beside **Concept**, **Chronicle**, **Embraced**, **Ambition**, and **Desire** explain what to enter. Hover, focus, or tap a button to read its help.
 
+## Reuse chronicle settings
+
+Set **Chronicle** and **Rule sources** in **Concept**, and enter **Chronicle Tenets** in **Relationships**. Return to **Concept**, expand **Chronicle presets**, enter a **Preset name**, and select **Save current settings**.
+
+Open another character draft and return to **Concept**. Choose the preset under **Saved presets** and select **Preview preset**. Compare the current and preset values for each field that would change. **Apply preset** copies those settings into the open draft. **Cancel preview** leaves the draft as it was. If a preset turns off a rule source, the draft keeps any saved selections that depend on it for review.
+
+Named drafts autosave the applied values. A character’s JSON backup carries its chronicle name, Tenets, and rule sources. The reusable presets stay in the browser where you saved them.
+
 ## Save and reopen browser drafts
 
 Expand **Browser drafts**, enter a **Draft name**, and select **Save draft**. Once named, the character and current step autosave as you work. Reload the page to resume the last open saved draft. Use **New draft** for another character, or choose a name under **Saved drafts** and select **Open draft** to resume that character at its own last step. Edit the draft name and select **Save draft** to rename it.

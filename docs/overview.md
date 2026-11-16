@@ -4,7 +4,7 @@ The Vampire: The Masquerade Character Creator helps players prepare a V5 vampire
 
 ## Player workflow
 
-1. Choose an age profile and enter a character concept, Ambition, and Desire. Record chronicle guidance as needed.
+1. Choose an age profile and enter a character concept, Ambition, and Desire. Set the chronicle name, Tenets, and rule sources yourself or preview and apply a reusable browser preset.
 2. Choose a clan or blood status. Named clans and Caitiff allocate their starting Disciplines and powers. Thin-blood fledglings choose matched Merits and Flaws, with extra choices for Alchemy, Discipline Affinity, or Clan Curse. For a neonate or ancilla, choose an eligible Predator Type. Assign Attributes and Skills with any applicable Predator grant visible in the ledger.
 3. Record Advantages, Flaws, Convictions, Touchstones, and relevant relationships. Apply starting XP if the age profile grants it and review the resulting sheet and any open Storyteller rulings.
 4. Open **Review & Print** to resolve open choices and print the character sheet.

@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T21:45:01+11:00",
+  "updatedAt": "2026-11-16T22:04:21+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -161,6 +161,13 @@
       "group": "Advancement",
       "notes": "Added earned XP awards and ordered purchases on top of the completed creation build. Verified Mara Vale’s 55 earned XP, 53 spent, and 2 remaining in Review & Print, including Amalgam purchase order, award removal, a pause after editing creation, named draft reload, and restoring the downloaded JSON as a separate draft. The sheet and Storyteller brief show advancement alongside starting XP. Mechanical links continue to share the creation build.",
       "completedAt": "2026-11-16T21:45:01+11:00"
+    },
+    {
+      "id": "add-chronicle-presets",
+      "title": "Add reusable chronicle presets",
+      "group": "Chronicle tools",
+      "notes": "Added named browser-local presets for the chronicle name, Tenets, and enabled rule sources. The preview shows current and preset values before applying them. Verified cancellation, independent reuse in Mara and Rowan’s drafts, a narrow viewport, named-draft reload, and JSON backup restore as a third draft. Applied values use the existing draft fields.",
+      "completedAt": "2026-11-16T22:04:21+11:00"
     }
   ]
 }

@@ -1,20 +1,14 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T21:53:38+11:00",
+  "updatedAt": "2026-11-16T22:04:21+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
     "status": "active",
-    "summary": "A browser-based Vampire: The Masquerade V5 creator with the named Core clans, Caitiff, Thin-bloods, an opt-in Player’s Guide pack, and post-creation XP advancement."
+    "summary": "A browser-based Vampire: The Masquerade V5 creator with the named Core clans, Caitiff, Thin-bloods, an opt-in Player’s Guide pack, post-creation XP advancement, and reusable chronicle presets."
   },
   "items": [
-    {
-      "id": "add-chronicle-presets",
-      "title": "Add reusable chronicle presets",
-      "group": "Chronicle tools",
-      "notes": "Save named browser-local presets for chronicle name, Tenets, and enabled rule sources. Preview field changes before applying a preset. Verify reuse across two drafts, preservation of unrelated character inputs, and backup restore of the applied settings."
-    },
     {
       "id": "add-v5-table-reference",
       "title": "Add a searchable V5 table reference",
