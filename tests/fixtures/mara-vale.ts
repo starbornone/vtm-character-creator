@@ -1,4 +1,5 @@
 import type { ClanPathDraft } from '../../src/rules/clan-path.ts'
+import type { CharacterDraft } from '../../src/rules/character-guide.ts'
 import type { StartingDraft } from '../../src/rules/starting-xp.ts'
 import type { TraitDraft } from '../../src/rules/trait-ledger.ts'
 
@@ -39,4 +40,16 @@ export const maraStarting: StartingDraft = {
     { kind: 'skill', id: 'stealth', to: 2 },
     { kind: 'skill', id: 'drive', to: 2 },
   ],
+}
+
+export const maraCharacter: CharacterDraft = {
+  concept: {
+    name: 'Mara Vale', concept: 'Former theater carpenter', chronicle: 'Last Call at the Lyric', embraced: '1998',
+    ambition: 'Secure a permanent home for the theater company', desire: 'Find the missing stagehand tonight',
+  },
+  relationships: {
+    sire: 'Inez Varga', coterie: '', tenets: 'Protect people who depend on you.',
+    convictions: [{ conviction: 'Keep my word', touchstone: 'Jo Reyes, the living stage manager' }],
+  },
+  traits: mara, clanPath: maraClanPath, starting: maraStarting,
 }

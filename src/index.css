@@ -43,4 +43,198 @@
     @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 disabled:text-muted-foreground;
     @apply aria-invalid:border-rose-400;
   }
+
+  .guide-button {
+    @apply min-h-10 rounded-md border border-border px-3 py-2 text-sm font-medium text-foreground;
+    @apply hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300;
+  }
+
+  .guide-button[aria-current="step"] {
+    @apply border-rose-400 bg-muted;
+  }
+
+  .guide-button-primary {
+    @apply border-transparent bg-rose-300 text-background hover:bg-rose-200;
+  }
+
+  .character-sheet {
+    @apply space-y-5 rounded-xl border border-border bg-card p-5 text-sm sm:p-7;
+    overflow-wrap: anywhere;
+  }
+
+  .sheet-header {
+    @apply flex flex-wrap items-start justify-between gap-3 border-b border-border pb-4;
+  }
+
+  .sheet-header h2 {
+    @apply text-3xl leading-tight font-semibold tracking-tight sm:text-4xl;
+  }
+
+  .sheet-caption, .sheet-concept, .sheet-specialties {
+    @apply text-muted-foreground;
+  }
+
+  .sheet-caption, .sheet-specialties {
+    @apply text-xs;
+  }
+
+  .sheet-concept {
+    @apply mt-1;
+  }
+
+  .sheet-draft {
+    @apply rounded-md border border-border px-3 py-1 font-semibold;
+  }
+
+  .sheet-details, .sheet-tracks, .sheet-trait-grid, .sheet-two-col {
+    @apply grid gap-3;
+  }
+
+  .sheet-tracks {
+    @apply grid-cols-2 sm:grid-cols-4 lg:grid-cols-7;
+  }
+
+  .sheet-tracks div {
+    @apply rounded-md border border-border px-3 py-2;
+  }
+
+  .sheet-tracks dt {
+    @apply text-xs text-muted-foreground;
+  }
+
+  .sheet-tracks dd {
+    @apply text-lg font-semibold tabular-nums;
+  }
+
+  .sheet-details, .sheet-two-col {
+    @apply sm:grid-cols-2;
+  }
+
+  .sheet-details dt, .sheet-ratings dd {
+    @apply font-semibold;
+  }
+
+  .sheet-details dd {
+    white-space: pre-wrap;
+  }
+
+  .sheet-trait-grid {
+    @apply sm:grid-cols-3;
+  }
+
+  .character-sheet h3 {
+    @apply mb-2 border-b border-border pb-1 text-base font-semibold;
+  }
+
+  .character-sheet h4 {
+    @apply mb-1 font-semibold;
+  }
+
+  .sheet-ratings div {
+    @apply flex justify-between gap-2 border-b border-border/50 py-0.5;
+  }
+
+  .sheet-attributes {
+    @apply mb-2;
+  }
+
+  .sheet-specialties {
+    @apply ml-1;
+  }
+
+  .sheet-list {
+    @apply mt-1 space-y-0.5;
+  }
+
+  .sheet-list + h3 {
+    @apply mt-3;
+  }
+}
+
+@page {
+  margin: 11mm;
+}
+
+@media print {
+  :root {
+    color-scheme: light;
+    --background: #fff;
+    --foreground: #111;
+    --card: #fff;
+    --muted-foreground: #333;
+    --border: #aaa;
+  }
+
+  .creator-shell {
+    max-width: none;
+    padding: 0;
+  }
+
+  .sheet-panel {
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  .character-sheet {
+    border: 0;
+    padding: 0;
+    font-size: 9pt;
+    line-height: 1.22;
+  }
+
+  .character-sheet > * {
+    margin-block: 0 !important;
+  }
+
+  .character-sheet > * + * {
+    margin-block-start: 3mm !important;
+  }
+
+  .sheet-header {
+    padding-bottom: 2mm;
+  }
+
+  .sheet-header h2 {
+    font-size: 25pt;
+  }
+
+  .sheet-header h2, .character-sheet h3, .character-sheet h4 {
+    break-after: avoid;
+  }
+
+  .sheet-caption, .sheet-specialties, .sheet-tracks dt {
+    font-size: 8pt;
+  }
+
+  .sheet-details, .sheet-two-col {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5mm 4mm;
+  }
+
+  .sheet-tracks {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 1.5mm;
+  }
+
+  .sheet-tracks div {
+    padding: 1mm 1.5mm;
+  }
+
+  .sheet-tracks dd {
+    font-size: 12pt;
+  }
+
+  .sheet-trait-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4mm;
+  }
+
+  .character-sheet h3 {
+    font-size: 11pt;
+    margin-bottom: 1mm;
+  }
+
+  .sheet-ratings div, .sheet-list li {
+    break-inside: avoid;
+  }
 }
