@@ -37,3 +37,5 @@ For backup changes, run the [backup tests](../tests/draft-backup.test.ts). In th
 For link changes, run the [build link tests](../tests/build-link.test.ts). Generate a link from Mara Vale and inspect the decoded fragment for names, narrative, and custom choice text. Open it in another tab, confirm that the preview leaves the library intact, and save a separate copy. Check that a malformed fragment shows an error.
 
 For brief changes, run the [Storyteller brief tests](../tests/storyteller-brief.test.ts). Compare the downloaded Markdown with the preview for Mara Vale and a draft with an unresolved manual ruling or a rejected XP purchase. Toggle a narrative section on and off and confirm that the text appears only while selected.
+
+For releases, use the [first-release verification record](release-verification.md) to repeat the desktop and mobile walkthrough, review printed sheets, and check the notices on the deployed site.

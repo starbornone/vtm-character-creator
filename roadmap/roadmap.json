@@ -1,19 +1,12 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T16:34:29+11:00",
+  "updatedAt": "2026-11-16T16:47:22+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
     "status": "active",
-    "summary": "A planned browser-based Vampire: The Masquerade V5 creator for standard clan neonates with a live rules ledger, local drafts, and printable sheets."
+    "summary": "A browser-based Vampire: The Masquerade V5 creator for standard clan neonates with a live rules ledger, local drafts, and printable sheets."
   },
-  "items": [
-    {
-      "id": "verify-first-release",
-      "title": "Verify the first release",
-      "group": "Release",
-      "notes": "Run rules, persistence, type, and build checks. Rehearse creation through print at desktop and mobile widths and verify public release notices."
-    }
-  ]
+  "items": []
 }

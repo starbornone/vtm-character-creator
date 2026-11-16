@@ -15,4 +15,6 @@ Name a browser draft at any step to autosave it. Each saved character resumes at
 
 The first release covers one vampire at a time and the seven named core clans. The supported workflow includes manual entries where the core rules can represent the choice. Those entries carry a Storyteller review flag. Additional character profiles, long-term advancement, coterie management, Foundry export, and a private Storyteller workspace are follow-up candidates. Browser-local storage and explicit sharing cover draft handling for the first release.
 
+See [First-release verification](release-verification.md) for the browser, print, and public notice checks.
+
 Use [Getting started](getting-started.md) to orient yourself in the current checkout, [Architecture](architecture.md) to understand the planned design, and the [roadmap](../roadmap/roadmap.json) to find the next item.

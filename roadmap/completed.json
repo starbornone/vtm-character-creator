@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T16:34:29+11:00",
+  "updatedAt": "2026-11-16T17:08:12+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -112,6 +112,13 @@
       "group": "Sharing",
       "notes": "Added a Storyteller Markdown preview and download with mechanics, open rulings, and opt-in narrative and custom text. Verified that completed Mara Vale and unfinished draft previews match the download, and that private text stays out until selected.",
       "completedAt": "2026-11-16T16:34:29+11:00"
+    },
+    {
+      "id": "verify-first-release",
+      "title": "Verify the first release",
+      "group": "Release",
+      "notes": "Verified 45 tests, type checking, a production build, creation through restore and print at 1440 px and 390 px, and one-page US Letter and A4 sheets. Verified the Dark Pack logo, copyright and trademark notice, and unofficial designation on the live creator and shared build preview. External sample feedback remains pending in docs/release-verification.md.",
+      "completedAt": "2026-11-16T16:47:22+11:00"
     }
   ]
 }
