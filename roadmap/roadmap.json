@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-17T00:26:20+11:00",
+  "updatedAt": "2026-11-17T00:28:51+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -9,6 +9,18 @@
     "summary": "A browser-based Vampire: The Masquerade V5 creator with Core and optional Player’s Guide choices, XP advancement, chronicle presets, a searchable rules reference, and local character and coterie planning tools."
   },
   "items": [
+    {
+      "id": "duplicate-browser-drafts",
+      "title": "Duplicate the current browser draft as a named copy",
+      "group": "Browser drafts",
+      "notes": "Add Duplicate draft in Browser drafts so players can try a different build without a download and restore. Suggest a unique name, use a fresh ID, and copy the current inputs and step. Verify that the original and copy reopen independently after reload, and that a failed save keeps the original open and the library intact."
+    },
+    {
+      "id": "expand-players-guide-clan-catalog",
+      "title": "Add one more clan to the opt-in Player’s Guide catalog",
+      "group": "Rules coverage",
+      "notes": "Choose a clan whose Disciplines the evaluator already supports. Cite the pinned printing and errata as applicable, and include the choices needed to complete a starting build. Verify a hand-checked fixture through review, print, backup restore, and a mechanical build link. Check source opt-in and confirm that existing Core and Ministry fixtures still evaluate as before."
+    },
     {
       "id": "review-player-storyteller-handoffs",
       "title": "Review sample handoffs with a player and a Storyteller",

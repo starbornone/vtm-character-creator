@@ -72,7 +72,8 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 
 ## Next priorities
 
-The local guide, handoff, and print items are complete. The remaining roadmap items are deferred.
+1. **Duplicate a browser draft.** Let players make a named copy of the current draft in **Browser drafts** before trying a different clan, Predator Type, or XP path. Today that takes a JSON download and restore. Copy the character inputs and current step under a fresh ID. Verify that edits to the copy stay separate after reload and that a failed save keeps the original draft open.
+2. **Expand the opt-in Player’s Guide catalog by one clan.** The pack currently offers the Ministry as its only additional clan. Choose one more clan whose Disciplines the evaluator already supports. Add its cited creation choices and any powers needed to finish a starting build. Verify a hand-checked fixture through review, print, backup restore, and a mechanical build link. Check that existing Core and Ministry drafts still resolve as before. [Rules sources and fixtures](docs/v5-rules.md)
 
 ### Deferred external handoff feedback
 
