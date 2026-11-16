@@ -123,6 +123,7 @@ interface ClanPathEditorProps {
 
 export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onChange }: ClanPathEditorProps) {
   const { clan, predator, clanSlots, predatorSlot, humanity, ledger } = path
+  const { predatorAllowed } = path.profile
   const grantLabel = predatorGrant && (predatorGrant.kind === 'skill-dot'
     ? `${traitLabel(predatorGrant.skill)} +1 · Skill dot while the Skill is unrated`
     : `${traitLabel(predatorGrant.skill)} (${predatorGrant.name})${predatorGrant.kind === 'pending' ? ' · Resolve the Skill rating or competing Specialty' : ' · Specialty'}`)
@@ -144,7 +145,9 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
         <div>
           <h2 id="clan-path-heading" className="text-2xl font-semibold tracking-tight">Clan &amp; Predator Type</h2>
           <p role="status" className="mt-1 text-sm text-muted-foreground">
-            {path.complete && predatorGrant?.kind !== 'pending' ? 'Clan and Predator Type choices complete' : 'Choose a clan, Predator Type, and their grants.'}
+            {!predatorAllowed
+              ? (path.complete ? 'Fledgling clan choices complete' : 'Choose a clan and assign its Disciplines and powers.')
+              : (path.complete && predatorGrant?.kind !== 'pending' ? 'Clan and Predator Type choices complete' : 'Choose a clan, Predator Type, and their grants.')}
           </p>
         </div>
         <div className="grid items-start gap-5 lg:grid-cols-2">
@@ -170,7 +173,7 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
             )}
           </fieldset>
 
-          <fieldset className="min-w-0 space-y-3 rounded-lg border border-border px-4 pb-4">
+          {predatorAllowed ? <fieldset className="min-w-0 space-y-3 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Predator Type</legend>
             <CatalogSelect searchable label="Starting Predator Type" value={draft.predatorType} choices={predatorChoices} disabled={!clan} invalid={Boolean(path.predatorIssue)} onChange={predatorType => onChange({ predatorType })} />
             {!clan && <p className="text-sm text-muted-foreground">Choose a clan to unlock this choice.</p>}
@@ -204,7 +207,11 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
                 </ul>}
               </>
             )}
-          </fieldset>
+          </fieldset> : <fieldset className="min-w-0 space-y-2 rounded-lg border border-border px-4 pb-4">
+            <legend className="px-1.5 text-sm font-semibold">Predator Type</legend>
+            <p className="text-sm text-muted-foreground">The fledgling’s feeding style develops in play. Core pp. 149, 175.</p>
+            {draft.predatorType && <p className="text-sm text-muted-foreground">Your Predator Type choices are paused for this profile.</p>}
+          </fieldset>}
         </div>
 
         {!!finalRatings['blood-sorcery'] && <CatalogSelect label="Starting Blood Sorcery Ritual (optional)" value={draft.ritual ?? ''} choices={ritualChoices} onChange={ritual => onChange({ ritual })} />}
@@ -217,7 +224,7 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
             const xpDots = total - row.total
             return <div className="rounded-lg bg-background/60 px-3 py-2" key={row.discipline}>
               <dt className="font-medium">{disciplines[row.discipline]}</dt>
-              <dd className="mt-0.5 text-sm text-muted-foreground">{total} total · {clan.name} {row.clanDots} · {predator?.name ?? 'Predator Type'} {row.predatorDots}{xpDots > 0 && ` · XP +${xpDots}`}</dd>
+              <dd className="mt-0.5 text-sm text-muted-foreground">{total} total · {clan.name} {row.clanDots}{predatorAllowed && ` · ${predator?.name ?? 'Predator Type'} ${row.predatorDots}`}{xpDots > 0 && ` · XP +${xpDots}`}</dd>
             </div>
           })}
         </dl>}

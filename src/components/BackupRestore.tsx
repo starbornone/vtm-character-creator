@@ -97,6 +97,7 @@ function BackupSummary({ draft }: { draft: DraftSnapshot }) {
     ['Backup name', draft.name],
     ['Character', sheet.identity.name || 'Unnamed character'],
     ['Concept', sheet.identity.concept],
+    ['Age profile', sheet.identity.ageProfile],
     ['Clan', sheet.identity.clan],
     ['Predator Type', sheet.identity.predator],
     ['Resume at', step?.title],

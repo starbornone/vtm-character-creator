@@ -29,7 +29,7 @@ export function CharacterSheet({ sheet, mechanicalOnly = false }: { sheet: Sheet
         {sheet.draft && <p className="sheet-draft">Draft · Open choices</p>}
       </header>
       <Details rows={[
-        ['Chronicle', mechanicalOnly ? undefined : identity.chronicle], ['Clan', identity.clan], ['Predator Type', identity.predator],
+        ['Chronicle', mechanicalOnly ? undefined : identity.chronicle], ['Age profile', identity.ageProfile], ['Clan', identity.clan], ['Predator Type', identity.predator],
         ['Generation', identity.generation && `${identity.generation}th`], ['Embraced', mechanicalOnly ? undefined : identity.embraced],
         ['Clan Bane', sheet.bane], ['Compulsion', sheet.compulsion],
       ]} />

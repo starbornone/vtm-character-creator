@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { maxConvictions, type ConceptDraft, type RelationshipDraft } from '@/rules/character-guide'
+import { ageProfileIds, ageProfiles, type AgeProfileId } from '@/rules/creation-profiles'
 
 function NarrativeField({ label, value, onChange, multiline = false }: {
   label: string
@@ -17,13 +18,32 @@ function NarrativeField({ label, value, onChange, multiline = false }: {
   )
 }
 
-export function ConceptEditor({ draft, onChange }: { draft: ConceptDraft; onChange: (update: Partial<ConceptDraft>) => void }) {
+export function ConceptEditor({ draft, onChange, ageProfile, onAgeProfile }: {
+  draft: ConceptDraft
+  onChange: (update: Partial<ConceptDraft>) => void
+  ageProfile: AgeProfileId
+  onAgeProfile: (profile: AgeProfileId) => void
+}) {
   return (
     <Card role="region" aria-labelledby="concept-heading" className="gap-0 py-0">
       <CardContent className="space-y-5 p-5 sm:p-7">
         <div>
           <h2 id="concept-heading" className="text-2xl font-semibold tracking-tight">Concept</h2>
           <p className="mt-1 text-sm text-muted-foreground">Start with who your character was in life and what keeps them going now.</p>
+        </div>
+        <div className="space-y-2">
+          <label className="grid gap-1.5 text-sm sm:max-w-xs">
+            Age profile
+            <select className="ledger-field" value={ageProfile} aria-describedby="age-profile-summary" onChange={event => {
+              const selected = ageProfileIds.find(id => id === event.target.value)
+              if (selected) onAgeProfile(selected)
+            }}>
+              {ageProfileIds.map(id => <option key={id} value={id}>{ageProfiles[id].name}</option>)}
+            </select>
+          </label>
+          <p id="age-profile-summary" className="text-sm text-muted-foreground">
+            {ageProfile === 'fledgling' ? 'A recently Embraced vampire with 0 starting XP. Predator Type is left open for play.' : 'An established young vampire with a Predator Type and 15 starting XP.'}
+          </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <NarrativeField label="Character name" value={draft.name} onChange={name => onChange({ name })} />

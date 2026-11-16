@@ -51,7 +51,7 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
   const { dispatch } = drafts
   const panel = useRef<HTMLDivElement>(null)
   const shouldFocus = useRef(false)
-  const { path, traits, starting, tracks, sheet, pending } = evaluateCharacter(draft)
+  const { ageProfile, path, traits, starting, tracks, sheet, pending } = evaluateCharacter(draft)
   const { attributes, skills, specialties } = traits
   const { health, willpower } = tracks
   const { predatorGrant } = specialties
@@ -110,7 +110,8 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
       </nav>
 
       <div ref={panel} tabIndex={-1} role="region" aria-label={`${guideSteps[index].title} step`} className="space-y-4 focus:outline-none print:hidden">
-        {step === 'concept' && <ConceptEditor draft={draft.concept} onChange={update => dispatch({ type: 'concept', update })} />}
+        {step === 'concept' && <ConceptEditor draft={draft.concept} onChange={update => dispatch({ type: 'concept', update })}
+          ageProfile={ageProfile} onAgeProfile={profile => dispatch({ type: 'age-profile', profile })} />}
         {step === 'traits' && <>
             <dl aria-live="polite" className="grid grid-cols-2 overflow-hidden rounded-xl border border-border bg-card">
               <div className="border-r border-border px-4 py-3 sm:px-6">
