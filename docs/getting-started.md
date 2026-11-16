@@ -75,7 +75,7 @@ The preview identifies omitted choices that need to be re-entered. Select **Save
 
 ## Export a Storyteller brief
 
-In **Review & Print**, select **Storyteller brief**. The Markdown preview includes evaluated mechanics, starting and advancement XP, and open rulings such as unresolved mechanical choices, rejected XP purchases, and manual options that need Storyteller review.
+In **Review & Print**, select **Storyteller brief**. Read **Open Rulings** beside the Markdown preview on desktop or above it on a narrow screen. This list shows the same unresolved mechanical choices, rejected XP purchases, and Storyteller review notes as the download. The Markdown also includes evaluated mechanics and starting and advancement XP.
 
 Choose the narrative sections you want to share. Character identity and chronicle, Ambition and Desire, Convictions and Touchstones, relationships and Chronicle Tenets, and custom names and Storyteller notes each start unchecked. Manual options and custom Specialties use generic labels in the default brief, while their ratings, costs, and review flags remain visible. Select **Download Markdown** to save the text shown in the preview as `storyteller-brief.md`.
 

@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T23:51:00+11:00",
+  "updatedAt": "2026-11-17T00:00:50+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -9,12 +9,6 @@
     "summary": "A browser-based Vampire: The Masquerade V5 creator with Core and optional Player’s Guide choices, XP advancement, chronicle presets, a searchable rules reference, and local character and coterie planning tools."
   },
   "items": [
-    {
-      "id": "surface-open-rulings-in-brief-preview",
-      "title": "Show open rulings alongside the Storyteller brief preview",
-      "group": "Local handoff usability",
-      "notes": "Use the internal walkthrough in docs/release-verification.md. Show open rulings without requiring a scroll through the Markdown. Verify on mobile and by keyboard that Mara's unspent starting XP is easy to find, the visible rulings match the downloaded brief, and narrative remains opt-in."
-    },
     {
       "id": "route-mismatched-json-handoffs",
       "title": "Point players to the matching JSON restore control",

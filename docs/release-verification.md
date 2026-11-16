@@ -50,8 +50,14 @@ Rehearsed both walkthroughs on 16 November 2026 in the Chromium production previ
 
 | Priority | Observation | Follow-up to test with reviewers |
 | --- | --- | --- |
-| 1 | The brief preview is a scrolling Markdown field. On mobile, the open rulings sit below the mechanics in the same field. | Check how quickly the Storyteller finds the unresolved XP choice. If it is easy to miss, make **Open Rulings** easier to reach from the preview. |
+| 1 | The original brief preview put open rulings below the mechanics in the same scrolling field. | The preview now shows a separate **Open Rulings** list. [Preview verification](#storyteller-brief-preview-verification) |
 | 2 | Giving the planner a character JSON backup produces a format error that names the expected file but gives no route back to **Browser drafts**. | Check whether reviewers can tell the two JSON files apart. If they choose the wrong file, point them to the matching restore control. |
+
+### Storyteller brief preview verification
+
+In the local production preview, Mara’s remaining 6 starting XP appeared in **Open Rulings** beside the Markdown at desktop width and above it at 390 × 844. The phone layout fit without horizontal overflow. The ruling was visible with the Markdown field at its initial scroll position.
+
+Enter opened the preview and downloaded the brief. Tab and Space reached and toggled all five narrative options. Both downloaded files contained the same ruling shown in the preview, **Advantages & XP: Spend the remaining starting XP.** The default file omitted Mara’s identity and narrative. Enabling the options included her identity, motivations, Touchstone, sire, and custom Specialty name. The brief tests also check that a rejected purchase’s custom name appears in both the visible ruling data and the escaped Markdown only when selected.
 
 ### Review status
 
