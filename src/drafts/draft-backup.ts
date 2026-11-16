@@ -1,4 +1,6 @@
 import { caitiffOption, thinBloodOption } from '../catalog/clan-path.ts'
+import { isSourcePacks, unavailableSourceMessage, unavailableSourcePacks } from '../catalog/source-packs.ts'
+import { usesPlayersGuideSelections } from '../rules/creation-sources.ts'
 import { guideSteps, type CharacterDraft, type GuideStep } from '../rules/character-guide.ts'
 import { ageProfiles, defaultAgeProfile, generationForProfile } from '../rules/creation-profiles.ts'
 import { isCharacterDraft, isRecord } from './draft-inputs.ts'
@@ -7,7 +9,8 @@ const legacyDraftSchemaVersion = 1
 const profiledDraftSchemaVersion = 2
 const caitiffDraftSchemaVersion = 3
 const thinBloodDraftSchemaVersion = 4
-const draftSchemaVersions = [legacyDraftSchemaVersion, profiledDraftSchemaVersion, caitiffDraftSchemaVersion, thinBloodDraftSchemaVersion]
+const sourceDraftSchemaVersion = 5
+const draftSchemaVersions = [legacyDraftSchemaVersion, profiledDraftSchemaVersion, caitiffDraftSchemaVersion, thinBloodDraftSchemaVersion, sourceDraftSchemaVersion]
 export const draftRuleset = 'vtm-v5'
 const backupFormat = 'vtm-character-creator-draft'
 
@@ -18,6 +21,9 @@ export interface DraftSnapshot {
 }
 
 export function draftSchemaVersionFor(snapshots: readonly DraftSnapshot[]) {
+  if (snapshots.some(({ character }) => character.sourcePacks !== undefined || usesPlayersGuideSelections(character.clanPath, character.starting.purchases))) {
+    return sourceDraftSchemaVersion
+  }
   if (snapshots.some(({ character: { clanPath, starting } }) =>
     clanPath.clan === thinBloodOption.id || clanPath.thinBlood !== undefined || (starting.generation ?? 0) >= 14)) {
     return thinBloodDraftSchemaVersion
@@ -49,7 +55,7 @@ export function serializeDraftDownload(draft: DraftSnapshot): string {
   }, null, 2) + '\n'
 }
 
-type BackupResult = { draft: DraftSnapshot; issue?: never } | { draft?: never; issue: string }
+type BackupResult = { draft: DraftSnapshot; issue?: never } | { draft?: never; issue: string; unavailableSources?: string[] }
 
 export function readDraftBackup(raw: string): BackupResult {
   let value: unknown
@@ -62,6 +68,11 @@ export function readDraftBackup(raw: string): BackupResult {
   if (!isRecord(value) || value.format !== backupFormat) return { issue: 'Choose a Character Creator draft backup.' }
   if (!draftSchemaVersions.some(version => version === value.schemaVersion)) return { issue: 'This draft backup version is unsupported.' }
   if (value.ruleset !== draftRuleset) return { issue: 'This draft backup uses an unsupported ruleset.' }
+  if (value.schemaVersion === sourceDraftSchemaVersion && isRecord(value.draft) && isRecord(value.draft.character)) {
+    const packs = value.draft.character.sourcePacks
+    const unavailable = isSourcePacks(packs) ? unavailableSourcePacks(packs) : []
+    if (unavailable.length) return { issue: unavailableSourceMessage(unavailable), unavailableSources: unavailable }
+  }
   if (!isDraftSnapshot(value.draft)) return { issue: 'The draft name, guide step, or character inputs are missing or invalid.' }
   if (value.schemaVersion !== draftSchemaVersionFor([value.draft])) return { issue: 'The character inputs do not match this draft backup version.' }
 

@@ -1,4 +1,5 @@
-import { caitiffOption, clanChoices, coreClans, corePredators, disciplineIds, disciplinePowers, startingRituals, thinBloodOption } from '../catalog/clan-path.ts'
+import { allDisciplinePowers, caitiffOption, clanChoices, coreClans, predatorChoices, disciplineIds, disciplinePowers, startingRituals, thinBloodOption } from '../catalog/clan-path.ts'
+import { isSourcePacks, playersGuide, unavailableSourceMessage, unavailableSourcePacks } from '../catalog/source-packs.ts'
 import { alchemyMethods, startingFormulae } from '../catalog/thin-blood.ts'
 import { advantageIds, flawIds, startingAdvantages } from '../catalog/starting-options.ts'
 import { skillIds } from '../catalog/traits.ts'
@@ -6,6 +7,7 @@ import { isCharacterDraft, isRecord } from '../drafts/draft-inputs.ts'
 import { draftRuleset } from '../drafts/draft-backup.ts'
 import { evaluateClanPath, manualOptionId } from '../rules/clan-path.ts'
 import { initialCharacterDraft, type CharacterDraft } from '../rules/character-guide.ts'
+import { usesPlayersGuideSelections } from '../rules/creation-sources.ts'
 import { ageProfileIds, ageProfiles, defaultAgeProfile, generationForProfile, thinBloodProfile } from '../rules/creation-profiles.ts'
 import { attributeIds, type Purchase } from '../rules/starting-xp.ts'
 import type { ThinBloodDraft } from '../rules/thin-blood.ts'
@@ -16,7 +18,8 @@ const legacyVersion = 1
 const profiledVersion = 2
 const caitiffVersion = 3
 const thinBloodVersion = 4
-const buildVersions = [legacyVersion, profiledVersion, caitiffVersion, thinBloodVersion]
+const sourceVersion = 5
+const buildVersions = [legacyVersion, profiledVersion, caitiffVersion, thinBloodVersion, sourceVersion]
 const maxTokenLength = 12000
 
 export const omittedChoices = {
@@ -49,7 +52,7 @@ function supportedPurchase(purchase: Purchase, maxDiscipline: number, maxBloodPo
     }
     case 'discipline': {
       const id = selectedId(disciplineIds, purchase.id)
-      const power = id && disciplinePowers[id].find(option => option.id === purchase.power && option.level <= maxDiscipline)
+      const power = id && allDisciplinePowers[id].find(option => option.id === purchase.power && option.level <= maxDiscipline)
       if (id && power && Number.isInteger(purchase.to) && purchase.to >= 1 && purchase.to <= maxDiscipline) {
         const confirmed = isCaitiff && purchase.to === 1 && purchase.caitiffLearning === true
         return { kind: 'discipline', id, to: purchase.to, power: power.id, ...(confirmed ? { caitiffLearning: true } : {}) }
@@ -84,18 +87,19 @@ function projectThinBlood(draft: ThinBloodDraft | undefined, path: NonNullable<R
 function projectBuild(draft: CharacterDraft) {
   const age = ageProfiles[draft.ageProfile ?? defaultAgeProfile]
   const maxDiscipline = draft.ageProfile === 'ancilla' ? 4 : 3
-  const path = evaluateClanPath(draft.clanPath, true, age)
+  // Resolve known catalog IDs for transport even when their pack is turned off in the draft.
+  const path = evaluateClanPath(draft.clanPath, true, age, [playersGuide.id])
   const { profile, thinBlood } = path
   const clan = clanChoices.find(option => option.id === path.clan?.id)
-  const predator = clan && corePredators.find(option => option.id === path.predator?.id)
+  const predator = clan && predatorChoices.find(option => option.id === path.predator?.id)
   const clanPowers: CharacterDraft['clanPath']['clanPowers'] = {}
   if (clan && !thinBlood) for (const slot of path.clanSlots) {
-    const power = disciplinePowers[slot.discipline].find(option => option.id === slot.selectedId)?.id
+    const power = allDisciplinePowers[slot.discipline].find(option => option.id === slot.selectedId)?.id
     if (power) clanPowers[slot.discipline] = { ...clanPowers[slot.discipline], [slot.rank]: power }
   }
   const predatorSlot = predator ? path.predatorSlot : undefined
-  const predatorPower = predatorSlot && disciplinePowers[predatorSlot.discipline].find(power => power.id === predatorSlot.selectedId)?.id
-  const predatorChoices = predator ? Object.fromEntries(path.grantChoices.map(choice => [
+  const predatorPower = predatorSlot && allDisciplinePowers[predatorSlot.discipline].find(power => power.id === predatorSlot.selectedId)?.id
+  const grants = predator ? Object.fromEntries(path.grantChoices.map(choice => [
     choice.id, Object.fromEntries(choice.rows.filter(row => row.ratings.includes(row.dots)).map(row => [row.id, row.dots])),
   ])) : {}
   const attributes = Object.fromEntries(attributeIds.flatMap(id => ratings.some(rating => rating === draft.traits.attributes[id]) ? [[id, draft.traits.attributes[id]]] : []))
@@ -105,36 +109,43 @@ function projectBuild(draft: CharacterDraft) {
     return dots !== undefined && startingAdvantages[id].dots.includes(dots) ? [[id, dots]] : []
   }))
 
+  const clanPath = {
+    clan: clan?.id ?? '',
+    twoDotDiscipline: clan ? path.twoDot ?? '' : '',
+    oneDotDiscipline: clan ? path.oneDot ?? '' : '',
+    clanPowers,
+    predatorType: predator?.id ?? '',
+    predatorDiscipline: predator ? selectedId(path.predatorDisciplines, draft.clanPath.predatorDiscipline) ?? '' : '',
+    predatorSpecialty: predator?.specialties.find(option => option.skill === draft.clanPath.predatorSpecialty)?.skill ?? '',
+    predatorPowers: predatorSlot && predatorPower ? { [predatorSlot.discipline]: predatorPower } : {},
+    predatorChoices: grants,
+    ritual: !thinBlood || thinBlood.affinity?.discipline === 'blood-sorcery'
+      ? startingRituals.find(option => option.id === draft.clanPath.ritual)?.id ?? '' : '',
+    thinBlood: thinBlood ? projectThinBlood(draft.clanPath.thinBlood, thinBlood) : undefined,
+  }
+  const purchases = profile.xp > 0
+    ? draft.starting.purchases.flatMap(purchase => supportedPurchase(purchase, maxDiscipline, profile.maxBloodPotency, path.isCaitiff) ?? []) : []
+  const sourcePacks = draft.sourcePacks ?? (usesPlayersGuideSelections(clanPath, purchases) ? [] : undefined)
+
   // Every exported value is a catalog ID, a bounded rating, or an enum.
   return {
     ageProfile: draft.ageProfile === defaultAgeProfile ? undefined : draft.ageProfile,
+    sourcePacks,
     traits: {
       distribution: selectedId(skillDistributionIds, draft.traits.distribution) ?? initialCharacterDraft.traits.distribution,
       attributes, skills, freeSpecialtySkill: selectedId(skillIds, draft.traits.freeSpecialty.skill) ?? '',
     },
-    clanPath: {
-      clan: clan?.id ?? '',
-      twoDotDiscipline: clan ? path.twoDot ?? '' : '',
-      oneDotDiscipline: clan ? path.oneDot ?? '' : '',
-      clanPowers,
-      predatorType: predator?.id ?? '',
-      predatorDiscipline: predator ? selectedId(path.predatorDisciplines, draft.clanPath.predatorDiscipline) ?? '' : '',
-      predatorSpecialty: predator?.specialties.find(option => option.skill === draft.clanPath.predatorSpecialty)?.skill ?? '',
-      predatorPowers: predatorSlot && predatorPower ? { [predatorSlot.discipline]: predatorPower } : {},
-      predatorChoices,
-      ritual: !thinBlood || thinBlood.affinity?.discipline === 'blood-sorcery'
-        ? startingRituals.find(option => option.id === draft.clanPath.ritual)?.id ?? '' : '',
-      thinBlood: thinBlood ? projectThinBlood(draft.clanPath.thinBlood, thinBlood) : undefined,
-    },
+    clanPath,
     starting: {
       generation: generationForProfile(profile, draft.starting.generation),
       advantages, flaws: flawIds.filter(id => draft.starting.flaws.includes(id)),
-      purchases: profile.xp > 0 ? draft.starting.purchases.flatMap(purchase => supportedPurchase(purchase, maxDiscipline, profile.maxBloodPotency, path.isCaitiff) ?? []) : [],
+      purchases,
     },
   }
 }
 
-function formatVersion(clanId: unknown, ageProfile: unknown) {
+function formatVersion(clanId: unknown, ageProfile: unknown, sourcePacks: unknown) {
+  if (sourcePacks !== undefined) return sourceVersion
   if (clanId === thinBloodOption.id) return thinBloodVersion
   if (clanId === caitiffOption.id) return caitiffVersion
   return ageProfile === undefined ? legacyVersion : profiledVersion
@@ -152,13 +163,13 @@ export function encodeBuildLink(draft: CharacterDraft) {
     (purchase.kind === 'skill' && purchase.to === 1 && specialtySkills.some(skill => skill === purchase.id)))) omitted.push('specialty-purchases')
 
   const mechanics = projectBuild(draft)
-  const version = formatVersion(mechanics.clanPath.clan, mechanics.ageProfile)
+  const version = formatVersion(mechanics.clanPath.clan, mechanics.ageProfile, mechanics.sourcePacks)
   const payload = { version, ruleset: draftRuleset, mechanics, omitted }
   const token = btoa(JSON.stringify(payload)).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '')
   return token.length <= maxTokenLength ? buildLinkPrefix + token : undefined
 }
 
-export function decodeBuildLink(hash: string): { draft: CharacterDraft; omitted: Omission[]; issue?: never } | { issue: string } {
+export function decodeBuildLink(hash: string): { draft: CharacterDraft; omitted: Omission[]; issue?: never } | { issue: string; unavailableSources?: string[] } {
   const token = hash.startsWith(buildLinkPrefix) ? hash.slice(buildLinkPrefix.length) : ''
   const invalid = { issue: 'This build link is incomplete or invalid.' }
   if (token.length > maxTokenLength || !/^[A-Za-z0-9_-]+$/.test(token)) return invalid
@@ -166,12 +177,18 @@ export function decodeBuildLink(hash: string): { draft: CharacterDraft; omitted:
     const value: unknown = JSON.parse(atob(token.replaceAll('-', '+').replaceAll('_', '/')))
     if (!isRecord(value) || !isRecord(value.mechanics) || !Array.isArray(value.omitted) || Object.keys(value).length !== 4) return invalid
     if (!buildVersions.some(version => version === value.version) || value.ruleset !== draftRuleset) return { issue: 'This build link uses an unsupported version or ruleset.' }
-    const { ageProfile, traits, clanPath, starting } = value.mechanics
+    const { ageProfile, sourcePacks, traits, clanPath, starting } = value.mechanics
     if (!isRecord(traits) || !isRecord(clanPath)) return invalid
     if (ageProfile !== undefined && !ageProfileIds.some(id => id !== defaultAgeProfile && id === ageProfile)) return invalid
-    if (value.version !== formatVersion(clanPath.clan, ageProfile)) return invalid
+    if (value.version !== formatVersion(clanPath.clan, ageProfile, sourcePacks)) return invalid
+    if (sourcePacks !== undefined) {
+      if (!isSourcePacks(sourcePacks)) return invalid
+      const unavailable = unavailableSourcePacks(sourcePacks)
+      if (unavailable.length) return { issue: unavailableSourceMessage(unavailable), unavailableSources: unavailable }
+    }
     const draft: unknown = {
       ...(ageProfile ? { ageProfile } : {}),
+      ...(sourcePacks === undefined ? {} : { sourcePacks }),
       concept: initialCharacterDraft.concept,
       relationships: initialCharacterDraft.relationships,
       traits: {

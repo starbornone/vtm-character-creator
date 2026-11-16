@@ -1,4 +1,5 @@
-import { disciplineIds, disciplinePowers, disciplines, startingRituals } from '../catalog/clan-path.ts'
+import { allDisciplinePowers, disciplineIds, disciplines, startingRituals } from '../catalog/clan-path.ts'
+import { playersGuide, playersGuideDisabled, unavailableSourceMessage, unavailableSourcePacks } from '../catalog/source-packs.ts'
 import { advantageIds, startingAdvantages, startingFlaws } from '../catalog/starting-options.ts'
 import { traitGroups, traitLabel } from '../catalog/traits.ts'
 import { evaluateClanPath, initialClanPath, manualOptionId, type ClanPathDraft } from './clan-path.ts'
@@ -38,6 +39,7 @@ export const maxConvictions = 3
 
 export interface CharacterDraft {
   ageProfile?: AgeProfileId
+  sourcePacks?: string[]
   concept: ConceptDraft
   relationships: RelationshipDraft
   traits: TraitDraft
@@ -55,6 +57,7 @@ export const initialCharacterDraft: CharacterDraft = {
 }
 
 export type CharacterAction = TraitAction
+  | { type: 'players-guide'; enabled: boolean }
   | { type: 'age-profile'; profile: AgeProfileId }
   | { type: 'concept'; update: Partial<ConceptDraft> }
   | { type: 'relationships'; update: Partial<RelationshipDraft> }
@@ -63,6 +66,11 @@ export type CharacterAction = TraitAction
 
 export function editCharacter(draft: CharacterDraft, action: CharacterAction): CharacterDraft {
   switch (action.type) {
+    case 'players-guide': {
+      const packs = (draft.sourcePacks ?? []).filter(id => id !== playersGuide.id)
+      if (action.enabled) packs.push(playersGuide.id)
+      return { ...draft, sourcePacks: packs.length ? packs : undefined }
+    }
     case 'age-profile': return { ...draft, ageProfile: action.profile }
     case 'concept': return { ...draft, concept: { ...draft.concept, ...action.update } }
     case 'relationships': return { ...draft, relationships: { ...draft.relationships, ...action.update } }
@@ -82,10 +90,16 @@ const conceptFields = [
 export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = true } = {}) {
   const ageProfile = draft.ageProfile ?? defaultAgeProfile
   const age = ageProfiles[ageProfile]
-  const path = evaluateClanPath(draft.clanPath, includeCustomText, age)
+  const sourcePacks = draft.sourcePacks ?? []
+  const path = evaluateClanPath(draft.clanPath, includeCustomText, age, sourcePacks)
   const { profile, thinBlood } = path
   const traits = evaluateTraitLedger(draft.traits, path.grantedSpecialty)
   const starting = evaluateStartingBuild(draft.starting, draft.traits, traits, path, includeCustomText)
+  const unavailablePacks = unavailableSourcePacks(sourcePacks)
+  const sourceIssues = [
+    ...(unavailablePacks.length ? [unavailableSourceMessage(unavailablePacks)] : []),
+    ...(path.sourceUnavailable || starting.entries.some(entry => entry.issue === playersGuideDisabled) ? [playersGuideDisabled] : []),
+  ]
   const baseTracks = deriveTracks(starting.final.attributes)
   const resilience = starting.final.powers.includes('resilience') ? starting.final.disciplines.fortitude ?? 0 : 0
   const tracks = { ...baseTracks, health: {
@@ -94,7 +108,7 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
 
   const pending: Record<EditStep, string[]> = {
     concept: conceptFields.filter(({ key }) => !draft.concept[key].trim()).map(({ label }) => `Fill in ${label.toLowerCase()}.`),
-    traits: [], clan: [], starting: [], relationships: [],
+    traits: [], clan: [...sourceIssues], starting: [], relationships: [],
   }
   if (traits.attributes.open || traits.attributes.excess) pending.traits.push('Complete the Attribute allocation.')
   if (traits.skills.open || traits.skills.excess) pending.traits.push('Complete the Skill distribution.')
@@ -166,10 +180,11 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
     })),
     disciplines: disciplineIds.flatMap(id => {
       const rating = final.disciplines[id] ?? 0
-      const powers = disciplinePowers[id].filter(power => final.powers.includes(power.id)).map(power => power.name)
+      const powers = allDisciplinePowers[id].filter(power => final.powers.includes(power.id)).map(power => power.name)
       return rating > 0 ? [{ name: disciplines[id], rating, powers }] : []
     }),
     ritual,
+    ...(sourcePacks.includes(playersGuide.id) ? { sourcePack: playersGuide.name } : {}),
     thinBlood: thinBlood && {
       merits: thinBlood.merits, flaws: thinBlood.flaws, alchemy: thinBlood.alchemy,
       cursedClan: thinBlood.curse?.name,
@@ -199,5 +214,5 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
     purchases: starting.entries.filter(entry => !entry.issue),
     draft: Object.values(pending).some(issues => issues.length > 0),
   }
-  return { ageProfile, path, traits, starting, tracks, sheet, pending }
+  return { ageProfile, path, traits, starting, tracks, sheet, pending, sourceIssues }
 }

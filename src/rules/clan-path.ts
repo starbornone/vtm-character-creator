@@ -1,7 +1,8 @@
 import {
-  caitiffOption, clanChoices, corePredators, disciplineIds, disciplinePowers, thinBloodOption,
+  allDisciplinePowers, caitiffOption, clanChoices, disciplineIds, predatorChoices, thinBloodOption,
   type ClanOption, type DisciplineId, type DisciplinePower, type DotGrant, type PredatorOption,
 } from '../catalog/clan-path.ts'
+import { sourceEnabled } from '../catalog/source-packs.ts'
 import { skillIds } from '../catalog/traits.ts'
 import { ageProfiles, thinBloodProfile, type AgeProfile } from './creation-profiles.ts'
 import { evaluateThinBlood, type ThinBloodDraft } from './thin-blood.ts'
@@ -60,7 +61,7 @@ export const initialClanPath: ClanPathDraft = {
 }
 
 type DisciplineRatings = Partial<Record<DisciplineId, number>>
-type PowerIssue = 'wrong-discipline' | 'level' | 'duplicate' | 'amalgam'
+type PowerIssue = 'wrong-discipline' | 'level' | 'duplicate' | 'amalgam' | 'source'
 
 export interface PowerSlot {
   discipline: DisciplineId
@@ -77,11 +78,13 @@ function powerSlot(
   selectedId: string,
   ratings: DisciplineRatings,
   previousSlots: readonly PowerSlot[],
+  sourcePacks: readonly string[],
 ): PowerSlot {
   // Core p. 244. A dot buys a distinct power at its new rating or lower.
-  const options = disciplinePowers[discipline].map(power => {
+  const options = allDisciplinePowers[discipline].filter(power => sourceEnabled(sourcePacks, power) || power.id === selectedId).map(power => {
     let issue: PowerIssue | undefined
-    if (power.level > rank) issue = 'level'
+    if (!sourceEnabled(sourcePacks, power)) issue = 'source'
+    else if (power.level > rank) issue = 'level'
     else if (previousSlots.some(slot => slot.selectedPower?.id === power.id)) issue = 'duplicate'
     else if (power.amalgam && (ratings[power.amalgam.discipline] ?? 0) < power.amalgam.dots) issue = 'amalgam'
     return { ...power, issue }
@@ -126,8 +129,10 @@ export function predatorRestriction(clanId: string | undefined, predatorId: stri
   if (predatorId === 'farmer' && bloodPotency >= 3) return 'Farmer requires Blood Potency below 3.'
 }
 
-export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true, age: AgeProfile = ageProfiles.neonate) {
-  const clan = draft.clan === manualOptionId ? manualClanOption(draft.manualClan) : clanChoices.find(option => option.id === draft.clan)
+export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true, age: AgeProfile = ageProfiles.neonate, sourcePacks: readonly string[] = []) {
+  const clanOption = draft.clan === manualOptionId ? manualClanOption(draft.manualClan) : clanChoices.find(option => option.id === draft.clan)
+  const clanUnavailable = Boolean(clanOption && !sourceEnabled(sourcePacks, clanOption))
+  const clan = clanUnavailable ? undefined : clanOption
   const isCaitiff = clan?.id === caitiffOption.id
   const thinBlood = clan?.id === thinBloodOption.id ? evaluateThinBlood(draft.thinBlood) : undefined
   const profile = thinBlood ? thinBloodProfile : age
@@ -143,23 +148,24 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true,
   for (const discipline of clan?.disciplines ?? []) {
     for (const rank of [1, 2] as const) {
       if (rank > (clanRatings[discipline] ?? 0)) break
-      clanSlots.push(powerSlot(discipline, rank, draft.clanPowers[discipline]?.[rank] ?? '', clanRatings, clanSlots))
+      clanSlots.push(powerSlot(discipline, rank, draft.clanPowers[discipline]?.[rank] ?? '', clanRatings, clanSlots, sourcePacks))
     }
   }
 
   const affinity = thinBlood?.affinity
   if (affinity) {
     clanRatings[affinity.discipline] = 1
-    clanSlots.push(powerSlot(affinity.discipline, 1, affinity.power.id, clanRatings, clanSlots))
+    clanSlots.push(powerSlot(affinity.discipline, 1, affinity.power.id, clanRatings, clanSlots, sourcePacks))
   }
 
   const predatorOption = draft.predatorType === manualOptionId
-    ? manualPredatorOption(draft.manualPredator) : corePredators.find(option => option.id === draft.predatorType)
-  const predatorIssue = profile.predatorAllowed
+    ? manualPredatorOption(draft.manualPredator) : predatorChoices.find(option => option.id === draft.predatorType)
+  const predatorUnavailable = Boolean(profile.predatorAllowed && predatorOption && !sourceEnabled(sourcePacks, predatorOption))
+  const predatorIssue = profile.predatorAllowed && !predatorUnavailable
     ? (isCaitiff && predatorOption?.advantages?.some(grant => isStatusAdvantage(grant.name))
       ? caitiffStatusIssue : predatorRestriction(clan?.id, draft.predatorType, profile.bloodPotency))
     : undefined
-  const predator = profile.predatorAllowed && clan && !predatorIssue ? predatorOption : undefined
+  const predator = profile.predatorAllowed && clan && !predatorIssue && !predatorUnavailable ? predatorOption : undefined
   const specialtyOption = predator?.specialties.find(option => option.skill === draft.predatorSpecialty)
   const specialtyName = specialtyOption?.custom ? (draft.predatorSpecialtyName ?? '').trim() : specialtyOption?.name
   const grantedSpecialty = specialtyOption && specialtyName ? { skill: specialtyOption.skill, name: specialtyName } : undefined
@@ -172,7 +178,7 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true,
   if (disciplineGrant) {
     const rank = clanRatings[disciplineGrant] === 2 ? 3 : clanRatings[disciplineGrant] === 1 ? 2 : 1
     totalRatings[disciplineGrant] = rank
-    predatorSlot = powerSlot(disciplineGrant, rank, draft.predatorPowers[disciplineGrant] ?? '', totalRatings, clanSlots)
+    predatorSlot = powerSlot(disciplineGrant, rank, draft.predatorPowers[disciplineGrant] ?? '', totalRatings, clanSlots, sourcePacks)
   }
 
   const reviews: string[] = []
@@ -210,6 +216,8 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true,
     total: totalRatings[discipline] ?? 0,
   }))
   return {
+    sourcePacks, clanUnavailable, predatorUnavailable,
+    sourceUnavailable: clanUnavailable || predatorUnavailable || predatorSlot?.issue === 'source' || clanSlots.some(slot => slot.issue === 'source'),
     profile, clan, isCaitiff, thinBlood, ageIssue, hasNosferatuBane, twoDot, oneDot, clanSlots, predator, predatorIssue, predatorDisciplines, specialtyOption, grantedSpecialty,
     disciplineGrant, predatorSlot, ledger, advantages, flaws, grantChoices, reviews,
     clanFlaws: isCaitiff ? [suspect] : hasNosferatuBane ? [{ name: 'Repulsive', dots: 2 }] : [],

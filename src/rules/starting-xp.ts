@@ -1,4 +1,5 @@
-import { disciplinePowers, disciplines, type DisciplineId } from '../catalog/clan-path.ts'
+import { allDisciplinePowers, disciplines, type DisciplineId } from '../catalog/clan-path.ts'
+import { playersGuideDisabled, sourceEnabled } from '../catalog/source-packs.ts'
 import { advantageIds, startingAdvantages, startingFlaws, type AdvantageId, type FlawId } from '../catalog/starting-options.ts'
 import { skillIds, traitGroups, traitLabel, type AttributeId, type SkillId } from '../catalog/traits.ts'
 import { caitiffStatusIssue, isStatusAdvantage, type evaluateClanPath } from './clan-path.ts'
@@ -112,6 +113,7 @@ interface ExperienceState {
   disciplines: Partial<Record<DisciplineId, number>>
   powers: string[]
   readyDisciplines: DisciplineId[]
+  sourcePacks: readonly string[]
   clanDisciplines: readonly DisciplineId[]
   isCaitiff: boolean
   looksRestricted: boolean
@@ -143,6 +145,7 @@ function startExperience(traits: TraitDraft, ledger: TraitLedger, path: ClanPath
     disciplines: Object.fromEntries(path.ledger.map(row => [row.discipline, row.total])),
     powers: slots.flatMap(slot => slot.selectedPower ? [slot.selectedPower.id] : []),
     readyDisciplines: path.ledger.filter(row => slots.every(slot => slot.discipline !== row.discipline || slot.selectedPower)).map(row => row.discipline),
+    sourcePacks: path.sourcePacks,
     clanDisciplines: path.isCaitiff ? [] : path.clan?.disciplines ?? [],
     isCaitiff: path.isCaitiff,
     looksRestricted: path.hasNosferatuBane,
@@ -160,7 +163,7 @@ export function purchaseLabel(purchase: Purchase, includeCustomText = true) {
     case 'specialty': return includeCustomText ? `${traitLabel(purchase.id)} (${purchase.name.trim()})` : `${traitLabel(purchase.id)} Specialty`
     case 'attribute': return `${traitLabel(purchase.id)} ${purchase.to}`
     case 'skill': return `${traitLabel(purchase.id)} ${purchase.to}${purchase.to === 1 && purchase.specialty?.trim() ? ` · First-dot Specialty${includeCustomText ? ` ${purchase.specialty.trim()}` : ''}` : ''}`
-    case 'discipline': return `${disciplines[purchase.id]} ${purchase.to} · ${disciplinePowers[purchase.id].find(power => power.id === purchase.power)?.name ?? 'Choose a power'}`
+    case 'discipline': return `${disciplines[purchase.id]} ${purchase.to} · ${allDisciplinePowers[purchase.id].find(power => power.id === purchase.power)?.name ?? 'Choose a power'}`
     case 'advantage': return `${startingAdvantages[purchase.id].name} ${purchase.to}`
     case 'blood-potency': return `Blood Potency ${purchase.to}`
   }
@@ -195,6 +198,8 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase): { cos
       return checkBudget(3)
     }
     case 'discipline': {
+      const power = allDisciplinePowers[purchase.id].find(option => option.id === purchase.power)
+      if (power && !sourceEnabled(state.sourcePacks, power)) return { issue: playersGuideDisabled }
       const current = state.disciplines[purchase.id]
       if (current === undefined || !state.readyDisciplines.includes(purchase.id)) return {
         issue: state.isCaitiff ? 'Complete the starting powers for this Discipline first.' : 'Choose a clan Discipline or complete its Predator Type power first.',
@@ -206,7 +211,6 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase): { cos
       if (state.isCaitiff && current === 0 && !purchase.caitiffLearning) {
         return { ...price, issue: 'Confirm the blood-tasting and learning requirements for this Discipline. Core pp. 107, 244.' }
       }
-      const power = disciplinePowers[purchase.id].find(option => option.id === purchase.power)
       if (!power || power.level > purchase.to || state.powers.includes(power.id)) return { ...price, issue: 'Choose an eligible new power for this dot.' }
       if (power.amalgam && (state.disciplines[power.amalgam.discipline] ?? 0) < power.amalgam.dots) return { ...price, issue: 'This power’s Amalgam prerequisite is unmet.' }
       if (power.prerequisite && !state.powers.includes(power.prerequisite.id)) return { ...price, issue: `Requires ${power.prerequisite.name}.` }

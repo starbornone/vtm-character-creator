@@ -1,4 +1,5 @@
 import { disciplineIds } from '../catalog/clan-path.ts'
+import { isSourcePacks } from '../catalog/source-packs.ts'
 import { thinBloodFlaws, thinBloodMerits } from '../catalog/thin-blood.ts'
 import { advantageIds, flawIds } from '../catalog/starting-options.ts'
 import { skillIds } from '../catalog/traits.ts'
@@ -84,9 +85,10 @@ function isStarting(value: unknown) {
 // Check the stored input shape. The rules evaluator handles unfinished and invalid choices.
 export function isCharacterDraft(value: unknown): value is CharacterDraft {
   if (!isRecord(value)) return false
-  const { ageProfile, concept, relationships, traits, clanPath, starting } = value
+  const { ageProfile, sourcePacks, concept, relationships, traits, clanPath, starting } = value
   const selectedProfile = ageProfileIds.find(id => id === ageProfile)
   if (ageProfile !== undefined && !selectedProfile) return false
+  if (sourcePacks !== undefined && !isSourcePacks(sourcePacks)) return false
   return isRecord(concept) && strings(concept, 'name', 'concept', 'chronicle', 'embraced', 'ambition', 'desire')
     && isRecord(relationships) && strings(relationships, 'sire', 'coterie', 'tenets')
     && Array.isArray(relationships.convictions) && relationships.convictions.every(pair => isRecord(pair) && strings(pair, 'conviction', 'touchstone'))

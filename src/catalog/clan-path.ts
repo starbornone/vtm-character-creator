@@ -1,3 +1,4 @@
+import { playersGuide } from './source-packs.ts'
 import type { SkillId } from './traits.ts'
 
 export const disciplines = {
@@ -21,6 +22,7 @@ export interface DisciplinePower {
   name: string
   level: 1 | 2 | 3 | 4
   page: number
+  sourcePack?: typeof playersGuide.id
   amalgam?: { discipline: DisciplineId; dots: number }
   prerequisite?: { id: string; name: string }
 }
@@ -120,6 +122,15 @@ export const disciplinePowers: Record<DisciplineId, readonly DisciplinePower[]> 
   ],
 }
 
+export const allDisciplinePowers: typeof disciplinePowers = {
+  ...disciplinePowers,
+  obfuscate: [
+    ...disciplinePowers.obfuscate,
+    { ...power('chimerstry', 'Chimerstry', 2, 76, { amalgam: { discipline: 'presence', dots: 1 } }), sourcePack: playersGuide.id },
+    { ...power('fata-morgana', 'Fata Morgana', 3, 77, { amalgam: { discipline: 'presence', dots: 2 } }), sourcePack: playersGuide.id },
+  ],
+}
+
 export const startingRituals = [
   { id: 'blood-walk', name: 'Blood Walk', page: 276 },
   { id: 'clinging-of-the-insect', name: 'Clinging of the Insect', page: 276 },
@@ -135,6 +146,7 @@ export interface ClanOption {
   bane: string
   compulsion: string
   source: string
+  sourcePack?: typeof playersGuide.id
 }
 
 export const coreClans: readonly ClanOption[] = [
@@ -157,7 +169,12 @@ export const thinBloodOption = {
   bane: '', compulsion: '', source: 'Core pp. 109–113, 140, 148–149, 182–184',
 } satisfies ClanOption
 
-export const clanChoices = [...coreClans, caitiffOption, thinBloodOption]
+const ministry: ClanOption = {
+  id: 'ministry', name: 'Ministry', disciplines: ['obfuscate', 'presence', 'protean'],
+  bane: 'Abhors the Light', compulsion: 'Transgression', source: 'Player’s Guide pp. 35–36', sourcePack: playersGuide.id,
+}
+
+export const clanChoices: readonly ClanOption[] = [...coreClans, caitiffOption, thinBloodOption, ministry]
 
 export interface SpecialtyOption {
   skill: SkillId
@@ -186,6 +203,7 @@ interface GrantChoice {
 }
 
 export interface PredatorOption {
+  sourcePack?: typeof playersGuide.id
   id: string
   name: string
   disciplines: readonly DisciplineId[]
@@ -276,5 +294,32 @@ export const corePredators: readonly PredatorOption[] = [
     id: 'siren', name: 'Siren', source: 'Core p. 178',
     disciplines: ['fortitude', 'presence'], specialties: [{ skill: 'persuasion', name: 'Seduction' }, { skill: 'subterfuge', name: 'Seduction' }],
     advantages: [{ name: 'Beautiful', dots: 2 }], flaws: [{ name: 'Enemy', dots: 1 }],
+  },
+]
+
+export const predatorChoices: readonly PredatorOption[] = [
+  ...corePredators,
+  {
+    id: 'extortionist', name: 'Extortionist', source: 'Player’s Guide p. 107', sourcePack: playersGuide.id,
+    disciplines: ['dominate', 'potence'],
+    specialties: [{ skill: 'intimidation', name: 'Coercion' }, { skill: 'larceny', name: 'Security' }],
+    choices: [
+      { id: 'extortionist-backgrounds', label: 'Extortionist Backgrounds', kind: 'advantage', dots: 3, mode: 'split',
+        options: [{ id: 'contacts', name: 'Contacts' }, { id: 'resources', name: 'Resources' }] },
+      { id: 'extortionist-enemy', label: 'Extortionist Enemy', kind: 'flaw', dots: 2, mode: 'one',
+        options: [{ id: 'police', name: 'Enemy (Police)' }, { id: 'escaped-victim', name: 'Enemy (Escaped victim)' }] },
+    ],
+  },
+  {
+    id: 'montero', name: 'Montero', source: 'Player’s Guide p. 108', sourcePack: playersGuide.id,
+    disciplines: ['dominate', 'obfuscate'],
+    specialties: [{ skill: 'leadership', name: 'Hunting Pack' }, { skill: 'stealth', name: 'Stakeout' }],
+    advantages: [{ name: 'Retainers', dots: 2 }], humanityChange: -1,
+  },
+  {
+    id: 'pursuer', name: 'Pursuer', source: 'Player’s Guide pp. 108–109', sourcePack: playersGuide.id,
+    disciplines: ['animalism', 'auspex'],
+    specialties: [{ skill: 'investigation', name: 'Profiling' }, { skill: 'stealth', name: 'Shadowing' }],
+    advantages: [{ name: 'Bloodhound', dots: 1 }, { name: 'Contacts', dots: 1 }], humanityChange: -1,
   },
 ]
