@@ -1,6 +1,6 @@
 import { advantageIds, flawIds, startingAdvantages, startingFlaws } from '@/catalog/starting-options'
 import { Card, CardContent } from '@/components/ui/card'
-import { neonate, type evaluateStartingBuild, type StartingDraft } from '@/rules/starting-xp'
+import { neonate, type evaluateStartingBuild, type ManualStartingOption, type StartingDraft } from '@/rules/starting-xp'
 
 type Build = ReturnType<typeof evaluateStartingBuild>
 
@@ -10,6 +10,49 @@ function BudgetStatus({ budget }: { budget: Build['advantageBudget'] }) {
       {budget.used} / {budget.limit} dots · {budget.remaining < 0 ? `${-budget.remaining} over` : `${budget.remaining} left`}
     </p>
   )
+}
+
+function ManualOptions({ options, evaluated, onChange }: {
+  options: ManualStartingOption[]
+  evaluated: Build['manualOptions']
+  onChange: (options: ManualStartingOption[]) => void
+}) {
+  function edit(index: number, update: Partial<ManualStartingOption>) {
+    onChange(options.map((entry, position) => position === index ? { ...entry, ...update } : entry))
+  }
+
+  return <fieldset className="space-y-3 rounded-lg border border-border px-4 pb-4">
+    <legend className="px-1.5 text-sm font-semibold">Manual Advantages &amp; Flaws</legend>
+    <p className="text-sm text-muted-foreground">These entries use the base dot budgets and appear on the sheet for Storyteller review.</p>
+    {options.map((option, index) => <fieldset key={index} className="grid min-w-0 gap-2 rounded-md border border-border p-3 sm:grid-cols-2">
+      <legend className="px-1 text-sm">Manual entry {index + 1}</legend>
+      <label className="grid gap-1 text-sm">Type
+        <select className="ledger-field" value={option.kind} onChange={event => {
+          const kind = event.target.value === 'flaw' ? 'flaw' : 'advantage'
+          edit(index, { kind, dots: kind === 'flaw' ? Math.min(option.dots, 2) : option.dots })
+        }}>
+          <option value="advantage">Advantage</option>
+          <option value="flaw">Flaw</option>
+        </select>
+      </label>
+      <label className="grid gap-1 text-sm">Dots
+        <select className="ledger-field" value={option.dots} onChange={event => edit(index, { dots: Number(event.target.value) })}>
+          {[1, 2, 3, 4, 5].slice(0, option.kind === 'flaw' ? 2 : 5).map(rating => <option key={rating}>{rating}</option>)}
+        </select>
+      </label>
+      <label className="grid min-w-0 gap-1 text-sm">Name
+        <input className="ledger-field w-full" value={option.name} onChange={event => edit(index, { name: event.target.value })} />
+      </label>
+      <label className="grid min-w-0 gap-1 text-sm">Source or Storyteller note
+        <input className="ledger-field w-full" value={option.source} onChange={event => edit(index, { source: event.target.value })} />
+      </label>
+      <div className="flex flex-wrap items-center gap-2 sm:col-span-2">
+        <button type="button" className="guide-button" aria-label={`Remove manual entry ${index + 1}`} onClick={() => onChange(options.filter((_, position) => position !== index))}>Remove</button>
+        {evaluated[index]?.issue && <span className="text-sm text-rose-300">{evaluated[index].issue}</span>}
+      </div>
+    </fieldset>)}
+    <button type="button" className="guide-button" onClick={() => onChange([...options, { kind: 'advantage', name: '', dots: 1, source: '' }])}>Add manual entry</button>
+  </fieldset>
 }
 
 export function StartingOptionsEditor({ draft, build, onChange }: {
@@ -79,6 +122,7 @@ export function StartingOptionsEditor({ draft, build, onChange }: {
             })}
           </fieldset>
         </div>
+        <ManualOptions options={draft.manualOptions ?? []} evaluated={build.manualOptions} onChange={manualOptions => onChange({ manualOptions })} />
       </CardContent>
     </Card>
   )

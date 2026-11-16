@@ -28,6 +28,14 @@ export interface StartingDraft {
   advantages: Partial<Record<AdvantageId, number>>
   flaws: FlawId[]
   purchases: Purchase[]
+  manualOptions?: ManualStartingOption[]
+}
+
+export interface ManualStartingOption {
+  kind: 'advantage' | 'flaw'
+  name: string
+  dots: number
+  source: string
 }
 
 export const initialStartingDraft: StartingDraft = { generation: undefined, advantages: {}, flaws: [], purchases: [] }
@@ -44,24 +52,48 @@ function flawConflict(id: FlawId, advantage: AdvantageId) {
   return 'conflictsWith' in flaw && flaw.conflictsWith === advantage
 }
 
-function evaluateOptions(draft: StartingDraft, hasLingeringKiss: boolean) {
+function evaluateOptions(draft: StartingDraft, path: ClanPath, hasLingeringKiss: boolean) {
+  const grantedAdvantages = Object.fromEntries(advantageIds.map(id => [
+    id, path.advantages.filter(grant => grant.name === startingAdvantages[id].name).reduce((sum, grant) => sum + grant.dots, 0),
+  ])) as Record<AdvantageId, number>
+  const grantedFlaws = [...path.flaws, ...path.clanFlaws]
   const advantages = advantageIds.flatMap(id => {
     const dots = draft.advantages[id] ?? 0
     if (dots === 0) return []
     const issue = id === 'unbondable' && hasLingeringKiss ? 'Unbondable conflicts with Lingering Kiss.'
-      : startingAdvantages[id].dots.includes(dots) ? undefined : 'Choose a listed rating.'
+      : id === 'beautiful' && path.clan?.id === 'nosferatu' ? 'The Nosferatu Bane prohibits the Beautiful Merit.'
+      : !startingAdvantages[id].dots.includes(dots) ? 'Choose a listed rating.'
+      : !startingAdvantages[id].dots.includes(dots + grantedAdvantages[id]) ? 'The selected dots and existing grant exceed the listed ratings.' : undefined
     return [{ id, dots, issue }]
   })
   const active = advantages.filter(option => !option.issue)
   const flaws = [...new Set(draft.flaws)].map(id => ({
     id, dots: startingFlaws[id].dots,
-    issue: active.some(option => flawConflict(id, option.id)) ? 'Conflicts with a selected Advantage.' : undefined,
+    issue: grantedFlaws.some(flaw => flaw.name === startingFlaws[id].name) ? 'Already granted by the clan or Predator Type.'
+      : id === 'ugly' && path.clan?.id === 'nosferatu' ? 'The Nosferatu Bane already imposes Repulsive.'
+      : active.some(option => flawConflict(id, option.id)) ? 'Conflicts with a selected Advantage.'
+      : advantageIds.some(advantage => grantedAdvantages[advantage] && flawConflict(id, advantage)) ? 'Conflicts with a granted Advantage.' : undefined,
   }))
+  const manualOptions = (draft.manualOptions ?? []).map((option, index, entries) => {
+    const name = option.name.trim()
+    const source = option.source.trim()
+    const normalized = name.toLowerCase()
+    const known = option.kind === 'advantage' ? [...Object.values(startingAdvantages), ...path.advantages] : [...Object.values(startingFlaws), ...grantedFlaws]
+    const duplicate = known.some(entry => entry.name.toLowerCase() === normalized)
+      || entries.some((entry, position) => position !== index && entry.kind === option.kind && entry.name.trim().toLowerCase() === normalized)
+    const issue = !name || !source ? 'Enter a name and source or Storyteller note.'
+      : !Number.isInteger(option.dots) || option.dots < 1 || option.dots > (option.kind === 'advantage' ? 5 : 2) ? 'Choose a valid starting dot rating.'
+      : duplicate ? 'This option already appears in the catalog, grants, or manual entries.' : undefined
+    return { ...option, name, source, issue }
+  })
+  const manualDots = (kind: ManualStartingOption['kind']) => manualOptions.reduce((sum, option) => sum + (option.kind === kind && !option.issue ? option.dots : 0), 0)
   return {
     advantages,
     flaws,
-    advantageBudget: budget(active.reduce((sum, option) => sum + option.dots, 0), neonate.advantages),
-    flawBudget: budget(flaws.filter(option => !option.issue).reduce((sum, option) => sum + option.dots, 0), neonate.flaws),
+    manualOptions,
+    grantedAdvantages,
+    advantageBudget: budget(active.reduce((sum, option) => sum + option.dots, manualDots('advantage')), neonate.advantages),
+    flawBudget: budget(flaws.filter(option => !option.issue).reduce((sum, option) => sum + option.dots, manualDots('flaw')), neonate.flaws),
   }
 }
 
@@ -73,6 +105,8 @@ interface ExperienceState {
   disciplines: Partial<Record<DisciplineId, number>>
   powers: string[]
   readyDisciplines: DisciplineId[]
+  clanDisciplines: readonly DisciplineId[]
+  looksRestricted: boolean
   advantages: Partial<Record<AdvantageId, number>>
   flaws: FlawId[]
   bloodPotency: BloodPotency
@@ -90,16 +124,20 @@ function startExperience(traits: TraitDraft, ledger: TraitLedger, path: ClanPath
   if (grant?.kind === 'specialty') addSpecialty(grant.skill, grant.name)
   const skills: ExperienceState['skills'] = Object.fromEntries(ledger.specialties.eligibleSkills.map(id => [id, traits.skills[id]]))
   if (grant?.kind === 'skill-dot') skills[grant.skill] = 1
+  const advantages = { ...options.grantedAdvantages }
+  for (const option of options.advantages) if (!option.issue) advantages[option.id] += option.dots
 
   return {
     attributes: { ...traits.attributes }, skills, specialties,
     unresolvedSkills: skillIds.filter(id => traits.skills[id] !== undefined && skills[id] === undefined),
     disciplines: Object.fromEntries(path.ledger.map(row => [row.discipline, row.total])),
     powers: slots.flatMap(slot => slot.selectedPower ? [slot.selectedPower.id] : []),
-    readyDisciplines: (path.clan?.disciplines ?? []).filter(id => slots.every(slot => slot.discipline !== id || slot.selectedPower)),
-    advantages: Object.fromEntries(options.advantages.filter(option => !option.issue).map(({ id, dots }) => [id, dots])),
+    readyDisciplines: path.ledger.filter(row => slots.every(slot => slot.discipline !== row.discipline || slot.selectedPower)).map(row => row.discipline),
+    clanDisciplines: path.clan?.disciplines ?? [],
+    looksRestricted: path.clan?.id === 'nosferatu',
+    advantages,
     flaws: options.flaws.filter(option => !option.issue).map(({ id }) => id),
-    bloodPotency: neonate.bloodPotency, remaining: neonate.xp,
+    bloodPotency: path.bloodPotencyChange ? 2 : neonate.bloodPotency, remaining: neonate.xp,
   }
 }
 
@@ -144,9 +182,9 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase): { cos
     }
     case 'discipline': {
       const current = state.disciplines[purchase.id]
-      if (current === undefined || !state.readyDisciplines.includes(purchase.id)) return { issue: 'Complete the starting power choices for this clan Discipline.' }
+      if (current === undefined || !state.readyDisciplines.includes(purchase.id)) return { issue: 'Choose a clan Discipline or complete its Predator Type power first.' }
       if (purchase.to !== current + 1 || purchase.to > 5) return { issue: 'Raise the Discipline one dot at a time, up to 5.' }
-      const price = checkBudget(purchase.to * 5)
+      const price = checkBudget(purchase.to * (state.clanDisciplines.includes(purchase.id) ? 5 : 7))
       if (price.issue) return price
       const power = disciplinePowers[purchase.id].find(option => option.id === purchase.power)
       if (!power || power.level > purchase.to || state.powers.includes(power.id)) return { ...price, issue: 'Choose an eligible new power for this dot.' }
@@ -155,6 +193,7 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase): { cos
       return price
     }
     case 'advantage': {
+      if (purchase.id === 'beautiful' && state.looksRestricted) return { issue: 'The Nosferatu Bane prohibits the Beautiful Merit.' }
       const option = startingAdvantages[purchase.id]
       const current = state.advantages[purchase.id] ?? 0
       if (option.dots.find(dots => dots > current) !== purchase.to) return { issue: 'Choose the next listed Advantage rating.' }
@@ -186,16 +225,19 @@ function applyPurchase(state: ExperienceState, purchase: Purchase, cost: number)
 
 export function evaluateStartingBuild(draft: StartingDraft, traits: TraitDraft, ledger: TraitLedger, path: ClanPath) {
   const hasLingeringKiss = path.clanSlots.some(slot => slot.selectedPower?.id === 'lingering-kiss') || path.predatorSlot?.selectedPower?.id === 'lingering-kiss'
-  const options = evaluateOptions(draft, hasLingeringKiss)
+  const options = evaluateOptions(draft, path, hasLingeringKiss)
   const final = startExperience(traits, ledger, path, options)
   const entries = draft.purchases.map(purchase => {
     const quote = quotePurchase(final, purchase)
     if (!quote.issue && quote.cost !== undefined) applyPurchase(final, purchase, quote.cost)
     return { ...quote, label: purchaseLabel(purchase), remaining: final.remaining }
   })
-  const predatorAdvantage = path.predator?.advantage.dots ?? 0
-  const totalAdvantageDots = Object.values(final.advantages).reduce((sum, dots) => sum + (dots ?? 0), predatorAdvantage)
-  const xpAdvantageDots = totalAdvantageDots - predatorAdvantage - options.advantageBudget.used
+  const predatorAdvantage = path.advantages.reduce((sum, grant) => sum + grant.dots, 0)
+  const trackedGrants = Object.values(options.grantedAdvantages).reduce((sum, dots) => sum + dots, 0)
+  const manualAdvantageDots = options.manualOptions.reduce((sum, option) => sum + (option.kind === 'advantage' && !option.issue ? option.dots : 0), 0)
+  const purchasedAdvantageDots = Object.values(final.advantages).reduce((sum, dots) => sum + dots, manualAdvantageDots) - trackedGrants
+  const totalAdvantageDots = purchasedAdvantageDots + predatorAdvantage
+  const xpAdvantageDots = purchasedAdvantageDots - options.advantageBudget.used
   return {
     ...options, final, entries, predatorAdvantage, xpAdvantageDots, totalAdvantageDots,
     generation: draft.generation, humanity: path.humanity.total,

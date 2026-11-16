@@ -1,7 +1,7 @@
-import { disciplinePowers, disciplines, type DisciplineId } from '../catalog/clan-path.ts'
+import { disciplineIds, disciplinePowers, disciplines, startingRituals } from '../catalog/clan-path.ts'
 import { advantageIds, startingAdvantages, startingFlaws } from '../catalog/starting-options.ts'
 import { traitGroups, traitLabel } from '../catalog/traits.ts'
-import { evaluateClanPath, initialClanPath, type ClanPathDraft } from './clan-path.ts'
+import { evaluateClanPath, initialClanPath, manualOptionId, type ClanPathDraft } from './clan-path.ts'
 import { evaluateStartingBuild, initialStartingDraft, neonate, type StartingDraft } from './starting-xp.ts'
 import { deriveTracks, editTraits, evaluateTraitLedger, initialTraitDraft, type TraitAction, type TraitDraft } from './trait-ledger.ts'
 
@@ -78,7 +78,11 @@ export function evaluateCharacter(draft: CharacterDraft) {
   const path = evaluateClanPath(draft.clanPath)
   const traits = evaluateTraitLedger(draft.traits, path.grantedSpecialty)
   const starting = evaluateStartingBuild(draft.starting, draft.traits, traits, path)
-  const tracks = deriveTracks(starting.final.attributes)
+  const baseTracks = deriveTracks(starting.final.attributes)
+  const resilience = starting.final.powers.includes('resilience') ? starting.final.disciplines.fortitude ?? 0 : 0
+  const tracks = { ...baseTracks, health: {
+    ...baseTracks.health, resilience, total: baseTracks.health.total === undefined ? undefined : baseTracks.health.total + resilience,
+  } }
 
   const pending: Record<EditStep, string[]> = {
     concept: conceptFields.filter(({ key }) => !draft.concept[key].trim()).map(({ label }) => `Fill in ${label.toLowerCase()}.`),
@@ -88,19 +92,23 @@ export function evaluateCharacter(draft: CharacterDraft) {
   if (traits.skills.open || traits.skills.excess) pending.traits.push('Complete the Skill distribution.')
   if (traits.specialties.completed < traits.specialties.total) pending.traits.push('Name all eligible starting Specialties.')
 
-  if (!path.clan) pending.clan.push('Choose a clan.')
+  if (!path.clan) pending.clan.push(draft.clanPath.clan === manualOptionId
+    ? 'Name the manual clan, add its source or note, and choose three distinct Disciplines.' : 'Choose a clan.')
   else {
     if (path.clanSlots.length < 3 || path.clanSlots.some(slot => !slot.selectedPower)) pending.clan.push('Assign both clan Disciplines and their powers.')
-    if (!path.predator) pending.clan.push('Choose a Predator Type.')
+    if (!path.predator) pending.clan.push(path.predatorIssue ?? (draft.clanPath.predatorType === manualOptionId
+      ? 'Complete the manual Predator Type’s name, source or note, and any grant details.' : 'Choose a Predator Type.'))
     else {
       if (!path.predatorSlot?.selectedPower) pending.clan.push('Choose the granted Discipline and an eligible power.')
       if (!path.grantedSpecialty || traits.specialties.predatorGrant?.kind === 'pending') pending.clan.push('Resolve the Predator Type’s Specialty or Skill dot.')
+      for (const choice of path.grantChoices) if (!choice.complete) pending.clan.push(`Complete the ${choice.label} grant.`)
     }
   }
 
   if (!starting.generation) pending.starting.push('Choose a Generation.')
   if (starting.advantageBudget.remaining !== 0 || starting.advantages.some(option => option.issue)) pending.starting.push('Resolve the base Advantage choices and their budget.')
   if (starting.flawBudget.remaining !== 0 || starting.flaws.some(option => option.issue)) pending.starting.push('Resolve the base Flaw choices and their budget.')
+  if (starting.manualOptions.some(option => option.issue)) pending.starting.push('Resolve incomplete or duplicate manual Advantages and Flaws.')
   if (starting.entries.some(entry => entry.issue)) pending.starting.push('Resolve ineligible XP purchases.')
   if (starting.final.remaining > 0) pending.starting.push('Spend the remaining starting XP.')
 
@@ -110,6 +118,8 @@ export function evaluateCharacter(draft: CharacterDraft) {
   }
 
   const { final } = starting
+  const ritual = final.disciplines['blood-sorcery'] ? startingRituals.find(option => option.id === draft.clanPath.ritual) : undefined
+  const manualOptions = starting.manualOptions.filter(option => !option.issue)
   const sheet = {
     identity: {
       name: draft.concept.name.trim(), concept: draft.concept.concept.trim(), chronicle: draft.concept.chronicle.trim(),
@@ -131,20 +141,30 @@ export function evaluateCharacter(draft: CharacterDraft) {
         specialties: (final.specialties[id] ?? []).filter(Boolean),
       })),
     })),
-    disciplines: (Object.keys(disciplines) as DisciplineId[]).flatMap(id => {
+    disciplines: disciplineIds.flatMap(id => {
       const rating = final.disciplines[id] ?? 0
       const powers = disciplinePowers[id].filter(power => final.powers.includes(power.id)).map(power => power.name)
       return rating > 0 ? [{ name: disciplines[id], rating, powers }] : []
     }),
+    ritual,
+    reviews: [...path.reviews, ...manualOptions.map(option => `Manual ${option.kind === 'advantage' ? 'Advantage' : 'Flaw'}: ${option.name} (${option.source}).`)],
     advantages: advantageIds.flatMap(id => {
-      const dots = final.advantages[id] ?? 0
+      const dots = (final.advantages[id] ?? 0) - starting.grantedAdvantages[id]
       if (!dots) return []
       const base = starting.advantages.find(option => option.id === id && !option.issue)?.dots ?? 0
       return [{ name: startingAdvantages[id].name, dots, source: dots > base ? (base ? 'Base + XP' : 'XP') : 'Base' }]
-    }).concat(path.predator ? [{ ...path.predator.advantage, source: path.predator.name }] : []),
-    flaws: final.flaws.map(id => startingFlaws[id]),
+    }).concat(
+      path.advantages.map(grant => ({ ...grant, source: path.predator?.name ?? 'Predator Type' })),
+      manualOptions.filter(option => option.kind === 'advantage').map(({ name, dots }) => ({ name, dots, source: 'Manual · Base' })),
+    ),
+    flaws: [
+      ...final.flaws.map(id => ({ ...startingFlaws[id], source: undefined })),
+      ...path.flaws.map(grant => ({ ...grant, source: path.predator?.name })),
+      ...path.clanFlaws.map(grant => ({ ...grant, source: path.clan?.name })),
+      ...manualOptions.filter(option => option.kind === 'flaw').map(({ name, dots }) => ({ name, dots, source: 'Manual · Base' })),
+    ],
     advantageDots: starting.totalAdvantageDots,
-    flawDots: starting.flawBudget.used,
+    flawDots: starting.flawBudget.used + [...path.flaws, ...path.clanFlaws].reduce((sum, flaw) => sum + flaw.dots, 0),
     xpSpent: neonate.xp - final.remaining,
     xpRemaining: final.remaining,
     purchases: starting.entries.filter(entry => !entry.issue),

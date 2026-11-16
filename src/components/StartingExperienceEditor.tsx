@@ -1,25 +1,24 @@
 import { useState } from 'react'
-import { disciplinePowers, disciplines, type DisciplineId } from '@/catalog/clan-path'
+import { disciplineIds, disciplinePowers, disciplines } from '@/catalog/clan-path'
 import { advantageIds, startingAdvantages } from '@/catalog/starting-options'
 import { skillIds, traitLabel } from '@/catalog/traits'
+import { CatalogSelect } from '@/components/CatalogSelect'
 import { Card, CardContent } from '@/components/ui/card'
 import { attributeIds, neonate, purchaseLabel, quotePurchase, type evaluateStartingBuild, type Purchase } from '@/rules/starting-xp'
 import { specialtySkills } from '@/rules/trait-ledger'
 
 type Build = ReturnType<typeof evaluateStartingBuild>
 const categories = {
-  skill: 'Skill', attribute: 'Attribute', specialty: 'Specialty', discipline: 'Clan Discipline', advantage: 'Advantage', 'blood-potency': 'Blood Potency',
+  skill: 'Skill', attribute: 'Attribute', specialty: 'Specialty', discipline: 'Discipline', advantage: 'Advantage', 'blood-potency': 'Blood Potency',
 } satisfies Record<Purchase['kind'], string>
 const kinds = Object.keys(categories) as Purchase['kind'][]
-const disciplineIds = Object.keys(disciplines) as DisciplineId[]
-
-function targets(kind: Purchase['kind']) {
+function targets(kind: Purchase['kind'], state: Build['final']): { id: string; label: string; source?: string }[] {
   switch (kind) {
     case 'skill':
-    case 'specialty': return skillIds.map(id => ({ id, name: traitLabel(id) }))
-    case 'attribute': return attributeIds.map(id => ({ id, name: traitLabel(id) }))
-    case 'discipline': return disciplineIds.map(id => ({ id, name: disciplines[id] }))
-    case 'advantage': return advantageIds.map(id => ({ id, name: startingAdvantages[id].name }))
+    case 'specialty': return skillIds.map(id => ({ id, label: traitLabel(id) }))
+    case 'attribute': return attributeIds.map(id => ({ id, label: traitLabel(id) }))
+    case 'discipline': return state.readyDisciplines.map(id => ({ id, label: disciplines[id] }))
+    case 'advantage': return advantageIds.map(id => ({ id, label: startingAdvantages[id].name, source: `Core p. ${startingAdvantages[id].page}` }))
     case 'blood-potency': return []
   }
 }
@@ -97,12 +96,7 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
               {kinds.map(id => <option key={id} value={id}>{categories[id]}</option>)}
             </select>
           </label>
-          {kind !== 'blood-potency' && <label className="grid gap-1 text-sm">Purchase target
-            <select className="ledger-field" value={target} onChange={event => { setTarget(event.target.value); setName('') }}>
-              <option value="">Choose…</option>
-              {targets(kind).map(option => <option key={option.id} value={option.id}>{option.name}</option>)}
-            </select>
-          </label>}
+          {kind !== 'blood-potency' && <CatalogSelect key={kind} label="Purchase target" value={target} choices={targets(kind, build.final)} searchable={kind === 'skill' || kind === 'specialty'} onChange={value => { setTarget(value); setName('') }} />}
           {needsName && <label className="grid gap-1 text-sm">{kind === 'skill' ? 'Granted first-dot Specialty' : 'Purchased Specialty name'}
             <input className="ledger-field" value={name} onChange={event => setName(event.target.value)} />
           </label>}

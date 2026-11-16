@@ -93,16 +93,19 @@ function evaluateSpecialties(draft: TraitDraft, skillSlots: readonly RatingSlot[
     return rating !== undefined && !overfilled.has(rating)
   })
   // Core p. 149. A Predator Type grants a dot in an unrated Skill instead of a Specialty.
+  const firstDotSlots = specialtySkills.filter(id => draft.skills[id] !== undefined || grant?.skill === id).map(skill => ({
+    skill,
+    name: (draft.firstDotSpecialties[skill] ?? '').trim(),
+    active: eligibleSkills.includes(skill) || (grant?.skill === skill && draft.skills[skill] === undefined),
+  }))
+  const firstDotGrant = firstDotSlots.find(slot => slot.skill === grant?.skill)
   const predatorGrant = grant && {
     ...grant,
     kind: draft.skills[grant.skill] === undefined ? 'skill-dot' as const
-      : eligibleSkills.includes(grant.skill) ? 'specialty' as const : 'pending' as const,
+      : !eligibleSkills.includes(grant.skill) || Boolean(firstDotGrant
+        && ((grant.skill !== 'craft' && draft.skills[grant.skill] === 1) || firstDotGrant.name.toLowerCase() === grant.name.toLowerCase()))
+        ? 'pending' as const : 'specialty' as const,
   }
-  const firstDotSlots = specialtySkills.filter(id => draft.skills[id] !== undefined).map(skill => ({
-    skill,
-    name: (draft.firstDotSpecialties[skill] ?? '').trim(),
-    active: eligibleSkills.includes(skill),
-  }))
   const { skill, name } = draft.freeSpecialty
   const firstDot = firstDotSlots.find(slot => slot.skill === skill)
   const selectedRating = skill ? draft.skills[skill] : undefined

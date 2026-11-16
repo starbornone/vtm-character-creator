@@ -63,7 +63,7 @@ export function App() {
               <div className="border-r border-border px-4 py-3 sm:px-6">
                 <dt className="text-sm font-medium text-muted-foreground">Health</dt>
                 <dd className="mt-1 text-3xl font-semibold tabular-nums">{health.total ?? '—'}</dd>
-                <dd className="mt-1 text-sm text-muted-foreground">Stamina ({health.stamina ?? '—'}) + 3{health.total !== traits.health.total ? ' · includes XP' : ''}</dd>
+                <dd className="mt-1 text-sm text-muted-foreground">Stamina ({health.stamina ?? '—'}) + 3{health.resilience > 0 ? ` + Resilience (${health.resilience})` : ''}{health.stamina !== traits.health.stamina ? ' · includes XP' : ''}</dd>
               </div>
               <div className="px-4 py-3 sm:px-6">
                 <dt className="text-sm font-medium text-muted-foreground">Willpower</dt>
@@ -116,7 +116,7 @@ export function App() {
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 id="review-heading" className="text-2xl font-semibold tracking-tight">Review &amp; Print</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{sheet.draft ? 'Open choices remain. The printed sheet will be marked Draft.' : 'All starting choices are resolved.'}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{sheet.draft ? 'Open choices remain. The printed sheet will be marked Draft.' : sheet.reviews.length ? 'Starting choices are filled in. See the Storyteller review notes on the sheet.' : 'All starting choices are resolved.'}</p>
               </div>
               <button type="button" className="guide-button guide-button-primary" onClick={() => window.print()}>Print character sheet</button>
             </div>
@@ -144,7 +144,7 @@ export function App() {
         <a className="text-foreground underline underline-offset-4 hover:text-rose-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-300" href="https://astralarchives.games/">
           Return to Astral Archives
         </a>
-        <p>V5 Core Rulebook, pp. 130–137, 155–216</p>
+        <p>V5 Core Rulebook · Renegade second printing</p>
       </footer>
     </main>
   )

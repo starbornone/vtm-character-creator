@@ -17,7 +17,7 @@ test('Mara completes the Brujah and Alleycat choices with their source-specific 
   assert.deepEqual(path.clanSlots.map(slot => slot.selectedPower?.id), ['lethal-body', 'awe', 'daunt'])
   assert.equal(path.predatorSlot?.selectedPower?.id, 'prowess')
   assert.deepEqual(path.humanity, { base: 7, adjustment: -1, total: 6 })
-  assert.deepEqual(path.predator?.advantage, { name: 'Criminal Contacts', dots: 3 })
+  assert.deepEqual(path.advantages, [{ name: 'Criminal Contacts', dots: 3 }])
   const traits = evaluateTraitLedger(mara, path.grantedSpecialty)
   assert.deepEqual(traits.specialties.predatorGrant, { skill: 'brawl', name: 'Grappling', kind: 'specialty' })
   assert.equal(traits.skills.open, 0)

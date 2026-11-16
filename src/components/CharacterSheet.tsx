@@ -64,6 +64,7 @@ export function CharacterSheet({ sheet }: { sheet: Sheet }) {
               {discipline.powers.length > 0 && <span> {discipline.powers.join(', ')}</span>}
             </li>)}
           </ul>
+          {sheet.ritual && <p><strong>Starting Ritual</strong> {sheet.ritual.name} · Core p. {sheet.ritual.page}</p>}
           <h3>Starting XP</h3>
           <p>{sheet.xpSpent} spent · {sheet.xpRemaining} remaining</p>
           <ol className="sheet-list" aria-label="Applied XP purchases">
@@ -74,10 +75,10 @@ export function CharacterSheet({ sheet }: { sheet: Sheet }) {
           <h3 id="sheet-advantages">Advantages &amp; Flaws</h3>
           <p>{sheet.advantageDots} Advantage dots · {sheet.flawDots} Flaw dots</p>
           <ul className="sheet-list" aria-label="Advantages">
-            {sheet.advantages.map(option => <li key={option.name}>{option.name} {option.dots} · {option.source}</li>)}
+            {sheet.advantages.map((option, index) => <li key={index}>{option.name} {option.dots} · {option.source}</li>)}
           </ul>
           <ul className="sheet-list" aria-label="Flaws">
-            {sheet.flaws.map(option => <li key={option.name}>{option.name} · {option.dots} Flaw dots</li>)}
+            {sheet.flaws.map((option, index) => <li key={index}>{option.name} · {option.dots} Flaw {option.dots === 1 ? 'dot' : 'dots'}{option.source && ` · ${option.source}`}</li>)}
           </ul>
         </section>
       </div>
@@ -94,6 +95,10 @@ export function CharacterSheet({ sheet }: { sheet: Sheet }) {
           </li>)}
         </ul>}
       </section>
+      {sheet.reviews.length > 0 && <section aria-labelledby="sheet-storyteller">
+        <h3 id="sheet-storyteller">Storyteller Review</h3>
+        <ul className="sheet-list">{sheet.reviews.map(note => <li key={note}>{note}</li>)}</ul>
+      </section>}
     </article>
   )
 }
