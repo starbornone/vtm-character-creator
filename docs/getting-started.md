@@ -17,7 +17,7 @@ If npm reports a missing `package.json`, return to the repository root. For a re
 
 ## Choose an age profile
 
-In **Concept**, use **Age profile** to choose **Fledgling**, **Neonate**, or **Ancilla**. A newly Embraced fledgling starts with 0 XP and develops a Predator Type in play. A neonate chooses an eligible Predator Type and starts with 15 XP. Both profiles use 12th or 13th Generation. An ancilla also chooses an eligible Predator Type and starts at 10th or 11th Generation with Blood Potency 2, Humanity 6 before Predator adjustments, 9 base Advantage dots, 4 base Flaw dots, and 35 XP.
+In **Concept**, use **Age profile** to choose **Fledgling**, **Neonate**, or **Ancilla**. A newly Embraced fledgling starts with 0 XP and develops a Predator Type in play. A neonate chooses an eligible Predator Type and starts with 15 XP. Named-clan and Caitiff fledglings and neonates use 12th or 13th Generation. Thin-bloods use the Fledgling profile and 14th to 16th Generation. An ancilla also chooses an eligible Predator Type and starts at 10th or 11th Generation with Blood Potency 2, Humanity 6 before Predator adjustments, 9 base Advantage dots, 4 base Flaw dots, and 35 XP.
 
 Switching profiles checks the selected Generation, dot budgets, and XP journal against the new rules. If a Generation becomes unavailable, the guide keeps it in the full draft until you choose a new one. Switching back can make the saved choice active again. Fledgling pauses the Predator Type and XP choices. Browser drafts and JSON backups preserve those choices. Mechanical build links carry the choices supported by the current profile. First-release drafts, backups, and links open as neonates.
 
@@ -49,7 +49,7 @@ Choose the narrative sections you want to share. Character identity and chronicl
 
 ## Choose options from the Core catalog
 
-Under **Clan & Predator Type**, use the search fields to filter the pickers by option name or source page. Caitiff is a dedicated option alongside the named clans. The picker shows eligibility restrictions. Once you choose a Predator Type, complete its Specialty, Discipline power, and any additional grant choices. Characters with Blood Sorcery can select an optional starting level-one Ritual.
+Under **Clan & Predator Type**, use the search fields to filter the pickers by option name or source page. Caitiff and Thin-blood are dedicated options alongside the named clans. The picker shows eligibility restrictions. Once you choose a Predator Type, complete its Specialty, Discipline power, and any additional grant choices. Characters with Blood Sorcery can select an optional starting level-one Ritual.
 
 Choose **Manual entry** in either picker for a table-specific clan or Predator Type using the same starting allocation. Enter its name and source or Storyteller note. In **Advantages & XP**, add manual Advantages or Flaws against the base budgets. The sheet shows those entries and their notes under **Storyteller Review**.
 
@@ -89,6 +89,12 @@ In **Concept**, choose **Neonate**, then select **Caitiff** under **Clan & Preda
 
 In **Review & Print**, check that the sheet shows Suspect as a separate Caitiff Flaw, 15 XP spent, and 0 XP remaining. Use **Print character sheet** to print it. Download the draft, then use **Choose JSON backup** to preview and restore a separate copy.
 
+## Build Iris Calder
+
+In **Concept**, choose **Fledgling**. In **Clan & Predator Type**, select **Thin-blood**. If you arrive with another age selected, use **Set age to Fledgling**. Choose the two Merits and two Flaws from [Iris Calder’s fixture](v5-rules.md#iris-calder-thin-blood-fixture). Select Brujah for Clan Curse, Fortitude and Resilience for Discipline Affinity, and Fixatio and Haze for Thin-blood Alchemy.
+
+Follow the fixture’s trait allocation and choose 15th Generation in **Advantages & XP**. Fill the regular 7 Advantage and 2 Flaw dots separately from the Thin-blood choices. Complete **Relationships**, then confirm Blood Potency 0, Fortitude 1, and the starting formula in **Review & Print**. Print the sheet and download a backup to restore as a new draft.
+
 ## Verify the production build
 
 ```sh
@@ -97,6 +103,6 @@ npm run build
 npm run preview
 ```
 
-The tests check the complete Mara, Rowan, Silas, and Nessa sheets, age profile compatibility, core path and grant rules, browser draft storage, JSON backup round-trips, the build link allowlist, and narrative opt-ins for the Storyteller brief. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
+The tests check the complete Mara, Rowan, Silas, Nessa, and Iris sheets, age profile compatibility, core path and grant rules, browser draft storage, JSON backup round-trips, the build link allowlist, and narrative opt-ins for the Storyteller brief. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
 
 See the [overview](overview.md) for first-release scope and [Development](development.md) for contributor checks.

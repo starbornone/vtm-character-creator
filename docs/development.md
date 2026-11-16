@@ -35,6 +35,8 @@ For ancilla rules, run the [ancilla tests](../tests/ancilla-creation.test.ts). U
 
 For Caitiff rules, run the [Caitiff tests](../tests/caitiff-creation.test.ts). Build [Nessa Reed](v5-rules.md#nessa-reed-caitiff-fixture), verify the 12 XP upgrade and 6 XP first-dot quote, and try a manual positive Status entry. Compare the review sheet with print and restore a browser download under a second name.
 
+For Thin-blood rules, run the [Thin-blood tests](../tests/thin-blood-creation.test.ts) and build [Iris Calder](v5-rules.md#iris-calder-thin-blood-fixture). Try a Neonate age and one incompatible Merit and Flaw pair, then resolve both. Confirm that the completed review, print, and restored backup show the same Clan Curse, Affinity, and Alchemy.
+
 For catalog changes, run the [catalog tests](../tests/core-catalog.test.ts) and try a second path in the browser. Search by name and page, switch clans with a Predator Type already selected, and confirm that a manual entry’s source or note reaches **Storyteller Review**.
 
 For draft changes, run the [browser storage tests](../tests/browser-drafts.test.ts), save two characters at different steps, and reload after switching between them. Force a write failure on the local draft key and confirm that the last save persists, the current edits appear in the download, and a retry succeeds when writes resume.

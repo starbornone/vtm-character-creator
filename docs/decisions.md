@@ -68,4 +68,12 @@ The brief shows evaluated mechanics and open rulings with generic labels for man
 
 **Consequences.** The Storyteller determines whether the fiction meets the learning requirements and whether to apply the Social penalty with Kindred who know the character is Caitiff. Version 3 carries Caitiff and the structured learning confirmation without adding notes to mechanical links. Earlier named-clan formats remain readable.
 
+## 9 Core Thin-blood creation uses the Fledgling profile
+
+**Context.** Core pp. 136–140, 148–149, and 182–184 give Thin-bloods a separate Generation range and matched Merits and Flaws. Their lasting starting powers can come from Discipline Affinity or Thin-blood Alchemist.
+
+**Decision.** Keep blood status independent of age. Use the Core Fledgling path for Thin-bloods and offer a direct fix when the saved age conflicts. Keep their Merits and Flaws separate from the regular dot budgets. Resolve permanent Affinity, the first Alchemy method and formula, and any Bane granted by Clan Curse. Flag the Core creation restrictions on personal Bonding, Mawla, Retainers, and Status.
+
+**Consequences.** The sheet records the starting choices and leaves feeding-based temporary powers and later Alchemy advancement to play. Version 4 carries the structured choices in backups and mechanical links. Changing blood status preserves prior draft inputs for a switch back.
+
 See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the full flow.

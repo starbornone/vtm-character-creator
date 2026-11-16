@@ -33,7 +33,7 @@ The ten Predator Types are Alleycat, Bagger, Blood Leech, Cleaver, Consensualist
 | Scene Queen | Choose Disliked outside the scene or Prey Exclusion for another scene. | p. 178 |
 | Nosferatu | The Bane supplies Repulsive outside the base Flaw budget. The sheet flags the Siren’s Beautiful grant for Storyteller review and excludes it from the total. | pp. 85, 178–179 |
 
-Manual options record a source or table note. The evaluator applies the supported starting dot and grant structure and exposes the entry for Storyteller review. The clan picker includes Caitiff alongside the named clans. Each works with the fledgling, neonate, and ancilla profiles. The Predator catalog is available to neonates and ancillae. Thin-blood creation is a separate path.
+Manual options record a source or table note. The evaluator applies the supported starting dot and grant structure and exposes the entry for Storyteller review. The clan picker includes Caitiff alongside the named clans. Each works with the fledgling, neonate, and ancilla profiles. The Predator catalog is available to neonates and ancillae. Choose the Fledgling profile for the separate Thin-blood path.
 
 ## Hand-checked fixture
 
@@ -157,3 +157,28 @@ Nessa Reed is a 13th-Generation Caitiff neonate and night-shift locksmith in *Ke
 | Drive 0 → 1 | 3 | 0 |
 
 The [fixture](../tests/fixtures/nessa-reed.ts) and [Caitiff tests](../tests/caitiff-creation.test.ts) verify the totals, Discipline eligibility and XP costs, Status restriction, and transfers. In the browser, Nessa’s review matched the one-page US Letter print and a restored copy of the downloaded JSON. The restored copy retained the completed sheet after reload.
+
+## Iris Calder Thin-blood fixture
+
+| Rule | Starting behavior | Core reference |
+| --- | --- | --- |
+| Age and Generation | Use Fledgling and choose 14th, 15th, or 16th Generation. Start with Humanity 7, Blood Potency 0, 0 XP, and no Predator Type. The corrected Blood Potency table gives one Blood Surge die and Bane Severity 0. | pp. 136–140, 148–149, 214, 216 |
+| Separate budgets | Take one to three Thin-blood Merits and the same number of Thin-blood Flaws. These have no dot value. Separately choose 7 regular Advantage and 2 Flaw dots. Core creation excludes personal Bonding, Mawla, Retainers, and Status. Anarch Comrades and Camarilla Contact remain available as Thin-blood Merits. | pp. 136, 148–149, 182–184 |
+| Incompatible picks | Lifelike conflicts with Dead Flesh, Vampiric Resilience conflicts with Mortal Frailty, and Anarch Comrades conflicts with Shunned by the Anarchs. Branded by the Camarilla can coexist with Camarilla Contact. | pp. 182–184 |
+| Clan Curse | Choose a clan Bane at severity 1. Brujah and Gangrel require Bestial Temper. Tremere requires Catenating Blood. A Nosferatu curse carries the Nosferatu Bane’s Looks restrictions. Clan Curse grants no clan Compulsion. | pp. 85, 183, 208 |
+| Discipline Affinity | Choose a Core Discipline with one dot and one level-one power. Match any permanent Blood Sorcery dot with the same optional starting level-one Ritual available to other characters with that dot. The sheet omits temporary Disciplines gained through feeding in play. | pp. 111, 184, 244, 272 |
+| Thin-blood Alchemist | Gain Thin-blood Alchemy 1. Choose Athanor Corporis, Calcinatio, or Fixatio, and one level-one formula, Far Reach or Haze. Profane Hieros Gamos is level three under the incorporated 2019 errata. The starting path covers the first method and formula. | pp. 184, 282–287 |
+
+Iris Calder is a 15th-Generation Thin-blood fledgling and night bicycle mechanic in *The Last Ferry*, Embraced in 2025. Iris’s Ambition is to keep a safe workshop for the duskborn. Their Desire is to find the missing courier before sunrise. The Chronicle Tenet is to leave a light on for those coming home. The Conviction “Never strand a fellow traveler” is tied to Avery Chen, a living ferry dispatcher.
+
+| Category | Choices and expected results |
+| --- | --- |
+| Attributes | Strength 2, Dexterity 4, Stamina 3, Charisma 2, Manipulation 1, Composure 3, Intelligence 3, Wits 2, Resolve 2. |
+| Balanced Skills | 3 in Craft, Drive, and Streetwise. 2 in Awareness, Brawl, Investigation, Science, and Stealth. 1 in Athletics, Insight, Larceny, Medicine, Persuasion, Survival, and Technology. All others start at 0. |
+| Specialties | Craft (Bicycle repair), Science (Materials), and Stealth (Back lanes) as the free Specialty. |
+| Thin-blood Merits | Discipline Affinity grants Fortitude 1 with Resilience. Thin-blood Alchemist grants Thin-blood Alchemy 1 with Fixatio and Haze. |
+| Thin-blood Flaws | Bestial Temper and Clan Curse (Brujah). Bestial Temper qualifies Iris for Violent Temper at Bane Severity 1. |
+| Base Advantages and Flaws | Haven 2 + Mask 2 + Resources 3 = 7 Advantage dots. Stake Bait fills the 2-dot base Flaw budget. |
+| Final tracks | Health 7 (Stamina 3 + 3 + Fortitude 1 from Resilience), Willpower 5 (Composure 3 + Resolve 2), Humanity 7, Blood Potency 0, one Blood Surge die, and 0 XP spent or remaining. |
+
+The [fixture](../tests/fixtures/iris-calder.ts) and [Thin-blood tests](../tests/thin-blood-creation.test.ts) cover the hand calculations, incompatible selections, preserved draft inputs, and transfers. The browser walkthrough confirmed the unsupported-age warning and incompatible Lifelike and Dead Flesh pair, the completed review, a one-page US Letter print, a separate JSON backup restore and reload, and the read-only build link.
