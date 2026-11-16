@@ -1,0 +1,33 @@
+{
+  "schema": "name-roadmap/v1",
+  "file": "completed",
+  "updatedAt": "2026-11-16T13:28:33+11:00",
+  "project": {
+    "key": "vtm-character-creator",
+    "title": "Vampire: The Masquerade Character Creator",
+    "status": "active"
+  },
+  "items": [
+    {
+      "id": "initialize-repository",
+      "title": "Initialize the repository",
+      "group": "Foundation",
+      "notes": "The first commit adds the project README and establishes the repository.",
+      "completedAt": "2026-11-16T12:45:53+11:00"
+    },
+    {
+      "id": "plan-v5-character-creator",
+      "title": "Plan the V5 character creator",
+      "group": "Planning",
+      "notes": "PLAN.md records the proposed first-release scope, rules ledger, player workflow, and implementation sequence.",
+      "completedAt": "2026-11-16T13:28:33+11:00"
+    },
+    {
+      "id": "document-project-and-roadmap",
+      "title": "Document the project and initialize its roadmap",
+      "group": "Documentation",
+      "notes": "The README links the contributor documentation, agent guidance, and shared roadmap contract.",
+      "completedAt": "2026-11-16T13:28:33+11:00"
+    }
+  ]
+}

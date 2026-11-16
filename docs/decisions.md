@@ -1,0 +1,37 @@
+# Decision records
+
+These records describe the planned implementation. See the [roadmap](../roadmap/roadmap.json) for delivery status.
+
+## 1 Static Vite app with shadcn/ui
+
+**Context.** The guide needs responsive form controls, dependent choices, and a live summary. Drafts and file transfers can operate within the browser.
+
+**Decision.** Use Vite, React, TypeScript, Tailwind CSS, and shadcn/ui. Serve a static app and keep named drafts in browser storage.
+
+**Consequences.** A draft belongs to its browser and origin. The full backup is the supported path for moving it to another browser or recovering it after storage loss.
+
+## 2 V5 Core Rulebook neonates first
+
+**Context.** Character profiles and editions introduce different starting rules and exceptions.
+
+**Decision.** Implement standard clan neonates and the core options that let them finish a build. Record the ruleset in drafts and exports.
+
+**Consequences.** Additional profiles need explicit rules and test cases. Manual entries can cover additional choices supported by the current model and carry a Storyteller review item.
+
+## 3 One evaluator for the ledger and character sheet
+
+**Context.** Changing clan or Predator Type can invalidate related choices and alter several totals at once.
+
+**Decision.** Store the player’s allocations and choices. Use pure TypeScript rules functions to derive active totals and validation for editing, review, and print.
+
+**Consequences.** Ineligible selections remain available for the player to resolve. Every derived grant can identify its origin, and formula changes can be verified independently of React.
+
+## 4 Explicit transfer formats
+
+**Context.** A portable backup needs the complete draft. Sharing a build usually calls for mechanics, while a Storyteller may also need selected narrative details.
+
+**Decision.** Use a versioned JSON backup, an allowlisted mechanical build link, and a Markdown Storyteller brief with opt-in narrative sections.
+
+**Consequences.** Validate portable inputs before applying them. New draft fields require an explicit decision about backup, link, and brief behavior.
+
+See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the planned flow.

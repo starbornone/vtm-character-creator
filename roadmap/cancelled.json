@@ -1,0 +1,11 @@
+{
+  "schema": "name-roadmap/v1",
+  "file": "cancelled",
+  "updatedAt": "2026-11-16T13:28:33+11:00",
+  "project": {
+    "key": "vtm-character-creator",
+    "title": "Vampire: The Masquerade Character Creator",
+    "status": "active"
+  },
+  "items": []
+}

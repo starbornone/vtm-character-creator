@@ -1,0 +1,85 @@
+{
+  "schema": "name-roadmap/v1",
+  "file": "roadmap",
+  "updatedAt": "2026-11-16T13:28:33+11:00",
+  "project": {
+    "key": "vtm-character-creator",
+    "title": "Vampire: The Masquerade Character Creator",
+    "status": "active",
+    "summary": "A planned browser-based Vampire: The Masquerade V5 creator for standard clan neonates with a live rules ledger, local drafts, and printable sheets."
+  },
+  "items": [
+    {
+      "id": "scaffold-vite-app",
+      "title": "Scaffold the Vite app",
+      "group": "Foundation",
+      "notes": "Set up React, TypeScript, Tailwind CSS, and shadcn/ui. Record the supported runtime and working install, dev, and verification commands in Getting started."
+    },
+    {
+      "id": "pin-v5-rules-sources",
+      "title": "Pin the V5 rules sources",
+      "group": "Rules",
+      "notes": "Select the Core Rulebook printing and applicable errata. Hand-check a standard clan neonate fixture and record the source for each rule used by the first build."
+    },
+    {
+      "id": "build-attribute-skill-ledger",
+      "title": "Build the Attribute and Skill ledger",
+      "group": "Rules",
+      "notes": "Evaluate dot distributions, Specialties, Health, and Willpower and expose the available slots and sources of each total."
+    },
+    {
+      "id": "build-first-clan-and-predator-type",
+      "title": "Build the first clan and Predator Type path",
+      "group": "Rules",
+      "notes": "Support one clan and one eligible Predator Type with Discipline allocation, powers, mandatory grants, dependent choices, and validation."
+    },
+    {
+      "id": "evaluate-advantages-flaws-and-starting-xp",
+      "title": "Evaluate Advantages, Flaws, and starting XP",
+      "group": "Rules",
+      "notes": "Track starting budgets and ordered purchases. Verify Generation, Humanity, Blood Potency, and the XP balance for the first fixture."
+    },
+    {
+      "id": "complete-first-character-guide",
+      "title": "Complete the first character guide and print sheet",
+      "group": "Guide",
+      "notes": "Connect concept, relationships, mechanical choices, and review. Verify the full build and its printout against the same fixture."
+    },
+    {
+      "id": "expand-core-option-catalog",
+      "title": "Expand the core option catalog",
+      "group": "Catalog",
+      "notes": "Add the remaining named core clans and eligible core Predator Types, source-tagged options, searchable pickers, and manual entries for Storyteller review."
+    },
+    {
+      "id": "save-named-browser-drafts",
+      "title": "Save named browser drafts",
+      "group": "Drafts",
+      "notes": "Persist the last step and draft inputs. Report save failures and keep the current draft exportable."
+    },
+    {
+      "id": "support-json-backup-and-restore",
+      "title": "Support JSON backup and restore",
+      "group": "Sharing",
+      "notes": "Validate the versioned ruleset and draft inputs. Preview before restoring a copy and check partial and complete draft round-trips."
+    },
+    {
+      "id": "share-mechanical-build-links",
+      "title": "Share mechanical build links",
+      "group": "Sharing",
+      "notes": "Generate a read-only preview from allowed mechanics and catalog IDs. Verify that names and narrative text stay out of the payload."
+    },
+    {
+      "id": "export-storyteller-brief",
+      "title": "Export the Storyteller brief",
+      "group": "Sharing",
+      "notes": "Preview and download the mechanical build and open rulings in Markdown, with player-selected narrative sections."
+    },
+    {
+      "id": "verify-first-release",
+      "title": "Verify the first release",
+      "group": "Release",
+      "notes": "Run rules, persistence, type, and build checks. Rehearse creation through print at desktop and mobile widths and verify public release notices."
+    }
+  ]
+}
