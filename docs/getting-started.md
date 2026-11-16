@@ -19,7 +19,15 @@ If npm reports a missing `package.json`, return to the repository root. For a re
 
 Enter a **Draft name** and select **Save draft**. Once named, the character and current step autosave as you work. Reload the page to resume the last open saved draft. Use **New draft** for another character, or choose a name under **Saved drafts** and select **Open draft** to resume that character at its own last step. Edit the draft name and select **Save draft** to rename it.
 
-Drafts belong to the current browser and site address. If saving fails, the last saved version stays in the browser and the current edits stay open. Use **Retry save** after storage is available or choose **Download current draft** before reloading to save a JSON copy with the current edits and step. In-app JSON restore is the next sharing milestone.
+Drafts belong to the current browser and site address. If saving fails, the last saved version stays in the browser and the current edits stay open. Use **Retry save** after storage is available or choose **Download current draft** before reloading to save a JSON copy with the current edits and step.
+
+## Back up and restore a draft
+
+Select **Download current draft** to save a JSON backup of the character and current step, including an unfinished or unnamed character. The backup includes narrative fields and Storyteller notes.
+
+Select **Choose JSON backup** and open the file. Review the character, saved step, and completion status in **Backup preview**. Edit **New draft name** if desired, then select **Restore as new draft**. The copy opens at its saved step and the existing drafts remain in the library. If the original name is already taken, the preview suggests a name with a copy suffix.
+
+The guide reports malformed files, unsupported versions or rulesets, and invalid draft inputs before restoring anything. If browser storage rejects the restore, the preview stays open so you can retry.
 
 ## Choose options from the Core catalog
 
@@ -53,6 +61,6 @@ npm run build
 npm run preview
 ```
 
-The tests check Mara’s complete sheet, core path and grant rules, and draft storage and recovery. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
+The tests check Mara’s complete sheet, core path and grant rules, browser draft storage, and JSON backup round-trips. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
 
 See the [overview](overview.md) for first-release scope and [Development](development.md) for contributor checks.

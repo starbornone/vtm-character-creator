@@ -9,7 +9,7 @@ The ledger uses stable Attribute and Skill IDs from [`src/catalog/traits.ts`](..
 | React guide | Collect draft inputs, expose the live ledger and step navigation, and show review, print, and share previews. |
 | `src/rules/` | Evaluate the draft under its V5 ruleset. Calculate totals, list the source of each grant, and attach issues to affected choices. |
 | `src/catalog/` | Hold stable option IDs, structured prerequisites and effects, and book and page references. |
-| `src/drafts/` | Validate saved character inputs, store named drafts and steps, and generate the current draft download. |
+| `src/drafts/` | Validate character inputs, store named drafts and steps, and encode and read portable JSON backups. |
 
 ```mermaid
 flowchart LR
@@ -33,6 +33,8 @@ Predator grant choices use stable IDs and are applied only while the current sel
 
 [`src/drafts/browser-drafts.ts`](../src/drafts/browser-drafts.ts) saves a versioned, V5 library under one `localStorage` key. It stores each named character’s inputs and step, plus the active draft ID. The working copy stays in memory during storage errors. Before writing, the app compares the stored value with the one it last read or wrote so an older open tab avoids replacing a newer save. Download serializes the working copy directly.
 
-A full backup carries the versioned draft. Build links are constructed from an allowlist of mechanical fields and catalog IDs. Import and share previews open before any saved draft changes. The Storyteller brief uses the evaluated sheet and the narrative fields the player selects.
+[`src/drafts/draft-backup.ts`](../src/drafts/draft-backup.ts) handles the portable backup envelope. It carries `format`, `schemaVersion`, `ruleset`, and a snapshot of the name, step, and character inputs. Backup restore and browser storage use the same input validation. The preview evaluates the snapshot with the live rules engine. Confirmation allocates a fresh draft ID and saves the appended library and its active ID in one write.
+
+Planned build links will use an allowlist of mechanical fields and catalog IDs. The Storyteller brief will use the evaluated sheet and the narrative fields the player selects.
 
 For a new catalog entry, add the source reference, stable ID, and structured effects. For a rules change, update the evaluator and its hand-checked fixtures, then verify the result in the guide and print review. For a transfer change, check round-trips and unsupported input before altering the export format. See [Decisions](decisions.md) and [Development](development.md).
