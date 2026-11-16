@@ -1,7 +1,9 @@
 import { guideSteps, type CharacterDraft, type GuideStep } from '../rules/character-guide.ts'
+import { defaultAgeProfile } from '../rules/creation-profiles.ts'
 import { isCharacterDraft, isRecord } from './draft-inputs.ts'
 
-export const draftSchemaVersion = 1
+const legacyDraftSchemaVersion = 1
+const profiledDraftSchemaVersion = 2
 export const draftRuleset = 'vtm-v5'
 const backupFormat = 'vtm-character-creator-draft'
 
@@ -11,6 +13,11 @@ export interface DraftSnapshot {
   character: CharacterDraft
 }
 
+export function draftSchemaVersionFor(snapshots: readonly DraftSnapshot[]) {
+  return snapshots.some(({ character }) => character.ageProfile && character.ageProfile !== defaultAgeProfile)
+    ? profiledDraftSchemaVersion : legacyDraftSchemaVersion
+}
+
 export function isDraftSnapshot(value: unknown): value is DraftSnapshot {
   return isRecord(value)
     && typeof value.name === 'string' && value.name.trim().length > 0
@@ -18,9 +25,10 @@ export function isDraftSnapshot(value: unknown): value is DraftSnapshot {
     && isCharacterDraft(value.character)
 }
 
-export function serializeDraftDownload({ name, step, character }: DraftSnapshot): string {
+export function serializeDraftDownload(draft: DraftSnapshot): string {
+  const { name, step, character } = draft
   return JSON.stringify({
-    format: backupFormat, schemaVersion: draftSchemaVersion, ruleset: draftRuleset,
+    format: backupFormat, schemaVersion: draftSchemaVersionFor([draft]), ruleset: draftRuleset,
     draft: { name, step, character },
   }, null, 2) + '\n'
 }
@@ -36,9 +44,10 @@ export function readDraftBackup(raw: string): BackupResult {
   }
 
   if (!isRecord(value) || value.format !== backupFormat) return { issue: 'Choose a Character Creator draft backup.' }
-  if (value.schemaVersion !== draftSchemaVersion) return { issue: 'This draft backup version is unsupported.' }
+  if (value.schemaVersion !== legacyDraftSchemaVersion && value.schemaVersion !== profiledDraftSchemaVersion) return { issue: 'This draft backup version is unsupported.' }
   if (value.ruleset !== draftRuleset) return { issue: 'This draft backup uses an unsupported ruleset.' }
   if (!isDraftSnapshot(value.draft)) return { issue: 'The draft name, guide step, or character inputs are missing or invalid.' }
+  if (value.schemaVersion !== draftSchemaVersionFor([value.draft])) return { issue: 'The age profile does not match this draft backup version.' }
 
   const { name, step, character } = value.draft
   return { draft: { name: name.trim(), step, character } }

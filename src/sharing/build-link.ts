@@ -5,11 +5,13 @@ import { isCharacterDraft, isRecord } from '../drafts/draft-inputs.ts'
 import { draftRuleset } from '../drafts/draft-backup.ts'
 import { evaluateClanPath, manualOptionId } from '../rules/clan-path.ts'
 import { initialCharacterDraft, type CharacterDraft } from '../rules/character-guide.ts'
-import { attributeIds, neonate, type Purchase } from '../rules/starting-xp.ts'
+import { ageProfiles, defaultAgeProfile } from '../rules/creation-profiles.ts'
+import { attributeIds, type Purchase } from '../rules/starting-xp.ts'
 import { ratings, skillDistributionIds, specialtySkills } from '../rules/trait-ledger.ts'
 
 export const buildLinkPrefix = '#build='
-const version = 1
+const legacyVersion = 1
+const profiledVersion = 2
 const maxTokenLength = 12000
 
 export const omittedChoices = {
@@ -57,7 +59,8 @@ function supportedPurchase(purchase: Purchase): Purchase | undefined {
 }
 
 function projectBuild(draft: CharacterDraft) {
-  const path = evaluateClanPath(draft.clanPath)
+  const profile = ageProfiles[draft.ageProfile ?? defaultAgeProfile]
+  const path = evaluateClanPath(draft.clanPath, true, profile)
   const clan = coreClans.find(option => option.id === path.clan?.id)
   const predator = clan && corePredators.find(option => option.id === path.predator?.id)
   const clanPowers: CharacterDraft['clanPath']['clanPowers'] = {}
@@ -79,6 +82,7 @@ function projectBuild(draft: CharacterDraft) {
 
   // Every exported value is a catalog ID, a bounded rating, or an enum.
   return {
+    ageProfile: draft.ageProfile === defaultAgeProfile ? undefined : draft.ageProfile,
     traits: {
       distribution: selectedId(skillDistributionIds, draft.traits.distribution) ?? initialCharacterDraft.traits.distribution,
       attributes, skills, freeSpecialtySkill: selectedId(skillIds, draft.traits.freeSpecialty.skill) ?? '',
@@ -96,24 +100,27 @@ function projectBuild(draft: CharacterDraft) {
       ritual: startingRituals.find(option => option.id === draft.clanPath.ritual)?.id ?? '',
     },
     starting: {
-      generation: neonate.generations.find(generation => generation === draft.starting.generation),
+      generation: profile.generations.find(generation => generation === draft.starting.generation),
       advantages, flaws: flawIds.filter(id => draft.starting.flaws.includes(id)),
-      purchases: draft.starting.purchases.flatMap(purchase => supportedPurchase(purchase) ?? []),
+      purchases: profile.xp > 0 ? draft.starting.purchases.flatMap(purchase => supportedPurchase(purchase) ?? []) : [],
     },
   }
 }
 
 export function encodeBuildLink(draft: CharacterDraft) {
+  const profile = ageProfiles[draft.ageProfile ?? defaultAgeProfile]
   const omitted: Omission[] = []
   if (draft.clanPath.clan === manualOptionId) omitted.push('manual-clan')
-  if (draft.clanPath.predatorType === manualOptionId) omitted.push('manual-predator')
+  if (profile.predatorAllowed && draft.clanPath.predatorType === manualOptionId) omitted.push('manual-predator')
   if (draft.traits.freeSpecialty.name.trim() || Object.values(draft.traits.firstDotSpecialties).some(name => name?.trim())
-    || draft.clanPath.predatorSpecialtyName?.trim()) omitted.push('specialty-names')
+    || (profile.predatorAllowed && draft.clanPath.predatorSpecialtyName?.trim())) omitted.push('specialty-names')
   if (draft.starting.manualOptions?.length) omitted.push('manual-options')
-  if (draft.starting.purchases.some(purchase => purchase.kind === 'specialty' ||
+  if (profile.xp > 0 && draft.starting.purchases.some(purchase => purchase.kind === 'specialty' ||
     (purchase.kind === 'skill' && purchase.to === 1 && specialtySkills.some(skill => skill === purchase.id)))) omitted.push('specialty-purchases')
 
-  const payload = { version, ruleset: draftRuleset, mechanics: projectBuild(draft), omitted }
+  const mechanics = projectBuild(draft)
+  const version = mechanics.ageProfile ? profiledVersion : legacyVersion
+  const payload = { version, ruleset: draftRuleset, mechanics, omitted }
   const token = btoa(JSON.stringify(payload)).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '')
   return token.length <= maxTokenLength ? buildLinkPrefix + token : undefined
 }
@@ -125,10 +132,12 @@ export function decodeBuildLink(hash: string): { draft: CharacterDraft; omitted:
   try {
     const value: unknown = JSON.parse(atob(token.replaceAll('-', '+').replaceAll('_', '/')))
     if (!isRecord(value) || !isRecord(value.mechanics) || !Array.isArray(value.omitted) || Object.keys(value).length !== 4) return invalid
-    if (value.version !== version || value.ruleset !== draftRuleset) return { issue: 'This build link uses an unsupported version or ruleset.' }
-    const { traits, clanPath, starting } = value.mechanics
+    if ((value.version !== legacyVersion && value.version !== profiledVersion) || value.ruleset !== draftRuleset) return { issue: 'This build link uses an unsupported version or ruleset.' }
+    const { ageProfile, traits, clanPath, starting } = value.mechanics
+    if (value.version === legacyVersion ? ageProfile !== undefined : ageProfile !== 'fledgling') return invalid
     if (!isRecord(traits)) return invalid
     const draft: unknown = {
+      ...(ageProfile ? { ageProfile } : {}),
       concept: initialCharacterDraft.concept,
       relationships: initialCharacterDraft.relationships,
       traits: {

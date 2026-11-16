@@ -2,7 +2,8 @@ import { disciplineIds, disciplinePowers, disciplines, startingRituals } from '.
 import { advantageIds, startingAdvantages, startingFlaws } from '../catalog/starting-options.ts'
 import { traitGroups, traitLabel } from '../catalog/traits.ts'
 import { evaluateClanPath, initialClanPath, manualOptionId, type ClanPathDraft } from './clan-path.ts'
-import { evaluateStartingBuild, initialStartingDraft, neonate, type StartingDraft } from './starting-xp.ts'
+import { ageProfiles, defaultAgeProfile, type AgeProfileId } from './creation-profiles.ts'
+import { evaluateStartingBuild, initialStartingDraft, type StartingDraft } from './starting-xp.ts'
 import { deriveTracks, editTraits, evaluateTraitLedger, initialTraitDraft, type TraitAction, type TraitDraft } from './trait-ledger.ts'
 
 export const guideSteps = [
@@ -36,6 +37,7 @@ export interface RelationshipDraft {
 export const maxConvictions = 3
 
 export interface CharacterDraft {
+  ageProfile?: AgeProfileId
   concept: ConceptDraft
   relationships: RelationshipDraft
   traits: TraitDraft
@@ -44,6 +46,7 @@ export interface CharacterDraft {
 }
 
 export const initialCharacterDraft: CharacterDraft = {
+  ageProfile: defaultAgeProfile,
   concept: { name: '', concept: '', chronicle: '', embraced: '', ambition: '', desire: '' },
   relationships: { sire: '', coterie: '', tenets: '', convictions: [{ conviction: '', touchstone: '' }] },
   traits: initialTraitDraft,
@@ -52,6 +55,7 @@ export const initialCharacterDraft: CharacterDraft = {
 }
 
 export type CharacterAction = TraitAction
+  | { type: 'age-profile'; profile: AgeProfileId }
   | { type: 'concept'; update: Partial<ConceptDraft> }
   | { type: 'relationships'; update: Partial<RelationshipDraft> }
   | { type: 'clan-path'; update: Partial<ClanPathDraft> }
@@ -59,6 +63,7 @@ export type CharacterAction = TraitAction
 
 export function editCharacter(draft: CharacterDraft, action: CharacterAction): CharacterDraft {
   switch (action.type) {
+    case 'age-profile': return { ...draft, ageProfile: action.profile }
     case 'concept': return { ...draft, concept: { ...draft.concept, ...action.update } }
     case 'relationships': return { ...draft, relationships: { ...draft.relationships, ...action.update } }
     case 'clan-path': return { ...draft, clanPath: { ...draft.clanPath, ...action.update } }
@@ -75,7 +80,9 @@ const conceptFields = [
 ] as const
 
 export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = true } = {}) {
-  const path = evaluateClanPath(draft.clanPath, includeCustomText)
+  const ageProfile = draft.ageProfile ?? defaultAgeProfile
+  const profile = ageProfiles[ageProfile]
+  const path = evaluateClanPath(draft.clanPath, includeCustomText, profile)
   const traits = evaluateTraitLedger(draft.traits, path.grantedSpecialty)
   const starting = evaluateStartingBuild(draft.starting, draft.traits, traits, path, includeCustomText)
   const baseTracks = deriveTracks(starting.final.attributes)
@@ -96,12 +103,14 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
     ? 'Name the manual clan, add its source or note, and choose three distinct Disciplines.' : 'Choose a clan.')
   else {
     if (path.clanSlots.length < 3 || path.clanSlots.some(slot => !slot.selectedPower)) pending.clan.push('Assign both clan Disciplines and their powers.')
-    if (!path.predator) pending.clan.push(path.predatorIssue ?? (draft.clanPath.predatorType === manualOptionId
-      ? 'Complete the manual Predator Type’s name, source or note, and any grant details.' : 'Choose a Predator Type.'))
-    else {
-      if (!path.predatorSlot?.selectedPower) pending.clan.push('Choose the granted Discipline and an eligible power.')
-      if (!path.grantedSpecialty || traits.specialties.predatorGrant?.kind === 'pending') pending.clan.push('Resolve the Predator Type’s Specialty or Skill dot.')
-      for (const choice of path.grantChoices) if (!choice.complete) pending.clan.push(`Complete the ${choice.label} grant.`)
+    if (profile.predatorAllowed) {
+      if (!path.predator) pending.clan.push(path.predatorIssue ?? (draft.clanPath.predatorType === manualOptionId
+        ? 'Complete the manual Predator Type’s name, source or note, and any grant details.' : 'Choose a Predator Type.'))
+      else {
+        if (!path.predatorSlot?.selectedPower) pending.clan.push('Choose the granted Discipline and an eligible power.')
+        if (!path.grantedSpecialty || traits.specialties.predatorGrant?.kind === 'pending') pending.clan.push('Resolve the Predator Type’s Specialty or Skill dot.')
+        for (const choice of path.grantChoices) if (!choice.complete) pending.clan.push(`Complete the ${choice.label} grant.`)
+      }
     }
   }
 
@@ -130,6 +139,7 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
       name: draft.concept.name.trim(), concept: draft.concept.concept.trim(), chronicle: draft.concept.chronicle.trim(),
       embraced: draft.concept.embraced.trim(), ambition: draft.concept.ambition.trim(), desire: draft.concept.desire.trim(),
       clan: hideClanText ? 'Manual clan' : path.clan?.name, predator: predatorName, generation: starting.generation,
+      ageProfile: profile.name,
     },
     relationships: { sire: draft.relationships.sire.trim(), coterie: draft.relationships.coterie.trim(), tenets: draft.relationships.tenets.trim(), convictions },
     tracks: {
@@ -176,10 +186,10 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
     ],
     advantageDots: starting.totalAdvantageDots,
     flawDots: starting.flawBudget.used + [...path.flaws, ...path.clanFlaws].reduce((sum, flaw) => sum + flaw.dots, 0),
-    xpSpent: neonate.xp - final.remaining,
+    xpSpent: profile.xp - final.remaining,
     xpRemaining: final.remaining,
     purchases: starting.entries.filter(entry => !entry.issue),
     draft: Object.values(pending).some(issues => issues.length > 0),
   }
-  return { path, traits, starting, tracks, sheet, pending }
+  return { ageProfile, path, traits, starting, tracks, sheet, pending }
 }

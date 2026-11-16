@@ -2,9 +2,9 @@ import { disciplinePowers, disciplines, type DisciplineId } from '../catalog/cla
 import { advantageIds, startingAdvantages, startingFlaws, type AdvantageId, type FlawId } from '../catalog/starting-options.ts'
 import { skillIds, traitGroups, traitLabel, type AttributeId, type SkillId } from '../catalog/traits.ts'
 import type { evaluateClanPath } from './clan-path.ts'
+import type { StartingGeneration } from './creation-profiles.ts'
 import { specialtySkills, type evaluateTraitLedger, type TraitDraft } from './trait-ledger.ts'
 
-export const neonate = { generations: [12, 13], bloodPotency: 1, maxBloodPotency: 3, xp: 15, advantages: 7, flaws: 2 } as const
 export const attributeIds = traitGroups.flatMap(({ attributes }): readonly AttributeId[] => attributes)
 
 // Core p. 216 and Renegade's Blood Potency Correction.
@@ -24,7 +24,7 @@ export type Purchase =
   | { kind: 'blood-potency'; to: BloodPotency }
 
 export interface StartingDraft {
-  generation: (typeof neonate.generations)[number] | undefined
+  generation: StartingGeneration | undefined
   advantages: Partial<Record<AdvantageId, number>>
   flaws: FlawId[]
   purchases: Purchase[]
@@ -92,8 +92,8 @@ function evaluateOptions(draft: StartingDraft, path: ClanPath, hasLingeringKiss:
     flaws,
     manualOptions,
     grantedAdvantages,
-    advantageBudget: budget(active.reduce((sum, option) => sum + option.dots, manualDots('advantage')), neonate.advantages),
-    flawBudget: budget(flaws.filter(option => !option.issue).reduce((sum, option) => sum + option.dots, manualDots('flaw')), neonate.flaws),
+    advantageBudget: budget(active.reduce((sum, option) => sum + option.dots, manualDots('advantage')), path.profile.advantages),
+    flawBudget: budget(flaws.filter(option => !option.issue).reduce((sum, option) => sum + option.dots, manualDots('flaw')), path.profile.flaws),
   }
 }
 
@@ -110,6 +110,7 @@ interface ExperienceState {
   advantages: Partial<Record<AdvantageId, number>>
   flaws: FlawId[]
   bloodPotency: BloodPotency
+  maxBloodPotency: BloodPotency
   remaining: number
 }
 
@@ -137,7 +138,9 @@ function startExperience(traits: TraitDraft, ledger: TraitLedger, path: ClanPath
     looksRestricted: path.clan?.id === 'nosferatu',
     advantages,
     flaws: options.flaws.filter(option => !option.issue).map(({ id }) => id),
-    bloodPotency: path.bloodPotencyChange ? 2 : neonate.bloodPotency, remaining: neonate.xp,
+    bloodPotency: path.bloodPotencyChange ? 2 : path.profile.bloodPotency,
+    maxBloodPotency: path.profile.maxBloodPotency,
+    remaining: path.profile.xp,
   }
 }
 
@@ -202,7 +205,7 @@ export function quotePurchase(state: ExperienceState, purchase: Purchase): { cos
       return checkBudget(3 * (purchase.to - current))
     }
     case 'blood-potency':
-      if (purchase.to !== state.bloodPotency + 1 || purchase.to > neonate.maxBloodPotency) return { issue: 'Raise Blood Potency one dot at a time, within the Generation limit.' }
+      if (purchase.to !== state.bloodPotency + 1 || purchase.to > state.maxBloodPotency) return { issue: 'Raise Blood Potency one dot at a time, within the Generation limit.' }
       return checkBudget(purchase.to * 10)
   }
 }
@@ -227,7 +230,9 @@ export function evaluateStartingBuild(draft: StartingDraft, traits: TraitDraft, 
   const hasLingeringKiss = path.clanSlots.some(slot => slot.selectedPower?.id === 'lingering-kiss') || path.predatorSlot?.selectedPower?.id === 'lingering-kiss'
   const options = evaluateOptions(draft, path, hasLingeringKiss)
   const final = startExperience(traits, ledger, path, options)
-  const entries = draft.purchases.map(purchase => {
+  // Keep purchases in the draft when changing profiles. A zero-XP profile suspends the journal.
+  const purchases = path.profile.xp > 0 ? draft.purchases : []
+  const entries = purchases.map(purchase => {
     const quote = quotePurchase(final, purchase)
     if (!quote.issue && quote.cost !== undefined) applyPurchase(final, purchase, quote.cost)
     return { ...quote, label: purchaseLabel(purchase, includeCustomText), remaining: final.remaining }
@@ -239,7 +244,7 @@ export function evaluateStartingBuild(draft: StartingDraft, traits: TraitDraft, 
   const totalAdvantageDots = purchasedAdvantageDots + predatorAdvantage
   const xpAdvantageDots = purchasedAdvantageDots - options.advantageBudget.used
   return {
-    ...options, final, entries, predatorAdvantage, xpAdvantageDots, totalAdvantageDots,
+    ...options, final, entries, profile: path.profile, predatorAdvantage, xpAdvantageDots, totalAdvantageDots,
     generation: draft.generation, humanity: path.humanity.total,
     bloodPotency: final.bloodPotency, ...bloodEffects[final.bloodPotency],
   }

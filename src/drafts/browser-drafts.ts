@@ -1,4 +1,4 @@
-import { draftRuleset, draftSchemaVersion, isDraftSnapshot, type DraftSnapshot } from './draft-backup.ts'
+import { draftRuleset, draftSchemaVersionFor, isDraftSnapshot, type DraftSnapshot } from './draft-backup.ts'
 import { isRecord } from './draft-inputs.ts'
 
 export const draftLibraryKey = 'vtm-character-creator:drafts'
@@ -26,9 +26,10 @@ function isNamedDraft(value: unknown): value is NamedDraft {
 function parseLibrary(raw: string): DraftLibrary | undefined {
   try {
     const value: unknown = JSON.parse(raw)
-    if (!isRecord(value) || value.schemaVersion !== draftSchemaVersion || value.ruleset !== draftRuleset) return
+    if (!isRecord(value) || value.ruleset !== draftRuleset) return
     const { activeId, drafts } = value
     if (!Array.isArray(drafts) || !drafts.every(isNamedDraft) || new Set(drafts.map(draft => draft.id)).size !== drafts.length) return
+    if (value.schemaVersion !== draftSchemaVersionFor(drafts)) return
     if (activeId !== null && (typeof activeId !== 'string' || !drafts.some(draft => draft.id === activeId))) return
     return { activeId, drafts }
   } catch {
@@ -54,7 +55,7 @@ export function saveDraftLibrary(getStorage: GetStorage, library: DraftLibrary, 
     if (storage.getItem(draftLibraryKey) !== previous) {
       return { issue: 'Browser drafts changed or could not be read. Download your current draft before reloading.' }
     }
-    const saved = JSON.stringify({ schemaVersion: draftSchemaVersion, ruleset: draftRuleset, ...library })
+    const saved = JSON.stringify({ schemaVersion: draftSchemaVersionFor(library.drafts), ruleset: draftRuleset, ...library })
     storage.setItem(draftLibraryKey, saved)
     return { saved }
   } catch {

@@ -3,6 +3,7 @@ import {
   type ClanOption, type DisciplineId, type DisciplinePower, type DotGrant, type PredatorOption,
 } from '../catalog/clan-path.ts'
 import { skillIds } from '../catalog/traits.ts'
+import { ageProfiles, type AgeProfile } from './creation-profiles.ts'
 
 export const manualOptionId = 'manual'
 
@@ -116,7 +117,7 @@ export function predatorRestriction(clanId: string | undefined, predatorId: stri
   if (predatorId === 'farmer' && bloodPotency >= 3) return 'Farmer requires Blood Potency below 3.'
 }
 
-export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true) {
+export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true, profile: AgeProfile = ageProfiles.neonate) {
   const clan = draft.clan === manualOptionId ? manualClanOption(draft.manualClan) : coreClans.find(option => option.id === draft.clan)
   const twoDot = clan?.disciplines.find(id => id === draft.twoDotDiscipline)
   const oneDot = clan?.disciplines.find(id => id === draft.oneDotDiscipline && id !== twoDot)
@@ -132,8 +133,8 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true)
     }
   }
 
-  const predatorIssue = predatorRestriction(clan?.id, draft.predatorType)
-  const predator = clan && !predatorIssue ? (draft.predatorType === manualOptionId
+  const predatorIssue = profile.predatorAllowed ? predatorRestriction(clan?.id, draft.predatorType) : undefined
+  const predator = profile.predatorAllowed && clan && !predatorIssue ? (draft.predatorType === manualOptionId
     ? manualPredatorOption(draft.manualPredator)
     : corePredators.find(option => option.id === draft.predatorType)) : undefined
   const specialtyOption = predator?.specialties.find(option => option.skill === draft.predatorSpecialty)
@@ -185,12 +186,12 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true)
     total: totalRatings[discipline] ?? 0,
   }))
   return {
-    clan, twoDot, oneDot, clanSlots, predator, predatorIssue, predatorDisciplines, specialtyOption, grantedSpecialty,
+    profile, clan, twoDot, oneDot, clanSlots, predator, predatorIssue, predatorDisciplines, specialtyOption, grantedSpecialty,
     disciplineGrant, predatorSlot, ledger, advantages, flaws, grantChoices, reviews,
     clanFlaws: clan?.id === 'nosferatu' ? [{ name: 'Repulsive', dots: 2 }] : [],
     bloodPotencyChange: predator?.bloodPotencyChange ?? 0,
     humanity: { base: 7, adjustment: predator?.humanityChange ?? 0, total: 7 + (predator?.humanityChange ?? 0) },
     complete: clanSlots.length === 3 && clanSlots.every(slot => slot.selectedPower)
-      && Boolean(predatorSlot?.selectedPower && grantedSpecialty) && grantChoices.every(choice => choice.complete),
+      && (!profile.predatorAllowed || (Boolean(predatorSlot?.selectedPower && grantedSpecialty) && grantChoices.every(choice => choice.complete))),
   }
 }

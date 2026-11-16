@@ -4,7 +4,7 @@ import { advantageIds, startingAdvantages } from '@/catalog/starting-options'
 import { skillIds, traitLabel } from '@/catalog/traits'
 import { CatalogSelect } from '@/components/CatalogSelect'
 import { Card, CardContent } from '@/components/ui/card'
-import { attributeIds, neonate, purchaseLabel, quotePurchase, type evaluateStartingBuild, type Purchase } from '@/rules/starting-xp'
+import { attributeIds, purchaseLabel, quotePurchase, type evaluateStartingBuild, type Purchase } from '@/rules/starting-xp'
 import { specialtySkills } from '@/rules/trait-ledger'
 
 type Build = ReturnType<typeof evaluateStartingBuild>
@@ -52,7 +52,7 @@ function purchaseFor(kind: Purchase['kind'], target: string, name: string, state
       break
     }
     case 'blood-potency':
-      if (state.bloodPotency < neonate.maxBloodPotency) return { kind, to: state.bloodPotency === 1 ? 2 : 3 }
+      if (state.bloodPotency < state.maxBloodPotency) return { kind, to: state.bloodPotency === 1 ? 2 : 3 }
   }
 }
 
@@ -66,6 +66,15 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
   const [kind, setKind] = useState<Purchase['kind']>('skill')
   const [target, setTarget] = useState('')
   const [name, setName] = useState('')
+  if (build.profile.xp === 0) return (
+    <Card className="gap-0 py-0" role="region" aria-labelledby="starting-xp-heading">
+      <CardContent className="space-y-2 p-5 sm:p-7">
+        <h2 id="starting-xp-heading" className="text-2xl font-semibold tracking-tight">Starting XP</h2>
+        <p className="text-sm text-muted-foreground">Fledglings start with 0 XP. Core p. 140.</p>
+        {purchases.length > 0 && <p className="text-sm text-muted-foreground">Your starting XP purchases are paused for this profile.</p>}
+      </CardContent>
+    </Card>
+  )
   const purchase = purchaseFor(kind, target, name, build.final)
   const quote = purchase ? quotePurchase(build.final, purchase) : undefined
   const needsName = kind === 'specialty' || (purchase?.kind === 'skill' && purchase.to === 1 && specialtySkills.some(id => id === purchase.id))
@@ -83,7 +92,7 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
       <CardContent className="space-y-4 p-5 sm:p-7">
         <div>
           <h2 id="starting-xp-heading" className="text-2xl font-semibold tracking-tight">Starting XP</h2>
-          <p role="status" className="mt-1 text-sm text-muted-foreground">{build.final.remaining} / {neonate.xp} XP remaining</p>
+          <p role="status" className="mt-1 text-sm text-muted-foreground">{build.final.remaining} / {build.profile.xp} XP remaining</p>
         </div>
         <div className="grid items-end gap-3 rounded-lg border border-border p-3 sm:grid-cols-3">
           <label className="grid gap-1 text-sm">Purchase type

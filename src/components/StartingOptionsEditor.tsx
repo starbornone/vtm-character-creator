@@ -1,6 +1,6 @@
 import { advantageIds, flawIds, startingAdvantages, startingFlaws } from '@/catalog/starting-options'
 import { Card, CardContent } from '@/components/ui/card'
-import { neonate, type evaluateStartingBuild, type ManualStartingOption, type StartingDraft } from '@/rules/starting-xp'
+import type { evaluateStartingBuild, ManualStartingOption, StartingDraft } from '@/rules/starting-xp'
 
 type Build = ReturnType<typeof evaluateStartingBuild>
 
@@ -67,9 +67,9 @@ export function StartingOptionsEditor({ draft, build, onChange }: {
           <h2 id="starting-options-heading" className="text-2xl font-semibold tracking-tight">Advantages &amp; Flaws</h2>
           <label className="grid gap-1 text-sm">
             Generation
-            <select className="ledger-field" value={draft.generation ?? ''} onChange={event => onChange({ generation: neonate.generations.find(value => String(value) === event.target.value) })}>
+            <select className="ledger-field" value={draft.generation ?? ''} onChange={event => onChange({ generation: build.profile.generations.find(value => String(value) === event.target.value) })}>
               <option value="">Choose…</option>
-              {neonate.generations.map(value => <option key={value} value={value}>{value}th</option>)}
+              {build.profile.generations.map(value => <option key={value} value={value}>{value}th</option>)}
             </select>
           </label>
         </div>
