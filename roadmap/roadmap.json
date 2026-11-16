@@ -1,20 +1,14 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T22:04:21+11:00",
+  "updatedAt": "2026-11-16T22:32:02+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
     "status": "active",
-    "summary": "A browser-based Vampire: The Masquerade V5 creator with the named Core clans, Caitiff, Thin-bloods, an opt-in Player’s Guide pack, post-creation XP advancement, and reusable chronicle presets."
+    "summary": "A browser-based Vampire: The Masquerade V5 creator with the named Core clans, Caitiff, Thin-bloods, an opt-in Player’s Guide pack, post-creation XP advancement, reusable chronicle presets, and a searchable table reference."
   },
   "items": [
-    {
-      "id": "add-v5-table-reference",
-      "title": "Add a searchable V5 table reference",
-      "group": "Rules reference",
-      "notes": "Start with creation budgets, XP costs, Discipline prerequisites, and derived tracks in the supported rules. Use original summaries and pinned book and page references. Verify keyboard search, mobile use, and returning to the same draft and step."
-    },
     {
       "id": "add-character-relationship-map",
       "title": "Add a Relationship Map for one character",

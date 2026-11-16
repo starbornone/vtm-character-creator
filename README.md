@@ -6,6 +6,8 @@ Name a draft to autosave the character and resume at the last step in the same b
 
 Use [chronicle presets](docs/getting-started.md#reuse-chronicle-settings) to reuse a chronicle name, Tenets, and rule sources across drafts. Preview the changes before applying a preset.
 
+Open the [V5 table reference](docs/getting-started.md#look-up-v5-rules) from any creation step to search creation budgets, XP costs, Discipline prerequisites, and derived tracks.
+
 Once creation is complete, record awards and spend earned XP in the [XP Advancement Journal](docs/getting-started.md#advance-a-finished-character). The current sheet and Storyteller brief show advancement alongside starting XP. Browser drafts and JSON backups preserve the journal.
 
 Share a read-only build link with another player or Storyteller. The link carries creation choices and ratings while names, notes, and advancement stay in the draft. See [Share a mechanical build](docs/getting-started.md#share-a-mechanical-build).

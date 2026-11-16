@@ -31,6 +31,12 @@ Open another character draft and return to **Concept**. Choose the preset under 
 
 Named drafts autosave the applied values. A character’s JSON backup carries its chronicle name, Tenets, and rule sources. The reusable presets stay in the browser where you saved them.
 
+## Look up V5 rules
+
+Select **V5 table reference** in the header from any creation step. The search field receives focus automatically. Try a rule name, related words such as `Resilience Stamina`, or a printed page number such as `137`. Entries give a short explanation and their book and page references. The reference includes supported Player’s Guide power prerequisites and labels them with their source.
+
+Use **Tab** from the search field to reach and scroll the results with the keyboard. Select **Close** or press **Esc** to return to the same draft and step. The reference leaves unsaved edits available in the creator.
+
 ## Save and reopen browser drafts
 
 Expand **Browser drafts**, enter a **Draft name**, and select **Save draft**. Once named, the character and current step autosave as you work. Reload the page to resume the last open saved draft. Use **New draft** for another character, or choose a name under **Saved drafts** and select **Open draft** to resume that character at its own last step. Edit the draft name and select **Save draft** to rename it.

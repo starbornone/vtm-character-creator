@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T22:04:21+11:00",
+  "updatedAt": "2026-11-16T22:32:02+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -168,6 +168,13 @@
       "group": "Chronicle tools",
       "notes": "Added named browser-local presets for the chronicle name, Tenets, and enabled rule sources. The preview shows current and preset values before applying them. Verified cancellation, independent reuse in Mara and Rowan’s drafts, a narrow viewport, named-draft reload, and JSON backup restore as a third draft. Applied values use the existing draft fields.",
       "completedAt": "2026-11-16T22:04:21+11:00"
+    },
+    {
+      "id": "add-v5-table-reference",
+      "title": "Add a searchable V5 table reference",
+      "group": "Rules reference",
+      "notes": "Added a searchable dialog for creation budgets, XP costs, Discipline prerequisites, and derived tracks with book and page citations. Verified keyboard search by rule and page, focus return on Escape, scrolling at 390 px, layout at 320 px, and return to the same Relationships step with named and unsaved draft edits intact.",
+      "completedAt": "2026-11-16T22:32:02+11:00"
     }
   ]
 }
