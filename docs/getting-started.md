@@ -57,7 +57,7 @@ A supported pack enabled in a backup or link is active in its preview and saved 
 
 ## Choose options from the catalog
 
-Under **Clan & Predator Type**, use the search fields to filter the pickers by option name or source page. Caitiff and Thin-blood are dedicated options alongside the named clans. The picker shows eligibility restrictions. Once you choose a Predator Type, complete its Specialty, Discipline power, and any additional grant choices. Characters with Blood Sorcery can select an optional starting level-one Ritual.
+Under **Clan & Predator**, use the search fields to filter the pickers by option name or source page. Caitiff and Thin-blood are dedicated options alongside the named clans. The picker shows eligibility restrictions. Once you choose a Predator Type, complete its Specialty, Discipline power, and any additional grant choices. Characters with Blood Sorcery can select an optional starting level-one Ritual.
 
 Choose **Manual entry** in either picker for a table-specific clan or Predator Type using the same starting allocation. Enter its name and source or Storyteller note. In **Advantages & XP**, add manual Advantages or Flaws against the base budgets. The sheet shows those entries and their notes under **Storyteller Review**.
 
@@ -65,7 +65,7 @@ Choose **Manual entry** in either picker for a table-specific clan or Predator T
 
 In **Concept**, choose **Neonate** and enter Mara Vale, a former theater carpenter in *Last Call at the Lyric*, Embraced in 1998. Her Ambition is to secure a permanent home for the theater company. Her Desire is to find the missing stagehand tonight. Use **Continue** or the step navigation to move through the guide.
 
-Under **Clan & Predator Type**, choose Brujah and Alleycat. For Mara, put two clan dots in Presence and one in Potence. Choose Awe, Daunt, and Lethal Body. Give the Alleycat dot to Potence, choose Prowess, and select Brawl (Grappling). The ledger should show Presence 2, Potence 2, three dots of Criminal Contacts, and Humanity 6.
+Under **Clan & Predator**, choose Brujah and Alleycat. For Mara, put two clan dots in Presence and one in Potence. Choose Awe, Daunt, and Lethal Body. Give the Alleycat dot to Potence, choose Prowess, and select Brawl (Grappling). The ledger should show Presence 2, Potence 2, three dots of Criminal Contacts, and Humanity 6.
 
 In **Attributes & Skills**, assign ratings using the slots for the selected distribution. Brawl shows a bonus dot from Alleycat until you assign base dots to it. After you assign Brawl 3, the grant becomes Brawl (Grappling) in **Specialties**. Choose a rated Skill for the free Specialty and fill any first-dot Specialty slots that appear.
 
@@ -81,7 +81,7 @@ Open **Review & Print**. Mara’s sheet shows Health 6, Willpower 5, Humanity 6,
 
 ## Build and print Rowan Pike
 
-In **Concept**, choose **Fledgling**. Use [Rowan Pike’s fixture](v5-rules.md#rowan-pike-fledgling-fixture) to make a 12th-Generation Gangrel with Fortitude 2 and Protean 1. In **Clan & Predator Type**, complete the clan powers and continue directly to **Attributes & Skills**. In **Advantages & XP**, allocate the 7 Advantage and 2 Flaw dots. The starting XP section shows a budget of 0.
+In **Concept**, choose **Fledgling**. Use [Rowan Pike’s fixture](v5-rules.md#rowan-pike-fledgling-fixture) to make a 12th-Generation Gangrel with Fortitude 2 and Protean 1. In **Clan & Predator**, complete the clan powers and continue directly to **Attributes & Skills**. In **Advantages & XP**, allocate the 7 Advantage and 2 Flaw dots. The starting XP section shows a budget of 0.
 
 Complete **Relationships** and open **Review & Print**. Rowan’s sheet shows Health 8, Willpower 5, Humanity 7, and Blood Potency 1. Verify the Fledgling label and print the sheet. You can also save a named draft, reload at **Review & Print**, and restore a downloaded backup as a second draft.
 
@@ -93,13 +93,13 @@ Try **Neonate** in **Concept** and return to **Advantages & XP**. The guide flag
 
 ## Build Nessa Reed
 
-In **Concept**, choose **Neonate**, then select **Caitiff** under **Clan & Predator Type**. Follow the [Nessa Reed fixture](v5-rules.md#nessa-reed-caitiff-fixture) for the two free Discipline choices and Bagger’s Obfuscate grant. Under **Advantages & XP**, buy Presence 2 with Lingering Kiss for 12 XP and Drive 1 for 3 XP. To buy the first dot in a different Discipline, select its power and confirm the blood-tasting and learning requirements.
+In **Concept**, choose **Neonate**, then select **Caitiff** under **Clan & Predator**. Follow the [Nessa Reed fixture](v5-rules.md#nessa-reed-caitiff-fixture) for the two free Discipline choices and Bagger’s Obfuscate grant. Under **Advantages & XP**, buy Presence 2 with Lingering Kiss for 12 XP and Drive 1 for 3 XP. To buy the first dot in a different Discipline, select its power and confirm the blood-tasting and learning requirements.
 
 In **Review & Print**, check that the sheet shows Suspect as a separate Caitiff Flaw, 15 XP spent, and 0 XP remaining. Use **Print character sheet** to print it. Download the draft, then use **Choose JSON backup** to preview and restore a separate copy.
 
 ## Build Iris Calder
 
-In **Concept**, choose **Fledgling**. In **Clan & Predator Type**, select **Thin-blood**. If you arrive with another age selected, use **Set age to Fledgling**. Choose the two Merits and two Flaws from [Iris Calder’s fixture](v5-rules.md#iris-calder-thin-blood-fixture). Select Brujah for Clan Curse, Fortitude and Resilience for Discipline Affinity, and Fixatio and Haze for Thin-blood Alchemy.
+In **Concept**, choose **Fledgling**. In **Clan & Predator**, select **Thin-blood**. If you arrive with another age selected, use **Set age to Fledgling**. Choose the two Merits and two Flaws from [Iris Calder’s fixture](v5-rules.md#iris-calder-thin-blood-fixture). Select Brujah for Clan Curse, Fortitude and Resilience for Discipline Affinity, and Fixatio and Haze for Thin-blood Alchemy.
 
 Follow the fixture’s trait allocation and choose 15th Generation in **Advantages & XP**. Fill the regular 7 Advantage and 2 Flaw dots separately from the Thin-blood choices. Complete **Relationships**, then confirm Blood Potency 0, Fortitude 1, and the starting formula in **Review & Print**. Print the sheet and download a backup to restore as a new draft.
 

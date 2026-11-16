@@ -115,7 +115,7 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
           {guideSteps.map(option => {
             const Icon = stepIcons[option.id]
             return <li key={option.id}>
-              <button type="button" className="guide-button guide-action h-full w-full text-left" aria-current={option.id === step ? 'step' : undefined} onClick={() => goTo(option.id)}>
+              <button type="button" className="guide-button guide-action h-full w-full text-left max-[360px]:gap-1 max-[360px]:px-1" aria-current={option.id === step ? 'step' : undefined} onClick={() => goTo(option.id)}>
                 <Icon aria-hidden="true" />
                 {option.title}
               </button>

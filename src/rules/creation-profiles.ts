@@ -2,8 +2,8 @@ const standardClan = { generations: [12, 13], bloodPotency: 1, maxBloodPotency: 
 
 // Core pp. 136–137, 140, 149, 175, and 214.
 export const ageProfiles = {
-  neonate: { ...standardClan, name: 'Neonate', xp: 15, predatorAllowed: true },
   fledgling: { ...standardClan, name: 'Fledgling', xp: 0, predatorAllowed: false },
+  neonate: { ...standardClan, name: 'Neonate', xp: 15, predatorAllowed: true },
   ancilla: { name: 'Ancilla', generations: [10, 11], bloodPotency: 2, maxBloodPotency: 4, humanity: 6, advantages: 9, flaws: 4, xp: 35, predatorAllowed: true },
 } as const
 

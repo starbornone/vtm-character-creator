@@ -9,7 +9,7 @@ import { deriveTracks, editTraits, evaluateTraitLedger, initialTraitDraft, type 
 
 export const guideSteps = [
   { id: 'concept', title: 'Concept' },
-  { id: 'clan', title: 'Clan & Predator Type' },
+  { id: 'clan', title: 'Clan & Predator' },
   { id: 'traits', title: 'Attributes & Skills' },
   { id: 'starting', title: 'Advantages & XP' },
   { id: 'relationships', title: 'Relationships' },
