@@ -5,6 +5,7 @@ import { traitGroups } from '@/catalog/traits'
 import { AdvancementJournal } from '@/components/AdvancementJournal'
 import { AllocationEditor } from '@/components/AllocationEditor'
 import { CharacterSheet } from '@/components/CharacterSheet'
+import { ChroniclePresets } from '@/components/ChroniclePresets'
 import { ClanPathEditor } from '@/components/ClanPathEditor'
 import { DraftControls } from '@/components/DraftControls'
 import { ConceptEditor, RelationshipEditor } from '@/components/NarrativeEditors'
@@ -14,7 +15,7 @@ import { StartingExperienceEditor } from '@/components/StartingExperienceEditor'
 import { StartingOptionsEditor } from '@/components/StartingOptionsEditor'
 import { StorytellerBrief } from '@/components/StorytellerBrief'
 import { useBrowserDrafts } from '@/drafts/use-browser-drafts'
-import { evaluateCharacter, guideSteps, type GuideStep } from '@/rules/character-guide'
+import { chronicleSettings, evaluateCharacter, guideSteps, type GuideStep } from '@/rules/character-guide'
 import { skillDistributionIds, skillDistributions } from '@/rules/trait-ledger'
 import { buildLinkPrefix } from '@/sharing/build-link'
 
@@ -139,6 +140,8 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
             <p className="mt-2 text-sm text-muted-foreground">Core is always available. The Player’s Guide adds selected clans, Predator Types, and powers to this draft.</p>
             {sourceIssues.map(issue => <p key={issue} role="status" className="mt-2 text-sm text-rose-300">{issue}</p>)}
           </fieldset>
+          <ChroniclePresets key={id ?? 'unnamed'} settings={chronicleSettings(draft)}
+            onApply={settings => dispatch({ type: 'chronicle-preset', settings })} />
         </>}
         {step === 'traits' && <>
             <dl aria-live="polite" className="grid grid-cols-2 overflow-hidden rounded-xl border border-border bg-card">

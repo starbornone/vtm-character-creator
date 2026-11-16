@@ -36,6 +36,12 @@ export interface RelationshipDraft {
   convictions: { conviction: string; touchstone: string }[]
 }
 
+export interface ChronicleSettings {
+  chronicle: string
+  tenets: string
+  sourcePacks: string[]
+}
+
 export const maxConvictions = 3
 
 export interface CharacterDraft {
@@ -61,6 +67,7 @@ export const initialCharacterDraft: CharacterDraft = {
 export type CharacterAction = TraitAction
   | { type: 'players-guide'; enabled: boolean }
   | { type: 'age-profile'; profile: AgeProfileId }
+  | { type: 'chronicle-preset'; settings: ChronicleSettings }
   | { type: 'concept'; update: Partial<ConceptDraft> }
   | { type: 'relationships'; update: Partial<RelationshipDraft> }
   | { type: 'clan-path'; update: Partial<ClanPathDraft> }
@@ -75,6 +82,15 @@ export function editCharacter(draft: CharacterDraft, action: CharacterAction): C
       return { ...draft, sourcePacks: packs.length ? packs : undefined }
     }
     case 'age-profile': return { ...draft, ageProfile: action.profile }
+    case 'chronicle-preset': {
+      const { chronicle, tenets, sourcePacks } = action.settings
+      return {
+        ...draft,
+        concept: { ...draft.concept, chronicle },
+        relationships: { ...draft.relationships, tenets },
+        sourcePacks: sourcePacks.length ? [...sourcePacks] : undefined,
+      }
+    }
     case 'concept': return { ...draft, concept: { ...draft.concept, ...action.update } }
     case 'relationships': return { ...draft, relationships: { ...draft.relationships, ...action.update } }
     case 'clan-path': return { ...draft, clanPath: { ...draft.clanPath, ...action.update } }
@@ -82,6 +98,10 @@ export function editCharacter(draft: CharacterDraft, action: CharacterAction): C
     case 'advancement': return { ...draft, advancement: action.journal.awards.length || action.journal.purchases.length ? action.journal : undefined }
     default: return { ...draft, traits: editTraits(draft.traits, action) }
   }
+}
+
+export function chronicleSettings(draft: CharacterDraft): ChronicleSettings {
+  return { chronicle: draft.concept.chronicle, tenets: draft.relationships.tenets, sourcePacks: draft.sourcePacks ?? [] }
 }
 
 const conceptFields = [
