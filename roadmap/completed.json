@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T13:28:33+11:00",
+  "updatedAt": "2026-11-16T13:39:05+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -28,6 +28,13 @@
       "group": "Documentation",
       "notes": "The README links the contributor documentation, agent guidance, and shared roadmap contract.",
       "completedAt": "2026-11-16T13:28:33+11:00"
+    },
+    {
+      "id": "scaffold-vite-app",
+      "title": "Scaffold the Vite app",
+      "group": "Foundation",
+      "notes": "Set up React, TypeScript, Tailwind CSS, and shadcn/ui. Record the supported runtime and working install, dev, and verification commands in Getting started.",
+      "completedAt": "2026-11-16T13:39:05+11:00"
     }
   ]
 }

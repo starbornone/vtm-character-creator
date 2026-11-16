@@ -1,13 +1,27 @@
 # Getting started
 
-## Current checkout
+## Prerequisites
 
-The repository is in planning. Git and a Markdown editor are enough to work on the current files. Start with the [README](../README.md) and [project overview](overview.md), then open the first applicable item in the [ordered roadmap](../roadmap/roadmap.json). The [product plan](../PLAN.md) defines the first playable build.
+Use Node.js 24 or later with npm and a modern browser. Run commands from the repository root, which contains `package.json` and `package-lock.json`.
 
-The app scaffold, package manifest, and lockfile are pending. If an npm install or run command reports a missing `package.json`, confirm you are in the repository root and check whether the scaffold item has moved to [completed](../roadmap/completed.json). The scaffold will document the supported Node.js version, install command, run script, and local URL behavior here.
+## Install and run
 
-## First useful app check
+```sh
+npm ci
+npm run dev
+```
 
-Once the first playable build is available, open the URL printed by the dev server and start a character with the implemented clan and Predator Type. Assign Attributes and Skills, make the required choices, spend starting XP, and open print preview. The sheet should match the live ledger. Deliberately leave a required choice open and confirm review identifies the affected step.
+Open the **Local** URL printed by Vite. The dev server defaults to port `5173` and can use a different port if it is busy. The page should show the **Vampire: The Masquerade Character Creator** heading and a Fifth Edition development notice. Stop the server with Ctrl+C.
 
-For scaffold and verification expectations, see [Development](development.md). For draft, sharing, and rules decisions, see [Architecture](architecture.md).
+If npm reports a missing `package.json`, return to the repository root. For a registry or network error during `npm ci`, check access to the npm registry and retry. If your browser cannot connect, check that Vite is running and use its printed URL.
+
+## Verify the production build
+
+```sh
+npm run build
+npm run preview
+```
+
+The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the same starter screen. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
+
+See the [overview](overview.md) for first-release scope and [Development](development.md) for contributor checks.

@@ -1,6 +1,6 @@
 # Decision records
 
-These records describe the planned implementation. See the [roadmap](../roadmap/roadmap.json) for delivery status.
+The static app scaffold is implemented. The rules engine, draft storage, and transfer formats are planned. See the [roadmap](../roadmap/roadmap.json) for delivery status.
 
 ## 1 Static Vite app with shadcn/ui
 

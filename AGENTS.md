@@ -8,11 +8,11 @@ The Vampire: The Masquerade Character Creator (`vtm-character-creator`) is a pla
 
 - [README.md](README.md) is the human entry point. [PLAN.md](PLAN.md) describes the player workflow and release scope.
 - [docs/](docs/) holds contributor documentation and the roadmap contract. [roadmap/](roadmap/) holds the ordered backlog and history.
-- The app scaffold is pending. The [architecture](docs/architecture.md) describes the intended `src/rules/` and `src/catalog/` boundaries. Document the actual entry point when it lands.
+- [`src/main.tsx`](src/main.tsx) mounts the React app. [`src/App.tsx`](src/App.tsx) renders the starter screen. The [architecture](docs/architecture.md) describes the intended `src/rules/` and `src/catalog/` boundaries.
 
 ## Working agreements
 
-For this checkout, verify Markdown links, parse the three roadmap JSON files, and check changed files for whitespace errors. The [getting-started guide](docs/getting-started.md) will carry the actual install, run, and check commands when the app scaffold lands. Review [development](docs/development.md) before changing rules, catalogs, or transfer formats.
+Use `npm ci` to install dependencies, `npm run dev` to start Vite, and `npm run build` to type-check and produce the static build. For documentation and roadmap changes, verify relative links, parse the changed JSON, and check whitespace. See [Getting started](docs/getting-started.md) for setup and [Development](docs/development.md) for change-specific checks.
 
 ## Documentation
 

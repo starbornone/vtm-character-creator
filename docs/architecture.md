@@ -1,6 +1,8 @@
 # Architecture
 
-The implementation will be a static Vite app with React, TypeScript, Tailwind CSS, and shadcn/ui. The current repository holds the [product plan](../PLAN.md) and documentation. The following module paths describe the planned layout.
+The scaffold is a static Vite app with React, TypeScript, Tailwind CSS, and shadcn/ui. [`index.html`](../index.html) loads [`src/main.tsx`](../src/main.tsx), which mounts the starter screen in [`src/App.tsx`](../src/App.tsx). [`vite.config.ts`](../vite.config.ts) registers React and Tailwind and resolves `@/` to `src/`. The theme is in [`src/index.css`](../src/index.css), and [`components.json`](../components.json) points shadcn/ui to the same stylesheet and alias.
+
+The [product plan](../PLAN.md) describes the modules that follow the scaffold.
 
 | Area | Responsibility |
 | --- | --- |
