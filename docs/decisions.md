@@ -60,4 +60,12 @@ The brief shows evaluated mechanics and open rulings with generic labels for man
 
 **Consequences.** A profile switch can send the player back to **Advantages & XP**. Full drafts preserve choices for that review, including across reload and backup. Mechanical build links omit a paused Generation. Version 2 carries the ancilla profile and rank-four purchases while the established neonate and fledgling payloads still open.
 
+## 8 Core Caitiff rules with independent age profiles
+
+**Context.** Core pp. 107, 136–137, 148, and 244 give Caitiff free choice of starting Disciplines, a distinct XP rate, and conditions for learning a new Discipline. Caitiff start with Suspect and cannot buy positive Status at creation.
+
+**Decision.** Offer Caitiff alongside the named clans and reuse the chosen age profile. Allocate the free dots to two distinct Core Disciplines. Require the player to confirm the blood-tasting and other learning requirements when using XP for a Discipline's first dot. Record Suspect as a granted Flaw outside the base budget. Flag and exclude manual advantages or Predator grants labeled Status.
+
+**Consequences.** The Storyteller determines whether the fiction meets the learning requirements and whether to apply the Social penalty with Kindred who know the character is Caitiff. Version 3 carries Caitiff and the structured learning confirmation without adding notes to mechanical links. Earlier named-clan formats remain readable.
+
 See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the full flow.

@@ -56,7 +56,7 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 ## After the first release
 
 1. Extend standard-clan creation by age profile. The fledgling and ancilla paths are implemented and verified against [Rowan Pike](docs/v5-rules.md#rowan-pike-fledgling-fixture) and [Silas Ward](docs/v5-rules.md#silas-ward-ancilla-fixture). First-release neonate drafts, backups, and build links still resolve as neonates.
-2. Add Caitiff and Thin-blood creation as separate work items. Model age and clan or blood status independently, and cover supported combinations with hand-checked fixtures.
+2. Model age and clan or blood status independently. Caitiff creation is implemented and verified against [Nessa Reed](docs/v5-rules.md#nessa-reed-caitiff-fixture). Thin-blood creation is next.
 3. Add an opt-in Player’s Guide source pack. Start with a documented set of options and the prerequisites and grants needed to finish those builds. Keep the Core selection available as the default. [Renegade’s V5 Player’s Guide](https://renegadegamestudios.com/pdf-vampire-the-masquerade-roleplaying-game-5th-edition-players-guide/)
 4. Add an XP advancement journal that uses the finished character as its baseline and records earned and spent XP separately from creation.
 

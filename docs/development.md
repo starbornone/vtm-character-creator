@@ -33,6 +33,8 @@ For age profile changes, run the [creation profile tests](../tests/creation-prof
 
 For ancilla rules, run the [ancilla tests](../tests/ancilla-creation.test.ts). Use [Silas Ward](v5-rules.md#silas-ward-ancilla-fixture) to check a dependent rank-four purchase, move it earlier and back, then switch to Neonate and reload. Confirm that the unavailable Generation and over-budget choices are still visible. Switch through Fledgling and back to Ancilla, then check the restored sheet and its build link.
 
+For Caitiff rules, run the [Caitiff tests](../tests/caitiff-creation.test.ts). Build [Nessa Reed](v5-rules.md#nessa-reed-caitiff-fixture), verify the 12 XP upgrade and 6 XP first-dot quote, and try a manual positive Status entry. Compare the review sheet with print and restore a browser download under a second name.
+
 For catalog changes, run the [catalog tests](../tests/core-catalog.test.ts) and try a second path in the browser. Search by name and page, switch clans with a Predator Type already selected, and confirm that a manual entry’s source or note reaches **Storyteller Review**.
 
 For draft changes, run the [browser storage tests](../tests/browser-drafts.test.ts), save two characters at different steps, and reload after switching between them. Force a write failure on the local draft key and confirm that the last save persists, the current edits appear in the download, and a retry succeeds when writes resume.

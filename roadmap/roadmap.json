@@ -1,20 +1,14 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T17:43:53+11:00",
+  "updatedAt": "2026-11-16T17:55:45+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
     "status": "active",
-    "summary": "A browser-based Vampire: The Masquerade V5 creator for standard-clan fledglings, neonates, and ancillae with a live rules ledger, local drafts, and printable sheets."
+    "summary": "A browser-based Vampire: The Masquerade V5 creator for the named Core clans and Caitiff, with a live rules ledger, local drafts, and printable sheets."
   },
   "items": [
-    {
-      "id": "add-caitiff-creation",
-      "title": "Add Caitiff creation",
-      "group": "Creation profiles",
-      "notes": "Add Caitiff as a distinct choice alongside clan, with source-cited Discipline selection, costs, and restrictions. Verify a hand-checked Caitiff build through review, print, and backup restore."
-    },
     {
       "id": "add-thin-blood-creation",
       "title": "Add Thin-blood creation",

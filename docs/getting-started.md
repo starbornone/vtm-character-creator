@@ -49,7 +49,7 @@ Choose the narrative sections you want to share. Character identity and chronicl
 
 ## Choose options from the Core catalog
 
-Under **Clan & Predator Type**, use the search fields to filter the pickers by option name or source page. The picker shows eligibility restrictions. Once you choose a Predator Type, complete its Specialty, Discipline power, and any additional grant choices. Characters with Blood Sorcery can select an optional starting level-one Ritual.
+Under **Clan & Predator Type**, use the search fields to filter the pickers by option name or source page. Caitiff is a dedicated option alongside the named clans. The picker shows eligibility restrictions. Once you choose a Predator Type, complete its Specialty, Discipline power, and any additional grant choices. Characters with Blood Sorcery can select an optional starting level-one Ritual.
 
 Choose **Manual entry** in either picker for a table-specific clan or Predator Type using the same starting allocation. Enter its name and source or Storyteller note. In **Advantages & XP**, add manual Advantages or Flaws against the base budgets. The sheet shows those entries and their notes under **Storyteller Review**.
 
@@ -83,6 +83,12 @@ In **Concept**, choose **Ancilla**. Use the [Silas Ward fixture](v5-rules.md#sil
 
 Try **Neonate** in **Concept** and return to **Advantages & XP**. The guide flags Silas’s 11th Generation and the two extra dots in each base budget. Auspex 3 still fits the smaller XP budget and the Auspex 4 purchase stays in the journal. Choose **Ancilla** again to return to the completed sheet.
 
+## Build Nessa Reed
+
+In **Concept**, choose **Neonate**, then select **Caitiff** under **Clan & Predator Type**. Follow the [Nessa Reed fixture](v5-rules.md#nessa-reed-caitiff-fixture) for the two free Discipline choices and Bagger’s Obfuscate grant. Under **Advantages & XP**, buy Presence 2 with Lingering Kiss for 12 XP and Drive 1 for 3 XP. To buy the first dot in a different Discipline, select its power and confirm the blood-tasting and learning requirements.
+
+In **Review & Print**, check that the sheet shows Suspect as a separate Caitiff Flaw, 15 XP spent, and 0 XP remaining. Use **Print character sheet** to print it. Download the draft, then use **Choose JSON backup** to preview and restore a separate copy.
+
 ## Verify the production build
 
 ```sh
@@ -91,6 +97,6 @@ npm run build
 npm run preview
 ```
 
-The tests check the complete Mara, Rowan, and Silas sheets, age profile compatibility, core path and grant rules, browser draft storage, JSON backup round-trips, the build link allowlist, and narrative opt-ins for the Storyteller brief. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
+The tests check the complete Mara, Rowan, Silas, and Nessa sheets, age profile compatibility, core path and grant rules, browser draft storage, JSON backup round-trips, the build link allowlist, and narrative opt-ins for the Storyteller brief. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
 
 See the [overview](overview.md) for first-release scope and [Development](development.md) for contributor checks.

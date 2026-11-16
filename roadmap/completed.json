@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T17:43:53+11:00",
+  "updatedAt": "2026-11-16T17:55:45+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -133,6 +133,13 @@
       "group": "Creation profiles",
       "notes": "Added Core ancilla creation and rank-four Discipline powers. Built Silas Ward through browser review, checked the 35 XP journal in both orders, reloaded after switching to Neonate, paused Predator Type and XP under Fledgling, then restored the ancilla sheet and opened its mechanical link. Automated checks cover the hand calculations, prerequisites, Blood Potency, and draft and backup round-trips.",
       "completedAt": "2026-11-16T17:43:53+11:00"
+    },
+    {
+      "id": "add-caitiff-creation",
+      "title": "Add Caitiff creation",
+      "group": "Creation profiles",
+      "notes": "Added the Core Caitiff choice across all supported age profiles, including the Discipline allocation, six-times XP cost, learning confirmation, Suspect, and positive Status restriction. Verified Nessa Reed through browser review, a one-page US Letter print, JSON backup restore as a separate draft, and reload. Automated checks cover older drafts and Caitiff transfers.",
+      "completedAt": "2026-11-16T17:55:45+11:00"
     }
   ]
 }

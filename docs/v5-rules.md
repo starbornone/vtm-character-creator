@@ -33,7 +33,7 @@ The ten Predator Types are Alleycat, Bagger, Blood Leech, Cleaver, Consensualist
 | Scene Queen | Choose Disliked outside the scene or Prey Exclusion for another scene. | p. 178 |
 | Nosferatu | The Bane supplies Repulsive outside the base Flaw budget. The sheet flags the Siren’s Beautiful grant for Storyteller review and excludes it from the total. | pp. 85, 178–179 |
 
-Manual options record a source or table note. The evaluator applies the supported starting dot and grant structure and exposes the entry for Storyteller review. The clan catalog serves standard-clan fledglings, neonates, and ancillae. The Predator catalog is available to neonates and ancillae. Caitiff, Thin-bloods, and other age profiles have separate starting rules.
+Manual options record a source or table note. The evaluator applies the supported starting dot and grant structure and exposes the entry for Storyteller review. The clan picker includes Caitiff alongside the named clans. Each works with the fledgling, neonate, and ancilla profiles. The Predator catalog is available to neonates and ancillae. Thin-blood creation is a separate path.
 
 ## Hand-checked fixture
 
@@ -74,7 +74,7 @@ Spark of Rage requires both Potence 3 and Presence 3. Selecting both Lingering K
 
 ### Ordered starting XP
 
-The starting XP editor supports Attribute dots, Skill dots, Specialties, Discipline dots with a power, and the listed Advantages. Each Attribute or clan Discipline dot costs five times the new rating. An out-of-clan Discipline already granted by the Predator Type costs seven times the new rating. A Skill dot costs three times the new rating, a Specialty costs 3 XP, and an Advantage costs 3 XP per dot added. Increasing Blood Potency costs ten times the new rating, above the neonate’s 15 XP budget. Core pp. 130, 137, 214, 244.
+The starting XP editor supports Attribute dots, Skill dots, Specialties, Discipline dots with a power, and the listed Advantages. Each Attribute or clan Discipline dot costs five times the new rating. For a named clan, an out-of-clan Discipline already granted by the Predator Type costs seven times the new rating. For Caitiff, every Discipline dot costs six times the new rating. A Skill dot costs three times the new rating, a Specialty costs 3 XP, and an Advantage costs 3 XP per dot added. Increasing Blood Potency costs ten times the new rating, above the neonate’s 15 XP budget. Core pp. 130, 137, 214, 244.
 
 | Purchase | New rating | XP cost | XP remaining |
 | --- | ---: | ---: | ---: |
@@ -129,3 +129,31 @@ Silas Ward is an 11th-Generation Toreador night archivist in *The Uncatalogued C
 Moving Auspex 4 to the top of the journal skips that purchase as ineligible, then applies Auspex 3. Returning the purchases to their original order spends all 35 XP and restores Auspex 4. Under Neonate, Silas’s 11th Generation becomes inactive, both dot budgets are two over, and only the 15 XP purchase applies. Switching back to Ancilla restores the original result when those saved choices are still present.
 
 The [fixture](../tests/fixtures/silas-ward.ts) and [ancilla tests](../tests/ancilla-creation.test.ts) cover the totals, XP replay and power prerequisites, profile switches, and transfers. Browser verification built Silas from Concept through **Review & Print**, reordered the journal, reloaded after switching to Neonate, paused grants and purchases under Fledgling, returned to Ancilla, and opened the read-only link.
+
+## Nessa Reed Caitiff fixture
+
+| Rule | Starting behavior | Core reference |
+| --- | --- | --- |
+| Free Discipline dots | Choose any two distinct Core Disciplines. Put two dots in one and one dot in the other. Choose one eligible power per dot. | pp. 136, 148, 244 |
+| Discipline XP | Pay six times the new rating for every Discipline, including any grant from a Predator Type. For the first purchased dot in a new Discipline, confirm that the character has tasted a wielder’s blood and meets the normal learning requirements. | pp. 107, 137, 244 |
+| Clan traits | Caitiff have no shared clan Bane or Compulsion. Suspect gives one Flaw dot outside the age profile’s base Flaw budget. A Storyteller may apply a one- or two-die Social test penalty with Kindred who know the character is Caitiff. | pp. 107, 210–211, 194 |
+| Positive Status | Caitiff cannot purchase positive Status at creation. The guide excludes manual advantages and Predator grants labeled Status. | pp. 107, 194 |
+| Predator eligibility | Apply the chosen age profile’s rules. Caitiff may choose Bagger or Osiris for their other eligible Discipline. Their Blood Sorcery grants are reserved for Tremere. Caitiff can still select Blood Sorcery among the two free starting Disciplines. | pp. 148–149, 175–177 |
+
+Nessa Reed is a 13th-Generation Caitiff neonate and night-shift locksmith in *Keys to the Floodgate*, Embraced in 2006. Her Ambition is to keep a refuge open to the clanless and her Desire is to find the owner of the brass key. Her Chronicle Tenet is to leave a way out for those in danger. Her Conviction “Keep your doors open to the desperate” is tied to Mae Bell, a living shelter coordinator.
+
+| Category | Choices and expected results |
+| --- | --- |
+| Attributes | Strength 2, Dexterity 2, Stamina 3, Charisma 3, Manipulation 2, Composure 2, Intelligence 1, Wits 4, Resolve 3. |
+| Balanced Skills | 3 in Awareness, Stealth, and Streetwise. 2 in Athletics, Insight, Larceny, Persuasion, and Subterfuge. 1 in Animal Ken, Brawl, Etiquette, Investigation, Medicine, Occult, and Survival. All others start at 0. |
+| Free Discipline dots | Fortitude 2 with Resilience and Toughness, and Presence 1 with Awe (Core pp. 258, 267). |
+| Specialties and Predator grant | Larceny (Safecracking) is the free Specialty. Bagger grants Streetwise (Black Market), Obfuscate 1 with Cloak of Shadows, Iron Gullet 3, and Enemy 2 (Core pp. 176, 261). |
+| Base Advantages and Flaws | Haven 2 + Mask 2 + Resources 3 = 7 Advantage dots. Stake Bait fills the 2-dot base Flaw budget. Adding Bagger and Suspect yields 10 total Advantage and 5 total Flaw dots. |
+| Final tracks | Health 8 (Stamina 3 + 3 + Fortitude 2 from Resilience), Willpower 5 (Composure 2 + Resolve 3), Humanity 7, Blood Potency 1, Bane Severity 2, and two Blood Surge dice. |
+
+| XP purchase | Cost | XP left |
+| --- | ---: | ---: |
+| Presence 1 → 2, Lingering Kiss (Core p. 267) | 12 | 3 |
+| Drive 0 → 1 | 3 | 0 |
+
+The [fixture](../tests/fixtures/nessa-reed.ts) and [Caitiff tests](../tests/caitiff-creation.test.ts) verify the totals, Discipline eligibility and XP costs, Status restriction, and transfers. In the browser, Nessa’s review matched the one-page US Letter print and a restored copy of the downloaded JSON. The restored copy retained the completed sheet after reload.
