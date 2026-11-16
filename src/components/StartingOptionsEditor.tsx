@@ -109,6 +109,7 @@ export function StartingOptionsEditor({ draft, build, onChange }: {
           <fieldset className="min-w-0 space-y-2 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Base Flaws</legend>
             <BudgetStatus budget={build.flawBudget} />
+            {build.isCaitiff && <p className="text-sm text-muted-foreground">Suspect adds 1 Flaw dot outside the base budget. Caitiff cannot purchase positive Status. Core pp. 107, 194.</p>}
             {flawIds.map(id => {
               const flaw = startingFlaws[id]
               const issue = build.flaws.find(entry => entry.id === id)?.issue

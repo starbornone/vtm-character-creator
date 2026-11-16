@@ -23,7 +23,7 @@ function targets(kind: Purchase['kind'], state: Build['final']): { id: string; l
   }
 }
 
-function purchaseFor(kind: Purchase['kind'], target: string, name: string, state: Build['final']): Purchase | undefined {
+function purchaseFor(kind: Purchase['kind'], target: string, name: string, state: Build['final'], confirmedLearning: boolean): Purchase | undefined {
   switch (kind) {
     case 'skill': {
       const id = skillIds.find(id => id === target)
@@ -42,7 +42,10 @@ function purchaseFor(kind: Purchase['kind'], target: string, name: string, state
     }
     case 'discipline': {
       const id = disciplineIds.find(id => id === target)
-      if (id) return { kind, id, to: (state.disciplines[id] ?? 0) + 1, power: name }
+      if (id) {
+        const to = (state.disciplines[id] ?? 0) + 1
+        return { kind, id, to, power: name, ...(state.isCaitiff && to === 1 && confirmedLearning ? { caitiffLearning: true } : {}) }
+      }
       break
     }
     case 'advantage': {
@@ -68,6 +71,7 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
   const [kind, setKind] = useState<Purchase['kind']>('skill')
   const [target, setTarget] = useState('')
   const [name, setName] = useState('')
+  const [confirmedLearning, setConfirmedLearning] = useState(false)
   if (build.profile.xp === 0) return (
     <Card className="gap-0 py-0" role="region" aria-labelledby="starting-xp-heading">
       <CardContent className="space-y-2 p-5 sm:p-7">
@@ -77,7 +81,7 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
       </CardContent>
     </Card>
   )
-  const purchase = purchaseFor(kind, target, name, build.final)
+  const purchase = purchaseFor(kind, target, name, build.final, confirmedLearning)
   const quote = purchase ? quotePurchase(build.final, purchase) : undefined
   const needsName = kind === 'specialty' || (purchase?.kind === 'skill' && purchase.to === 1 && specialtySkills.some(id => id === purchase.id))
   const powers = purchase?.kind === 'discipline' ? disciplinePowers[purchase.id].filter(power => power.level <= purchase.to && !build.final.powers.includes(power.id)) : []
@@ -95,6 +99,7 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
         <div>
           <h2 id="starting-xp-heading" className="text-2xl font-semibold tracking-tight">Starting XP</h2>
           <p role="status" className="mt-1 text-sm text-muted-foreground">{build.final.remaining} / {build.profile.xp} XP remaining</p>
+          {build.isCaitiff && <p className="mt-1 text-sm text-muted-foreground">Caitiff Discipline dots cost 6 XP times the new rating. Core pp. 107, 137.</p>}
         </div>
         <div className="grid items-end gap-3 rounded-lg border border-border p-3 sm:grid-cols-3">
           <label className="grid gap-1 text-sm">Purchase type
@@ -103,11 +108,12 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
               if (selected) setKind(selected)
               setTarget('')
               setName('')
+              setConfirmedLearning(false)
             }}>
               {kinds.map(id => <option key={id} value={id}>{categories[id]}</option>)}
             </select>
           </label>
-          {kind !== 'blood-potency' && <CatalogSelect key={kind} label="Purchase target" value={target} choices={targets(kind, build.final)} searchable={kind === 'skill' || kind === 'specialty'} onChange={value => { setTarget(value); setName('') }} />}
+          {kind !== 'blood-potency' && <CatalogSelect key={kind} label="Purchase target" value={target} choices={targets(kind, build.final)} searchable={kind === 'skill' || kind === 'specialty'} onChange={value => { setTarget(value); setName(''); setConfirmedLearning(false) }} />}
           {needsName && <label className="grid gap-1 text-sm">{kind === 'skill' ? 'Granted first-dot Specialty' : 'Purchased Specialty name'}
             <input className="ledger-field" value={name} onChange={event => setName(event.target.value)} />
           </label>}
@@ -117,10 +123,15 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
               {powers.map(power => <option key={power.id} value={power.id}>{power.name} · Core p. {power.page}</option>)}
             </select>
           </label>}
+          {build.isCaitiff && purchase?.kind === 'discipline' && purchase.to === 1 && <label className="flex items-center gap-2 text-sm sm:col-span-3">
+            <input type="checkbox" className="size-4 accent-rose-300" checked={confirmedLearning} onChange={event => setConfirmedLearning(event.target.checked)} />
+            The character has tasted a wielder’s blood and meets the learning requirements.
+          </label>}
           <div className="flex flex-wrap items-center gap-3 sm:col-span-3">
             <button type="button" className={actionClass} disabled={!purchase || Boolean(quote?.issue)} onClick={() => {
               if (purchase && !quote?.issue) onChange([...purchases, purchase])
               setName('')
+              setConfirmedLearning(false)
             }}>Add purchase</button>
             <p className="text-sm text-muted-foreground" role="status">
               {purchase && quote?.cost !== undefined && `${purchaseLabel(purchase)} · ${quote.cost} XP. `}{quote?.issue ?? (!purchase && target ? 'This option is already at its maximum.' : '')}

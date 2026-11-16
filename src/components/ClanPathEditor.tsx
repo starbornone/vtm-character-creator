@@ -1,4 +1,4 @@
-import { coreClans, corePredators, disciplineIds, disciplines, startingRituals, type DisciplineId, type DotGrant } from '@/catalog/clan-path'
+import { clanChoices, corePredators, disciplineIds, disciplines, startingRituals, type DisciplineId, type DotGrant } from '@/catalog/clan-path'
 import { traitLabel } from '@/catalog/traits'
 import { manualOptionId, predatorRestriction, type ClanPathDraft, type evaluateClanPath, type ManualClan, type ManualPredator, type PowerSlot } from '@/rules/clan-path'
 import type { evaluateTraitLedger } from '@/rules/trait-ledger'
@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 type Path = ReturnType<typeof evaluateClanPath>
 
 const manualChoice = { id: manualOptionId, label: 'Manual entry', source: 'Storyteller review' }
-const clanChoices = [...coreClans.map(clan => ({ id: clan.id, label: clan.name, source: clan.source })), manualChoice]
+const ancestryChoices = [...clanChoices.map(clan => ({ id: clan.id, label: clan.name, source: clan.source })), manualChoice]
 const disciplineChoices = (ids: readonly DisciplineId[], excluded?: string) => ids.map(id => ({ id, label: disciplines[id], disabled: id === excluded }))
 const ritualChoices = startingRituals.map(ritual => ({ id: ritual.id, label: ritual.name, source: `Core p. ${ritual.page}` }))
 const emptyClan: ManualClan = { name: '', source: '', disciplines: [], bane: '', compulsion: '' }
@@ -122,7 +122,7 @@ interface ClanPathEditorProps {
 }
 
 export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onChange }: ClanPathEditorProps) {
-  const { clan, predator, clanSlots, predatorSlot, humanity, ledger } = path
+  const { clan, isCaitiff, predator, clanSlots, predatorSlot, humanity, ledger } = path
   const { predatorAllowed } = path.profile
   const grantLabel = predatorGrant && (predatorGrant.kind === 'skill-dot'
     ? `${traitLabel(predatorGrant.skill)} +1 · Skill dot while the Skill is unrated`
@@ -152,12 +152,14 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
         </div>
         <div className="grid items-start gap-5 lg:grid-cols-2">
           <fieldset className="min-w-0 space-y-3 rounded-lg border border-border px-4 pb-4">
-            <legend className="px-1.5 text-sm font-semibold">Clan</legend>
-            <CatalogSelect searchable label="Starting clan" value={draft.clan} choices={clanChoices} onChange={clan => onChange({ clan })} />
+            <legend className="px-1.5 text-sm font-semibold">Clan or Caitiff</legend>
+            <CatalogSelect searchable label="Starting clan" value={draft.clan} choices={ancestryChoices} onChange={clan => onChange({ clan })} />
             {draft.clan === manualOptionId && <ManualClanFields entry={draft.manualClan ?? emptyClan} onChange={manualClan => onChange({ manualClan })} />}
             {clan && (
               <>
-                <p className="text-sm text-muted-foreground">Bane · {clan.bane || '—'}<br />Compulsion · {clan.compulsion || '—'}</p>
+                {isCaitiff
+                  ? <p className="text-sm text-muted-foreground">Choose any two Core Disciplines. Caitiff have no shared clan Bane or Compulsion and start with Suspect. The Storyteller may apply a Social test penalty with Kindred who know you are Caitiff.</p>
+                  : <p className="text-sm text-muted-foreground">Bane · {clan.bane || '—'}<br />Compulsion · {clan.compulsion || '—'}</p>}
                 <p className="text-xs text-muted-foreground">{clan.source}</p>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <CatalogSelect label="Two-dot Discipline" value={draft.twoDotDiscipline} choices={disciplineChoices(clan.disciplines, draft.oneDotDiscipline)} onChange={twoDotDiscipline => onChange({ twoDotDiscipline })} />
@@ -193,7 +195,7 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
                 {path.specialtyOption?.custom && <TextField label="Predator Specialty name" value={draft.predatorSpecialtyName ?? ''} onChange={predatorSpecialtyName => onChange({ predatorSpecialtyName })} />}
                 <p className="text-xs text-muted-foreground">As you assign Skills, this grant updates to a Specialty for a rated Skill or a bonus dot for an unrated Skill.</p>
                 <CatalogSelect label="Predator Discipline" value={draft.predatorDiscipline} choices={disciplineChoices(path.predatorDisciplines)} onChange={predatorDiscipline => onChange({ predatorDiscipline })} />
-                {path.predatorDisciplines.includes(draft.predatorDiscipline as DisciplineId) && !predatorSlot && <p className="text-sm text-muted-foreground">Assign both clan Disciplines to determine the granted power’s rank.</p>}
+                {path.predatorDisciplines.includes(draft.predatorDiscipline as DisciplineId) && !predatorSlot && <p className="text-sm text-muted-foreground">Assign both starting Disciplines to determine the granted power’s rank.</p>}
                 {predatorSlot && <PowerChoice
                   slot={predatorSlot}
                   label={`${predator.name} ${disciplines[predatorSlot.discipline]} power for dot ${predatorSlot.rank}`}
@@ -219,12 +221,12 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
           {path.reviews.map(note => <li key={note}>{note}</li>)}
         </ul>}
         {clan && <dl aria-label="Discipline totals" className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-          {ledger.map(row => {
+          {ledger.filter(row => !isCaitiff || row.total > 0 || finalRatings[row.discipline]).map(row => {
             const total = finalRatings[row.discipline] ?? row.total
             const xpDots = total - row.total
             return <div className="rounded-lg bg-background/60 px-3 py-2" key={row.discipline}>
               <dt className="font-medium">{disciplines[row.discipline]}</dt>
-              <dd className="mt-0.5 text-sm text-muted-foreground">{total} total · {clan.name} {row.clanDots}{predatorAllowed && ` · ${predator?.name ?? 'Predator Type'} ${row.predatorDots}`}{xpDots > 0 && ` · XP +${xpDots}`}</dd>
+              <dd className="mt-0.5 text-sm text-muted-foreground">{total} total · {isCaitiff ? 'Base' : clan.name} {row.clanDots}{predatorAllowed && ` · ${predator?.name ?? 'Predator Type'} ${row.predatorDots}`}{xpDots > 0 && ` · XP +${xpDots}`}</dd>
             </div>
           })}
         </dl>}
