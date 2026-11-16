@@ -60,7 +60,12 @@ export function App() {
         </label>
       </AllocationEditor>
       <SpecialtyEditor draft={draft} specialties={specialties} dispatch={dispatch} />
-      <p className="text-sm text-muted-foreground">V5 Core Rulebook, pp. 136, 155–171</p>
+      <footer className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-border pt-4 text-sm text-muted-foreground">
+        <a className="text-foreground underline underline-offset-4 hover:text-rose-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-rose-300" href="https://astralarchives.games/">
+          Return to Astral Archives
+        </a>
+        <p>V5 Core Rulebook, pp. 136, 155–171</p>
+      </footer>
     </main>
   )
 }

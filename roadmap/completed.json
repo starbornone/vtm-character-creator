@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T14:03:51+11:00",
+  "updatedAt": "2026-11-16T14:08:03+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -49,6 +49,13 @@
       "group": "Rules",
       "notes": "Evaluate dot distributions, Specialties, Health, and Willpower and expose the available slots and sources of each total.",
       "completedAt": "2026-11-16T14:03:51+11:00"
+    },
+    {
+      "id": "add-app-favicon",
+      "title": "Add the app favicon",
+      "group": "Foundation",
+      "notes": "Add a Vampire-themed SVG icon and verify that the production page references it.",
+      "completedAt": "2026-11-16T14:08:03+11:00"
     }
   ]
 }
