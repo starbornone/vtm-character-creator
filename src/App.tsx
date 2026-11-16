@@ -9,6 +9,7 @@ import { ShareBuildControls, SharedBuild } from '@/components/SharedBuild'
 import { SpecialtyEditor } from '@/components/SpecialtyEditor'
 import { StartingExperienceEditor } from '@/components/StartingExperienceEditor'
 import { StartingOptionsEditor } from '@/components/StartingOptionsEditor'
+import { StorytellerBrief } from '@/components/StorytellerBrief'
 import { useBrowserDrafts } from '@/drafts/use-browser-drafts'
 import { evaluateCharacter, guideSteps, type GuideStep } from '@/rules/character-guide'
 import { skillDistributionIds, skillDistributions } from '@/rules/trait-ledger'
@@ -173,6 +174,7 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
               <button type="button" className="guide-button guide-button-primary" onClick={() => window.print()}>Print character sheet</button>
             </div>
             <ShareBuildControls key={id ?? 'unnamed'} draft={draft} />
+            <StorytellerBrief key={`brief-${id ?? 'unnamed'}`} draft={draft} />
             {openSteps.length > 0 && <ul aria-label="Open choices" className="grid gap-3 sm:grid-cols-2">
               {openSteps.map(option => <li key={option.id} className="rounded-lg border border-border px-3 py-2">
                 <button type="button" className="font-medium text-rose-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-rose-300" onClick={() => goTo(option.id)}>{option.title}</button>

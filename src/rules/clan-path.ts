@@ -116,7 +116,7 @@ export function predatorRestriction(clanId: string | undefined, predatorId: stri
   if (predatorId === 'farmer' && bloodPotency >= 3) return 'Farmer requires Blood Potency below 3.'
 }
 
-export function evaluateClanPath(draft: ClanPathDraft) {
+export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true) {
   const clan = draft.clan === manualOptionId ? manualClanOption(draft.manualClan) : coreClans.find(option => option.id === draft.clan)
   const twoDot = clan?.disciplines.find(id => id === draft.twoDotDiscipline)
   const oneDot = clan?.disciplines.find(id => id === draft.oneDotDiscipline && id !== twoDot)
@@ -152,8 +152,8 @@ export function evaluateClanPath(draft: ClanPathDraft) {
   }
 
   const reviews: string[] = []
-  if (clan?.id === manualOptionId) reviews.push(`Manual clan: ${clan.name} (${clan.source}).`)
-  if (predator?.id === manualOptionId) reviews.push(`Manual Predator Type: ${predator.name} (${predator.source}).`)
+  if (clan?.id === manualOptionId) reviews.push(includeCustomText ? `Manual clan: ${clan.name} (${clan.source}).` : 'Review the manual clan with the Storyteller.')
+  if (predator?.id === manualOptionId) reviews.push(includeCustomText ? `Manual Predator Type: ${predator.name} (${predator.source}).` : 'Review the manual Predator Type with the Storyteller.')
   const advantages = [...(predator?.advantages ?? [])]
   const flaws = [...(predator?.flaws ?? [])]
   if (clan?.id === 'nosferatu' && predator?.id === 'siren') {

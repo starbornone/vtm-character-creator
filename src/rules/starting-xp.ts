@@ -141,11 +141,11 @@ function startExperience(traits: TraitDraft, ledger: TraitLedger, path: ClanPath
   }
 }
 
-export function purchaseLabel(purchase: Purchase) {
+export function purchaseLabel(purchase: Purchase, includeCustomText = true) {
   switch (purchase.kind) {
-    case 'specialty': return `${traitLabel(purchase.id)} (${purchase.name.trim()})`
+    case 'specialty': return includeCustomText ? `${traitLabel(purchase.id)} (${purchase.name.trim()})` : `${traitLabel(purchase.id)} Specialty`
     case 'attribute': return `${traitLabel(purchase.id)} ${purchase.to}`
-    case 'skill': return `${traitLabel(purchase.id)} ${purchase.to}${purchase.to === 1 && purchase.specialty?.trim() ? ` · First-dot Specialty ${purchase.specialty.trim()}` : ''}`
+    case 'skill': return `${traitLabel(purchase.id)} ${purchase.to}${purchase.to === 1 && purchase.specialty?.trim() ? ` · First-dot Specialty${includeCustomText ? ` ${purchase.specialty.trim()}` : ''}` : ''}`
     case 'discipline': return `${disciplines[purchase.id]} ${purchase.to} · ${disciplinePowers[purchase.id].find(power => power.id === purchase.power)?.name ?? 'Choose a power'}`
     case 'advantage': return `${startingAdvantages[purchase.id].name} ${purchase.to}`
     case 'blood-potency': return `Blood Potency ${purchase.to}`
@@ -223,14 +223,14 @@ function applyPurchase(state: ExperienceState, purchase: Purchase, cost: number)
   }
 }
 
-export function evaluateStartingBuild(draft: StartingDraft, traits: TraitDraft, ledger: TraitLedger, path: ClanPath) {
+export function evaluateStartingBuild(draft: StartingDraft, traits: TraitDraft, ledger: TraitLedger, path: ClanPath, includeCustomText = true) {
   const hasLingeringKiss = path.clanSlots.some(slot => slot.selectedPower?.id === 'lingering-kiss') || path.predatorSlot?.selectedPower?.id === 'lingering-kiss'
   const options = evaluateOptions(draft, path, hasLingeringKiss)
   const final = startExperience(traits, ledger, path, options)
   const entries = draft.purchases.map(purchase => {
     const quote = quotePurchase(final, purchase)
     if (!quote.issue && quote.cost !== undefined) applyPurchase(final, purchase, quote.cost)
-    return { ...quote, label: purchaseLabel(purchase), remaining: final.remaining }
+    return { ...quote, label: purchaseLabel(purchase, includeCustomText), remaining: final.remaining }
   })
   const predatorAdvantage = path.advantages.reduce((sum, grant) => sum + grant.dots, 0)
   const trackedGrants = Object.values(options.grantedAdvantages).reduce((sum, dots) => sum + dots, 0)

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { editCharacter, initialCharacterDraft, type CharacterAction, type GuideStep } from '../rules/character-guide.ts'
+import { downloadTextFile } from '../sharing/download-text.ts'
 import {
   appendRestoredDraft, browserStorage, draftNameError, loadDraftLibrary, saveDraftLibrary, withSavedDraft,
   type DraftLibrary, type NamedDraft,
@@ -100,14 +101,8 @@ export function useBrowserDrafts() {
   function download() {
     const { open } = latest.current
     const name = open.name || open.character.concept.name.trim() || 'Untitled draft'
-    const file = new Blob([serializeDraftDownload({ name, step: open.step, character: open.character })], { type: 'application/json' })
-    const url = URL.createObjectURL(file)
-    const link = document.createElement('a')
     const stem = name.replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '').slice(0, 80)
-    link.href = url
-    link.download = `${stem || 'character'}-draft.json`
-    link.click()
-    setTimeout(() => URL.revokeObjectURL(url), 1000)
+    downloadTextFile(serializeDraftDownload({ name, step: open.step, character: open.character }), `${stem || 'character'}-draft.json`, 'application/json')
   }
 
   return { ...session, dispatch, goTo, save, switchDraft, download, restore }

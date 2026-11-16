@@ -74,10 +74,10 @@ const conceptFields = [
   { key: 'desire', label: 'Desire' },
 ] as const
 
-export function evaluateCharacter(draft: CharacterDraft) {
-  const path = evaluateClanPath(draft.clanPath)
+export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = true } = {}) {
+  const path = evaluateClanPath(draft.clanPath, includeCustomText)
   const traits = evaluateTraitLedger(draft.traits, path.grantedSpecialty)
-  const starting = evaluateStartingBuild(draft.starting, draft.traits, traits, path)
+  const starting = evaluateStartingBuild(draft.starting, draft.traits, traits, path, includeCustomText)
   const baseTracks = deriveTracks(starting.final.attributes)
   const resilience = starting.final.powers.includes('resilience') ? starting.final.disciplines.fortitude ?? 0 : 0
   const tracks = { ...baseTracks, health: {
@@ -120,26 +120,35 @@ export function evaluateCharacter(draft: CharacterDraft) {
   const { final } = starting
   const ritual = final.disciplines['blood-sorcery'] ? startingRituals.find(option => option.id === draft.clanPath.ritual) : undefined
   const manualOptions = starting.manualOptions.filter(option => !option.issue)
+  const hideClanText = !includeCustomText && path.clan?.id === manualOptionId
+  const hidePredatorText = !includeCustomText && path.predator?.id === manualOptionId
+  const predatorName = hidePredatorText ? 'Manual Predator Type' : path.predator?.name
+  const fixedSpecialty = !path.specialtyOption?.custom && traits.specialties.predatorGrant?.kind === 'specialty'
+    ? traits.specialties.predatorGrant : undefined
   const sheet = {
     identity: {
       name: draft.concept.name.trim(), concept: draft.concept.concept.trim(), chronicle: draft.concept.chronicle.trim(),
       embraced: draft.concept.embraced.trim(), ambition: draft.concept.ambition.trim(), desire: draft.concept.desire.trim(),
-      clan: path.clan?.name, predator: path.predator?.name, generation: starting.generation,
+      clan: hideClanText ? 'Manual clan' : path.clan?.name, predator: predatorName, generation: starting.generation,
     },
     relationships: { sire: draft.relationships.sire.trim(), coterie: draft.relationships.coterie.trim(), tenets: draft.relationships.tenets.trim(), convictions },
     tracks: {
       health: tracks.health.total, willpower: tracks.willpower.total,
       humanity: starting.humanity, bloodPotency: starting.bloodPotency, baneSeverity: starting.baneSeverity, bloodSurge: starting.bloodSurge,
     },
-    bane: path.clan?.bane,
-    compulsion: path.clan?.compulsion,
+    bane: hideClanText ? undefined : path.clan?.bane,
+    compulsion: hideClanText ? undefined : path.clan?.compulsion,
     traitGroups: traitGroups.map(group => ({
       name: group.name,
       attributes: group.attributes.map(id => ({ name: traitLabel(id), rating: final.attributes[id] })),
-      skills: group.skills.map(id => ({
-        name: traitLabel(id), rating: final.unresolvedSkills.includes(id) ? undefined : (final.skills[id] ?? 0),
-        specialties: (final.specialties[id] ?? []).filter(Boolean),
-      })),
+      skills: group.skills.map(id => {
+        const specialties = (final.specialties[id] ?? []).filter(Boolean)
+        const catalogNames = fixedSpecialty?.skill === id ? [fixedSpecialty.name] : []
+        return {
+          name: traitLabel(id), rating: final.unresolvedSkills.includes(id) ? undefined : (final.skills[id] ?? 0),
+          specialties: includeCustomText ? specialties : specialties.map(name => catalogNames.includes(name) ? name : 'Custom Specialty'),
+        }
+      }),
     })),
     disciplines: disciplineIds.flatMap(id => {
       const rating = final.disciplines[id] ?? 0
@@ -147,21 +156,23 @@ export function evaluateCharacter(draft: CharacterDraft) {
       return rating > 0 ? [{ name: disciplines[id], rating, powers }] : []
     }),
     ritual,
-    reviews: [...path.reviews, ...manualOptions.map(option => `Manual ${option.kind === 'advantage' ? 'Advantage' : 'Flaw'}: ${option.name} (${option.source}).`)],
+    reviews: [...path.reviews, ...manualOptions.map(option => includeCustomText
+      ? `Manual ${option.kind === 'advantage' ? 'Advantage' : 'Flaw'}: ${option.name} (${option.source}).`
+      : `Review a manual ${option.kind} with the Storyteller.`)],
     advantages: advantageIds.flatMap(id => {
       const dots = (final.advantages[id] ?? 0) - starting.grantedAdvantages[id]
       if (!dots) return []
       const base = starting.advantages.find(option => option.id === id && !option.issue)?.dots ?? 0
       return [{ name: startingAdvantages[id].name, dots, source: dots > base ? (base ? 'Base + XP' : 'XP') : 'Base' }]
     }).concat(
-      path.advantages.map(grant => ({ ...grant, source: path.predator?.name ?? 'Predator Type' })),
-      manualOptions.filter(option => option.kind === 'advantage').map(({ name, dots }) => ({ name, dots, source: 'Manual · Base' })),
+      path.advantages.map(({ name, dots }) => ({ name: hidePredatorText ? 'Manual Advantage' : name, dots, source: predatorName ?? 'Predator Type' })),
+      manualOptions.filter(option => option.kind === 'advantage').map(({ name, dots }) => ({ name: includeCustomText ? name : 'Manual Advantage', dots, source: 'Manual · Base' })),
     ),
     flaws: [
       ...final.flaws.map(id => ({ ...startingFlaws[id], source: undefined })),
-      ...path.flaws.map(grant => ({ ...grant, source: path.predator?.name })),
+      ...path.flaws.map(({ name, dots }) => ({ name: hidePredatorText ? 'Manual Flaw' : name, dots, source: predatorName })),
       ...path.clanFlaws.map(grant => ({ ...grant, source: path.clan?.name })),
-      ...manualOptions.filter(option => option.kind === 'flaw').map(({ name, dots }) => ({ name, dots, source: 'Manual · Base' })),
+      ...manualOptions.filter(option => option.kind === 'flaw').map(({ name, dots }) => ({ name: includeCustomText ? name : 'Manual Flaw', dots, source: 'Manual · Base' })),
     ],
     advantageDots: starting.totalAdvantageDots,
     flawDots: starting.flawBudget.used + [...path.flaws, ...path.clanFlaws].reduce((sum, flaw) => sum + flaw.dots, 0),
