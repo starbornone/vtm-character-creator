@@ -17,7 +17,7 @@ interface SpecialtyEditorProps {
 }
 
 export function SpecialtyEditor({ draft, specialties, dispatch }: SpecialtyEditorProps) {
-  const { firstDotSlots, eligibleSkills, freeIssue, completed, total } = specialties
+  const { firstDotSlots, eligibleSkills, freeIssue, completed, total, predatorGrant } = specialties
   const selectedSkill = draft.freeSpecialty.skill
   const hasInactiveSelection = selectedSkill && !eligibleSkills.includes(selectedSkill)
 
@@ -26,6 +26,12 @@ export function SpecialtyEditor({ draft, specialties, dispatch }: SpecialtyEdito
       <CardContent className="p-5 sm:p-7">
         <h2 id="specialties-heading" className="text-2xl font-semibold tracking-tight">Specialties</h2>
         <p role="status" className="mt-1 text-sm text-muted-foreground">{completed} of {total} named and eligible</p>
+        {predatorGrant && predatorGrant.kind !== 'skill-dot' && (
+          <p className={predatorGrant.kind === 'pending' ? 'mt-2 text-sm text-rose-300' : 'mt-2 text-sm text-muted-foreground'}>
+            Predator Specialty · {traitLabel(predatorGrant.skill)} ({predatorGrant.name})
+            {predatorGrant.kind === 'pending' && ' · Resolve the Skill rating or choose another Predator Specialty.'}
+          </p>
+        )}
         <div className="mt-5 grid items-start gap-4 lg:grid-cols-2">
           <fieldset className="min-w-0 space-y-3 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Free Specialty</legend>

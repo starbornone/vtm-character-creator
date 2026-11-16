@@ -1,7 +1,19 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { editCharacter, evaluateCharacter, initialCharacterDraft } from '../src/rules/character-guide.ts'
-import { maraCharacter } from './fixtures/mara-vale.ts'
+import { editCharacter, evaluateCharacter, guideSteps, initialCharacterDraft } from '../src/rules/character-guide.ts'
+import { maraCharacter, maraClanPath } from './fixtures/mara-vale.ts'
+
+test('choosing Clan and Predator Type first previews a grant that updates as Skills are assigned', () => {
+  assert.deepEqual(guideSteps.slice(0, 3).map(step => step.id), ['concept', 'clan', 'traits'])
+  const clanFirst = editCharacter(initialCharacterDraft, { type: 'clan-path', update: maraClanPath })
+  const brawl = (draft: typeof initialCharacterDraft) => evaluateCharacter(draft).sheet.traitGroups
+    .flatMap(group => group.skills).find(skill => skill.name === 'Brawl')
+  assert.deepEqual(brawl(clanFirst), { name: 'Brawl', rating: 1, specialties: [] })
+  const allocated = editCharacter(clanFirst, { type: 'skill', id: 'brawl', rating: 3 })
+  assert.deepEqual(brawl(allocated), { name: 'Brawl', rating: 3, specialties: ['Grappling'] })
+  const cleared = editCharacter(allocated, { type: 'skill', id: 'brawl', rating: undefined })
+  assert.deepEqual(brawl(cleared), brawl(clanFirst))
+})
 
 test('Mara’s reviewed sheet combines her story, starting choices, and final mechanics', () => {
   const { sheet, pending } = evaluateCharacter(maraCharacter)

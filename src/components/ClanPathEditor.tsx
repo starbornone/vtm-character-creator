@@ -124,7 +124,7 @@ interface ClanPathEditorProps {
 export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onChange }: ClanPathEditorProps) {
   const { clan, predator, clanSlots, predatorSlot, humanity, ledger } = path
   const grantLabel = predatorGrant && (predatorGrant.kind === 'skill-dot'
-    ? `${traitLabel(predatorGrant.skill)} +1 · Skill dot from ${predator?.name}`
+    ? `${traitLabel(predatorGrant.skill)} +1 · Skill dot while the Skill is unrated`
     : `${traitLabel(predatorGrant.skill)} (${predatorGrant.name})${predatorGrant.kind === 'pending' ? ' · Resolve the Skill rating or competing Specialty' : ' · Specialty'}`)
   const predatorChoices = [...corePredators.map(option => {
     const reason = predatorRestriction(clan?.id, option.id)
@@ -188,6 +188,7 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
                   onChange={predatorSpecialty => onChange({ predatorSpecialty })}
                 />
                 {path.specialtyOption?.custom && <TextField label="Predator Specialty name" value={draft.predatorSpecialtyName ?? ''} onChange={predatorSpecialtyName => onChange({ predatorSpecialtyName })} />}
+                <p className="text-xs text-muted-foreground">As you assign Skills, this grant updates to a Specialty for a rated Skill or a bonus dot for an unrated Skill.</p>
                 <CatalogSelect label="Predator Discipline" value={draft.predatorDiscipline} choices={disciplineChoices(path.predatorDisciplines)} onChange={predatorDiscipline => onChange({ predatorDiscipline })} />
                 {path.predatorDisciplines.includes(draft.predatorDiscipline as DisciplineId) && !predatorSlot && <p className="text-sm text-muted-foreground">Assign both clan Disciplines to determine the granted power’s rank.</p>}
                 {predatorSlot && <PowerChoice
