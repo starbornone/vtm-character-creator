@@ -17,15 +17,16 @@ const emptyClan: ManualClan = { name: '', source: '', disciplines: [], bane: '',
 const emptyPredator: ManualPredator = { name: '', source: '' }
 const emptyGrant: DotGrant = { name: '', dots: 0 }
 
-function TextField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+function TextField({ id, label, value, onChange }: { id?: string; label: string; value: string; onChange: (value: string) => void }) {
   return <label className="grid min-w-0 gap-1.5 text-sm">
     {label}
-    <input className="ledger-field w-full" value={value} onChange={event => onChange(event.target.value)} />
+    <input id={id} className="ledger-field w-full" value={value} onChange={event => onChange(event.target.value)} />
   </label>
 }
 
 function ManualClanFields({ entry, onChange }: { entry: ManualClan; onChange: (entry: ManualClan) => void }) {
-  return <div className="space-y-3 rounded-md border border-border p-3">
+  return <fieldset id="manual-clan" tabIndex={-1} className="min-w-0 space-y-3 rounded-md border border-border p-3">
+    <legend className="sr-only">Manual clan</legend>
     <TextField label="Manual clan name" value={entry.name} onChange={name => onChange({ ...entry, name })} />
     <TextField label="Clan source or Storyteller note" value={entry.source} onChange={source => onChange({ ...entry, source })} />
     <TextField label="Bane (optional)" value={entry.bane} onChange={bane => onChange({ ...entry, bane })} />
@@ -44,7 +45,7 @@ function ManualClanFields({ entry, onChange }: { entry: ManualClan; onChange: (e
         })}
       </div>
     </fieldset>
-  </div>
+  </fieldset>
 }
 
 function ManualGrantFields({ label, grant, onChange }: { label: string; grant: DotGrant; onChange: (grant: DotGrant) => void }) {
@@ -60,7 +61,8 @@ function ManualGrantFields({ label, grant, onChange }: { label: string; grant: D
 }
 
 function ManualPredatorFields({ entry, onChange }: { entry: ManualPredator; onChange: (entry: ManualPredator) => void }) {
-  return <div className="space-y-3 rounded-md border border-border p-3">
+  return <fieldset id="manual-predator" tabIndex={-1} className="min-w-0 space-y-3 rounded-md border border-border p-3">
+    <legend className="sr-only">Manual Predator Type</legend>
     <TextField label="Manual Predator Type name" value={entry.name} onChange={name => onChange({ ...entry, name })} />
     <TextField label="Predator Type source or Storyteller note" value={entry.source} onChange={source => onChange({ ...entry, source })} />
     <ManualGrantFields label="Granted Advantage" grant={entry.advantage ?? emptyGrant} onChange={advantage => onChange({ ...entry, advantage })} />
@@ -73,10 +75,10 @@ function ManualPredatorFields({ entry, onChange }: { entry: ManualPredator; onCh
         <option value="1">+1 Humanity</option>
       </select>
     </label>
-  </div>
+  </fieldset>
 }
 
-function PowerChoice({ slot, label, onChange }: { slot: PowerSlot; label: string; onChange: (id: string) => void }) {
+function PowerChoice({ id, slot, label, onChange }: { id: string; slot: PowerSlot; label: string; onChange: (id: string) => void }) {
   const choices = slot.options.filter(power => power.level <= slot.rank || power.id === slot.selectedId).map(power => ({
     id: power.id,
     label: `${power.name} · Level ${power.level}${power.issue === 'amalgam' && power.amalgam ? ` · Requires ${disciplines[power.amalgam.discipline]} ${power.amalgam.dots}`
@@ -87,20 +89,22 @@ function PowerChoice({ slot, label, onChange }: { slot: PowerSlot; label: string
 
   return (
     <div className="min-w-0 space-y-1">
-      <CatalogSelect label={label} value={slot.selectedId} choices={choices} invalid={Boolean(slot.issue)} onChange={onChange} />
+      <CatalogSelect id={id} label={label} value={slot.selectedId} choices={choices} invalid={Boolean(slot.issue)} onChange={onChange} />
       {slot.issue && <p className="text-xs text-rose-300">{slot.issue === 'source' ? playersGuideDisabled : 'Choose an eligible power for this dot.'}</p>}
     </div>
   )
 }
 
 function PredatorGrantChoice({ choice, onChange }: { choice: Path['grantChoices'][number]; onChange: (selection: Record<string, number>) => void }) {
+  const id = `predator-grant-${choice.id}`
   if (choice.mode === 'one') return <CatalogSelect
+    id={id}
     label={choice.label}
     value={choice.rows.find(row => row.dots === choice.dots)?.id ?? ''}
     choices={choice.rows.map(row => ({ id: row.id, label: `${row.name} · ${choice.dots} ${choice.dots === 1 ? 'dot' : 'dots'}` }))}
     onChange={id => onChange(id ? { [id]: choice.dots } : {})}
   />
-  return <fieldset className="space-y-2 rounded-md border border-border p-3">
+  return <fieldset id={id} tabIndex={-1} className="space-y-2 rounded-md border border-border p-3">
     <legend className="px-1 text-sm font-semibold">{choice.label}</legend>
     <p role="status" className="text-sm text-muted-foreground">{choice.used} / {choice.dots} dots allocated</p>
     {choice.rows.map(row => <label className="flex items-center justify-between gap-2 text-sm" key={row.id}>
@@ -161,7 +165,7 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, useFl
         <div className="grid items-start gap-5 lg:grid-cols-2">
           <fieldset className="min-w-0 space-y-3 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Clan or blood status</legend>
-            <CatalogSelect searchable label="Starting clan" value={draft.clan} choices={ancestryChoices} invalid={path.clanUnavailable} onChange={clan => onChange({ clan })} />
+            <CatalogSelect id="starting-clan" searchable label="Starting clan" value={draft.clan} choices={ancestryChoices} invalid={path.clanUnavailable} onChange={clan => onChange({ clan })} />
             {draft.clan === manualOptionId && <ManualClanFields entry={draft.manualClan ?? emptyClan} onChange={manualClan => onChange({ manualClan })} />}
             {thinBlood && <ThinBloodEditor draft={draft.thinBlood ?? initialThinBlood} rules={thinBlood} ageIssue={path.ageIssue}
               useFledgling={useFledgling} onChange={update => onChange({ thinBlood: { ...(draft.thinBlood ?? initialThinBlood), ...update } })} />}
@@ -172,11 +176,12 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, useFl
                   : <p className="text-sm text-muted-foreground">Bane · {clan.bane || '—'}<br />Compulsion · {clan.compulsion || '—'}</p>}
                 <p className="text-xs text-muted-foreground">{clan.source}</p>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <CatalogSelect label="Two-dot Discipline" value={draft.twoDotDiscipline} choices={disciplineChoices(clan.disciplines, draft.oneDotDiscipline)} onChange={twoDotDiscipline => onChange({ twoDotDiscipline })} />
-                  <CatalogSelect label="One-dot Discipline" value={draft.oneDotDiscipline} choices={disciplineChoices(clan.disciplines, draft.twoDotDiscipline)} onChange={oneDotDiscipline => onChange({ oneDotDiscipline })} />
+                  <CatalogSelect id="two-dot-discipline" label="Two-dot Discipline" value={draft.twoDotDiscipline} choices={disciplineChoices(clan.disciplines, draft.oneDotDiscipline)} onChange={twoDotDiscipline => onChange({ twoDotDiscipline })} />
+                  <CatalogSelect id="one-dot-discipline" label="One-dot Discipline" value={draft.oneDotDiscipline} choices={disciplineChoices(clan.disciplines, draft.twoDotDiscipline)} onChange={oneDotDiscipline => onChange({ oneDotDiscipline })} />
                 </div>
                 {clanSlots.map(slot => <PowerChoice
                   key={`${slot.discipline}-${slot.rank}`}
+                  id={`clan-power-${slot.discipline}-${slot.rank}`}
                   slot={slot}
                   label={`${disciplines[slot.discipline]} power for dot ${slot.rank}`}
                   onChange={power => onChange({ clanPowers: { ...draft.clanPowers, [slot.discipline]: { ...draft.clanPowers[slot.discipline], [slot.rank]: power } } })}
@@ -187,7 +192,7 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, useFl
 
           {predatorAllowed ? <fieldset className="min-w-0 space-y-3 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Predator Type</legend>
-            <CatalogSelect searchable label="Starting Predator Type" value={draft.predatorType} choices={predatorChoices} disabled={!clan} invalid={path.predatorUnavailable || Boolean(path.predatorIssue)} onChange={predatorType => onChange({ predatorType })} />
+            <CatalogSelect id="starting-predator" searchable label="Starting Predator Type" value={draft.predatorType} choices={predatorChoices} disabled={!clan} invalid={path.predatorUnavailable || Boolean(path.predatorIssue)} onChange={predatorType => onChange({ predatorType })} />
             {!clan && <p className="text-sm text-muted-foreground">Choose a clan to unlock this choice.</p>}
             {path.predatorIssue && <p className="text-sm text-rose-300">{path.predatorIssue}</p>}
             {draft.predatorType === manualOptionId && clan && <ManualPredatorFields entry={draft.manualPredator ?? emptyPredator} onChange={manualPredator => onChange({ manualPredator })} />}
@@ -195,6 +200,7 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, useFl
               <>
                 <p className="text-xs text-muted-foreground">{predator.source}</p>
                 <CatalogSelect
+                  id="predator-specialty"
                   label="Predator Specialty"
                   value={draft.predatorSpecialty}
                   choices={predator.specialties.map(({ skill, name }) => ({ id: skill, label: `${traitLabel(skill)} (${name})` }))}
@@ -202,11 +208,12 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, useFl
                   searchable={predator.id === manualOptionId}
                   onChange={predatorSpecialty => onChange({ predatorSpecialty })}
                 />
-                {path.specialtyOption?.custom && <TextField label="Predator Specialty name" value={draft.predatorSpecialtyName ?? ''} onChange={predatorSpecialtyName => onChange({ predatorSpecialtyName })} />}
+                {path.specialtyOption?.custom && <TextField id="predator-specialty-name" label="Predator Specialty name" value={draft.predatorSpecialtyName ?? ''} onChange={predatorSpecialtyName => onChange({ predatorSpecialtyName })} />}
                 <p className="text-xs text-muted-foreground">As you assign Skills, this grant updates to a Specialty for a rated Skill or a bonus dot for an unrated Skill.</p>
-                <CatalogSelect label="Predator Discipline" value={draft.predatorDiscipline} choices={disciplineChoices(path.predatorDisciplines)} onChange={predatorDiscipline => onChange({ predatorDiscipline })} />
+                <CatalogSelect id="predator-discipline" label="Predator Discipline" value={draft.predatorDiscipline} choices={disciplineChoices(path.predatorDisciplines)} onChange={predatorDiscipline => onChange({ predatorDiscipline })} />
                 {path.predatorDisciplines.includes(draft.predatorDiscipline as DisciplineId) && !predatorSlot && <p className="text-sm text-muted-foreground">Assign both starting Disciplines to determine the granted power’s rank.</p>}
                 {predatorSlot && <PowerChoice
+                  id="predator-power"
                   slot={predatorSlot}
                   label={`${predator.name} ${disciplines[predatorSlot.discipline]} power for dot ${predatorSlot.rank}`}
                   onChange={power => onChange({ predatorPowers: { ...draft.predatorPowers, [predatorSlot.discipline]: power } })}

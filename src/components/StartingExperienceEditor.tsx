@@ -83,7 +83,7 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
     <Card className="gap-0 py-0" role="region" aria-labelledby="starting-xp-heading">
       <CardContent className="space-y-4 p-5 sm:p-7">
         <div>
-          <h2 id="starting-xp-heading" className="text-2xl font-semibold tracking-tight">Starting XP</h2>
+          <h2 id="starting-xp-heading" tabIndex={-1} className="text-2xl font-semibold tracking-tight">Starting XP</h2>
           <p role="status" className="mt-1 text-sm text-muted-foreground">{build.final.remaining} / {build.profile.xp} XP remaining</p>
           {build.isCaitiff && <p className="mt-1 text-sm text-muted-foreground">Caitiff Discipline dots cost 6 XP times the new rating. Core pp. 107, 137.</p>}
         </div>
@@ -161,7 +161,7 @@ export function ExperiencePurchases({ state, entries, purchases, onChange, advan
         </div>
       </div>
       {entries.length > 0 && <ol aria-label={advancing ? 'Ordered advancement purchases' : 'Ordered XP purchases'} className="space-y-2">
-        {entries.map((entry, index) => <li key={index} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border/70 px-3 py-2">
+        {entries.map((entry, index) => <li key={index} id={advancing ? undefined : `starting-purchase-${index}`} tabIndex={!advancing && entry.issue ? -1 : undefined} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border/70 px-3 py-2">
           <div>
             <p className="font-medium">{entry.label}</p>
             <p className={`text-sm ${entry.issue ? 'text-rose-300' : 'text-muted-foreground'}`}>{entry.issue ?? `${entry.cost} XP · ${entry.remaining} left`}</p>

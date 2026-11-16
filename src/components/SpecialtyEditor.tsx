@@ -24,7 +24,7 @@ export function SpecialtyEditor({ draft, specialties, dispatch }: SpecialtyEdito
   return (
     <Card className="gap-0 py-0" role="region" aria-labelledby="specialties-heading">
       <CardContent className="p-5 sm:p-7">
-        <h2 id="specialties-heading" className="text-2xl font-semibold tracking-tight">Specialties</h2>
+        <h2 id="specialties-heading" tabIndex={-1} className="text-2xl font-semibold tracking-tight">Specialties</h2>
         <p role="status" className="mt-1 text-sm text-muted-foreground">{completed} of {total} named and eligible</p>
         {predatorGrant && predatorGrant.kind !== 'skill-dot' && (
           <p className={predatorGrant.kind === 'pending' ? 'mt-2 text-sm text-rose-300' : 'mt-2 text-sm text-muted-foreground'}>

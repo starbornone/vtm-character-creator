@@ -19,14 +19,16 @@ const conceptHelp = {
   desire: 'A short-term goal your character can pursue this session. It can change from session to session. For example, “Find out who followed me home.”',
 }
 
-function NarrativeField({ label, value, onChange, multiline = false, help }: {
+function NarrativeField({ id: fieldId, label, value, onChange, multiline = false, help }: {
+  id?: string
   label: string
   value: string
   onChange: (value: string) => void
   multiline?: boolean
   help?: string
 }) {
-  const id = useId()
+  const generatedId = useId()
+  const id = fieldId ?? generatedId
   const helpId = help ? `${id}-help` : undefined
 
   return (
@@ -70,12 +72,12 @@ export function ConceptEditor({ draft, onChange, ageProfile, onAgeProfile }: {
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <NarrativeField label="Character name" value={draft.name} onChange={name => onChange({ name })} />
-          <NarrativeField label="Concept" help={conceptHelp.concept} value={draft.concept} onChange={concept => onChange({ concept })} />
+          <NarrativeField id="concept-name" label="Character name" value={draft.name} onChange={name => onChange({ name })} />
+          <NarrativeField id="concept-concept" label="Concept" help={conceptHelp.concept} value={draft.concept} onChange={concept => onChange({ concept })} />
           <NarrativeField label="Chronicle (optional)" help={conceptHelp.chronicle} value={draft.chronicle} onChange={chronicle => onChange({ chronicle })} />
           <NarrativeField label="Embraced (optional)" help={conceptHelp.embraced} value={draft.embraced} onChange={embraced => onChange({ embraced })} />
-          <NarrativeField label="Ambition" help={conceptHelp.ambition} multiline value={draft.ambition} onChange={ambition => onChange({ ambition })} />
-          <NarrativeField label="Desire" help={conceptHelp.desire} multiline value={draft.desire} onChange={desire => onChange({ desire })} />
+          <NarrativeField id="concept-ambition" label="Ambition" help={conceptHelp.ambition} multiline value={draft.ambition} onChange={ambition => onChange({ ambition })} />
+          <NarrativeField id="concept-desire" label="Desire" help={conceptHelp.desire} multiline value={draft.desire} onChange={desire => onChange({ desire })} />
         </div>
       </CardContent>
     </Card>
@@ -103,13 +105,13 @@ export function RelationshipEditor({ draft, onChange }: { draft: RelationshipDra
           <fieldset key={index} className="space-y-3 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Conviction and Touchstone {index + 1}</legend>
             <div className="grid gap-3 sm:grid-cols-2">
-              <NarrativeField label={`Conviction ${index + 1}`} value={pair.conviction} onChange={value => updatePair(index, 'conviction', value)} />
-              <NarrativeField label={`Touchstone ${index + 1}`} value={pair.touchstone} onChange={value => updatePair(index, 'touchstone', value)} />
+              <NarrativeField id={`conviction-${index}`} label={`Conviction ${index + 1}`} value={pair.conviction} onChange={value => updatePair(index, 'conviction', value)} />
+              <NarrativeField id={`touchstone-${index}`} label={`Touchstone ${index + 1}`} value={pair.touchstone} onChange={value => updatePair(index, 'touchstone', value)} />
             </div>
-            {draft.convictions.length > 1 && <button type="button" className="guide-button guide-action" onClick={() => onChange({ convictions: draft.convictions.filter((_, offset) => offset !== index) })} aria-label={`Remove Conviction and Touchstone ${index + 1}`}><Trash2 aria-hidden="true" />Remove pair</button>}
+            {draft.convictions.length > 1 && <button id={`remove-conviction-${index}`} type="button" className="guide-button guide-action" onClick={() => onChange({ convictions: draft.convictions.filter((_, offset) => offset !== index) })} aria-label={`Remove Conviction and Touchstone ${index + 1}`}><Trash2 aria-hidden="true" />Remove pair</button>}
           </fieldset>
         ))}
-        {draft.convictions.length < maxConvictions && <button type="button" className="guide-button guide-action" onClick={() => onChange({ convictions: [...draft.convictions, { conviction: '', touchstone: '' }] })}><Plus aria-hidden="true" />Add Conviction and Touchstone</button>}
+        {draft.convictions.length < maxConvictions && <button id="add-conviction" type="button" className="guide-button guide-action" onClick={() => onChange({ convictions: [...draft.convictions, { conviction: '', touchstone: '' }] })}><Plus aria-hidden="true" />Add Conviction and Touchstone</button>}
       </CardContent>
     </Card>
   )

@@ -9,6 +9,7 @@ export interface CatalogChoice {
 }
 
 interface ChoiceProps {
+  id?: string
   label: string
   value: string
   choices: readonly CatalogChoice[]
@@ -18,8 +19,9 @@ interface ChoiceProps {
   searchable?: boolean
 }
 
-export function CatalogSelect({ label, value, choices, onChange, disabled, invalid, searchable }: ChoiceProps) {
-  const id = useId()
+export function CatalogSelect({ id: fieldId, label, value, choices, onChange, disabled, invalid, searchable }: ChoiceProps) {
+  const generatedId = useId()
+  const id = fieldId ?? generatedId
   const [query, setQuery] = useState('')
   const words = query.toLowerCase().trim().split(/\s+/)
   const matches = choices.filter(choice => words.every(word => `${choice.label} ${choice.source ?? ''}`.toLowerCase().includes(word)))

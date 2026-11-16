@@ -26,7 +26,7 @@ export function AllocationEditor<Id extends AttributeId | SkillId>({
       <CardContent className="p-5 sm:p-7">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h2 id={`${kind}-heading`} className="text-2xl font-semibold tracking-tight">{heading}</h2>
+            <h2 id={`${kind}-heading`} tabIndex={-1} className="text-2xl font-semibold tracking-tight">{heading}</h2>
             <p role="status" className="mt-1 text-sm tabular-nums text-muted-foreground">{status}</p>
           </div>
           {children}

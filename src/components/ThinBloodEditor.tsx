@@ -3,7 +3,8 @@ import { alchemyMethods, startingFormulae, thinBloodFlaws, thinBloodMerits } fro
 import { CatalogSelect } from '@/components/CatalogSelect'
 import { curseRestriction, type evaluateThinBlood, type ThinBloodDraft } from '@/rules/thin-blood'
 
-function TraitChoices<Id extends string>({ title, options, selected, onChange }: {
+function TraitChoices<Id extends string>({ kind, title, options, selected, onChange }: {
+  kind: 'merit' | 'flaw'
   title: string
   options: readonly { id: Id; name: string; page: number }[]
   selected: Id[]
@@ -12,7 +13,7 @@ function TraitChoices<Id extends string>({ title, options, selected, onChange }:
   return <fieldset className="space-y-1 rounded-md border border-border p-2.5">
     <legend className="px-1 text-sm font-semibold">{title} ({selected.length})</legend>
     {options.map(({ id, name, page }) => <label key={id} className="flex min-h-8 flex-wrap items-center gap-x-2 text-sm">
-      <input type="checkbox" className="size-4 accent-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300" checked={selected.includes(id)}
+      <input id={`thin-blood-${kind}-${id}`} type="checkbox" className="size-4 accent-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300" checked={selected.includes(id)}
         onChange={event => onChange(event.target.checked ? [...selected, id] : selected.filter(value => value !== id))} />
       {name} <span className="text-xs text-muted-foreground" aria-hidden="true">Core p. {page}</span>
     </label>)}
@@ -37,27 +38,27 @@ export function ThinBloodEditor({ draft, rules, ageIssue, useFledgling, onChange
   return <>
     {ageIssue && <div className="space-y-2">
       <p className="text-sm text-rose-300">{ageIssue}</p>
-      <button type="button" className="guide-button" onClick={useFledgling}>Set age to Fledgling</button>
+      <button id="use-fledgling" type="button" className="guide-button" onClick={useFledgling}>Set age to Fledgling</button>
     </div>}
-    <p className="text-sm text-muted-foreground">Choose one to three Merits with an equal number of Flaws. These choices sit outside the base dot budgets.</p>
+    <p id="thin-blood-traits" tabIndex={-1} className="text-sm text-muted-foreground">Choose one to three Merits with an equal number of Flaws. These choices sit outside the base dot budgets.</p>
     <div className="grid gap-3 min-[465px]:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-      <TraitChoices title="Thin-blood Merits" options={thinBloodMerits} selected={draft.merits} onChange={merits => onChange({ merits })} />
-      <TraitChoices title="Thin-blood Flaws" options={thinBloodFlaws} selected={draft.flaws} onChange={flaws => onChange({ flaws })} />
+      <TraitChoices kind="merit" title="Thin-blood Merits" options={thinBloodMerits} selected={draft.merits} onChange={merits => onChange({ merits })} />
+      <TraitChoices kind="flaw" title="Thin-blood Flaws" options={thinBloodFlaws} selected={draft.flaws} onChange={flaws => onChange({ flaws })} />
     </div>
-    {draft.flaws.includes('clan-curse') && <CatalogSelect label="Clan Curse Bane" value={draft.curseClan ?? ''} invalid={!rules.curse} onChange={curseClan => onChange({ curseClan })}
+    {draft.flaws.includes('clan-curse') && <CatalogSelect id="clan-curse-bane" label="Clan Curse Bane" value={draft.curseClan ?? ''} invalid={!rules.curse} onChange={curseClan => onChange({ curseClan })}
       choices={coreClans.map(clan => {
         const reason = curseRestriction(clan.id, draft)
         return { id: clan.id, label: `${clan.name} · ${clan.bane}${reason ? ` · ${reason}` : ''}`, source: 'Core p. 183', disabled: Boolean(reason) }
       })} />}
     {draft.merits.includes('discipline-affinity') && <fieldset className="space-y-2 rounded-md border border-border p-2.5">
       <legend className="px-1 text-sm font-semibold">Discipline Affinity (1 dot)</legend>
-      <CatalogSelect label="Affinity Discipline" value={draft.affinity ?? ''} choices={affinityChoices} onChange={affinity => onChange({ affinity })} />
-      <CatalogSelect label="Affinity power" value={draft.affinityPower ?? ''} choices={powers} disabled={!affinity} onChange={affinityPower => onChange({ affinityPower })} />
+      <CatalogSelect id="affinity-discipline" label="Affinity Discipline" value={draft.affinity ?? ''} choices={affinityChoices} onChange={affinity => onChange({ affinity })} />
+      <CatalogSelect id="affinity-power" label="Affinity power" value={draft.affinityPower ?? ''} choices={powers} disabled={!affinity} onChange={affinityPower => onChange({ affinityPower })} />
     </fieldset>}
     {draft.merits.includes('thin-blood-alchemist') && <fieldset className="space-y-2 rounded-md border border-border p-2.5">
       <legend className="px-1 text-sm font-semibold">Thin-blood Alchemy (1 dot)</legend>
-      <CatalogSelect label="Distillation method" value={draft.method ?? ''} choices={methodChoices} onChange={method => onChange({ method })} />
-      <CatalogSelect label="Starting formula" value={draft.formula ?? ''} choices={formulaChoices} onChange={formula => onChange({ formula })} />
+      <CatalogSelect id="distillation-method" label="Distillation method" value={draft.method ?? ''} choices={methodChoices} onChange={method => onChange({ method })} />
+      <CatalogSelect id="starting-formula" label="Starting formula" value={draft.formula ?? ''} choices={formulaChoices} onChange={formula => onChange({ formula })} />
     </fieldset>}
     {rules.issues.length > 0 && <ul aria-live="polite" className="space-y-1 text-sm text-rose-300">
       {rules.issues.map(issue => <li key={issue}>{issue}</li>)}

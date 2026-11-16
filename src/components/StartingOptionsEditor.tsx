@@ -25,7 +25,7 @@ function ManualOptions({ options, evaluated, onChange }: {
   return <fieldset className="space-y-3 rounded-lg border border-border px-4 pb-4">
     <legend className="px-1.5 text-sm font-semibold">Manual Advantages &amp; Flaws</legend>
     <p className="text-sm text-muted-foreground">These entries use the base dot budgets and appear on the sheet for Storyteller review.</p>
-    {options.map((option, index) => <fieldset key={index} className="grid min-w-0 gap-2 rounded-md border border-border p-3 sm:grid-cols-2">
+    {options.map((option, index) => <fieldset key={index} id={`manual-starting-${index}`} tabIndex={-1} className="grid min-w-0 gap-2 rounded-md border border-border p-3 sm:grid-cols-2">
       <legend className="px-1 text-sm">Manual entry {index + 1}</legend>
       <label className="grid gap-1 text-sm">Type
         <select className="ledger-field" value={option.kind} onChange={event => {
@@ -68,7 +68,7 @@ export function StartingOptionsEditor({ draft, build, onChange }: {
           <h2 id="starting-options-heading" className="text-2xl font-semibold tracking-tight">Advantages &amp; Flaws</h2>
           <label className="grid gap-1 text-sm">
             Generation
-            <select className="ledger-field" value={build.generation ?? ''} aria-invalid={Boolean(build.generationIssue) || undefined} aria-describedby={build.generationIssue ? 'generation-issue' : undefined} onChange={event => onChange({ generation: build.profile.generations.find(value => String(value) === event.target.value) })}>
+            <select id="starting-generation" className="ledger-field" value={build.generation ?? ''} aria-invalid={Boolean(build.generationIssue) || undefined} aria-describedby={build.generationIssue ? 'generation-issue' : undefined} onChange={event => onChange({ generation: build.profile.generations.find(value => String(value) === event.target.value) })}>
               <option value="">Choose…</option>
               {build.profile.generations.map(value => <option key={value} value={value}>{value}th</option>)}
             </select>
@@ -87,7 +87,7 @@ export function StartingOptionsEditor({ draft, build, onChange }: {
           </div>)}
         </dl>
         <div className="grid items-start gap-4 lg:grid-cols-2">
-          <fieldset className="min-w-0 space-y-2 rounded-lg border border-border px-4 pb-4">
+          <fieldset id="base-advantages" tabIndex={-1} className="min-w-0 space-y-2 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Base Advantages</legend>
             <BudgetStatus budget={build.advantageBudget} />
             {build.isThinBlood && <p className="text-sm text-muted-foreground">Thin-bloods cannot buy Bonding, Mawla, Retainers, or Status. Core p. 149.</p>}
@@ -108,7 +108,7 @@ export function StartingOptionsEditor({ draft, build, onChange }: {
             })}
             <p className="text-sm text-muted-foreground">{build.totalAdvantageDots} total Advantage dots{build.predatorAdvantage ? ` · ${build.predatorAdvantage} from Predator Type` : ''}{build.xpAdvantageDots ? ` · ${build.xpAdvantageDots} from XP` : ''}</p>
           </fieldset>
-          <fieldset className="min-w-0 space-y-2 rounded-lg border border-border px-4 pb-4">
+          <fieldset id="base-flaws" tabIndex={-1} className="min-w-0 space-y-2 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Base Flaws</legend>
             <BudgetStatus budget={build.flawBudget} />
             {build.isThinBlood && <p className="text-sm text-muted-foreground">Thin-blood Merits and Flaws have their own count under Clan &amp; Predator Type.</p>}
