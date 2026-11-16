@@ -37,6 +37,14 @@ Select **V5 table reference** in the header from any creation step. The search f
 
 Use **Tab** from the search field to reach and scroll the results with the keyboard. Select **Close** or press **Esc** to return to the same draft and step. The reference leaves unsaved edits available in the creator.
 
+## Map a character’s relationships
+
+Open **Relationships** and scroll to **Relationship Map**. The character’s sire, coterie, and Touchstones appear as you record them above. Enter a name and select **Add person** to include someone else. Choose **From** and **To**, enter a label such as “Owes a favor,” then select **Add connection**.
+
+Use **Tab** to reach the fields, arrow keys to move through the endpoint choices, and **Enter** to submit. The connection list reads from the first named endpoint to the second. Removing an added person also removes connections involving that person. If you rename or clear an original relationship, its existing connections keep the original name and mark it as an earlier entry.
+
+Named drafts autosave the map. The JSON backup preview shows the counts of added people and connections before you restore the draft as a copy. Mechanical build links share creation choices without relationship details.
+
 ## Save and reopen browser drafts
 
 Expand **Browser drafts**, enter a **Draft name**, and select **Save draft**. Once named, the character and current step autosave as you work. Reload the page to resume the last open saved draft. Use **New draft** for another character, or choose a name under **Saved drafts** and select **Open draft** to resume that character at its own last step. Edit the draft name and select **Save draft** to rename it.

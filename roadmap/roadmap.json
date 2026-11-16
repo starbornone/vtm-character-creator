@@ -1,20 +1,14 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T22:32:02+11:00",
+  "updatedAt": "2026-11-16T22:44:50+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
     "status": "active",
-    "summary": "A browser-based Vampire: The Masquerade V5 creator with the named Core clans, Caitiff, Thin-bloods, an opt-in Player’s Guide pack, post-creation XP advancement, reusable chronicle presets, and a searchable table reference."
+    "summary": "A browser-based Vampire: The Masquerade V5 creator with the named Core clans, Caitiff, Thin-bloods, an opt-in Player’s Guide pack, post-creation XP advancement, chronicle presets, a searchable table reference, and a Character Relationship Map."
   },
   "items": [
-    {
-      "id": "add-character-relationship-map",
-      "title": "Add a Relationship Map for one character",
-      "group": "Chronicle tools",
-      "notes": "Use the recorded sire, coterie, and Touchstones as starting points. Let players add people and connections, provide a keyboard-accessible way to review them, and verify backup restore. Keep relationship data out of mechanical build links."
-    },
     {
       "id": "add-coterie-domain-planner",
       "title": "Add a coterie and Domain planner with a portable handoff",

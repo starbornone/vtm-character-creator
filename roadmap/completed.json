@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T22:32:02+11:00",
+  "updatedAt": "2026-11-16T22:44:50+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -175,6 +175,13 @@
       "group": "Rules reference",
       "notes": "Added a searchable dialog for creation budgets, XP costs, Discipline prerequisites, and derived tracks with book and page citations. Verified keyboard search by rule and page, focus return on Escape, scrolling at 390 px, layout at 320 px, and return to the same Relationships step with named and unsaved draft edits intact.",
       "completedAt": "2026-11-16T22:32:02+11:00"
+    },
+    {
+      "id": "add-character-relationship-map",
+      "title": "Add a Relationship Map for one character",
+      "group": "Chronicle tools",
+      "notes": "Added a map seeded from the sire, coterie, and Touchstones, with keyboard-accessible editing for added people and labeled connections. Verified live relationship changes, a 390 px viewport, and restoring Mara’s downloaded backup as a separate draft that reopened at Relationships. The decoded mechanical link contained no relationship details and matched the link from before the map edits.",
+      "completedAt": "2026-11-16T22:44:50+11:00"
     }
   ]
 }

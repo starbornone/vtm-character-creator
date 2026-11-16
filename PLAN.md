@@ -61,10 +61,10 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 4. The XP advancement journal is implemented. It replays earned-XP purchases from the completed creation build and keeps the starting budget separate. [Mara Vale’s advancement fixture](docs/v5-rules.md#mara-vale-advancement-fixture) verifies the ordering, derived ratings, and transfers.
 5. [Chronicle presets](docs/getting-started.md#reuse-chronicle-settings) reuse the chronicle name, Tenets, and enabled rule sources across drafts in one browser. Players preview the field changes before applying a preset. The applied values travel with the character’s JSON backup.
 6. The searchable [V5 table reference](docs/getting-started.md#look-up-v5-rules) covers creation budgets, XP costs, Discipline prerequisites, and derived tracks with book and page references. Players can open it from any creation step and return to the same draft.
+7. The [Character Relationship Map](docs/getting-started.md#map-a-characters-relationships) starts with the recorded sire, coterie, and Touchstones. Players can add people and labeled connections. The map travels with the full draft backup.
 
 ## Next priorities
 
-1. **Character Relationship Map.** Start with one character and build from the relationships already recorded in the guide. Show the sire, coterie, and Touchstones, and let players add people and connections. Verify that the map survives a backup and that the existing mechanical build link stays free of narrative details.
-2. **Coterie and Domain planner.** Use the Relationship Map as the starting point for organizing multiple characters around shared coterie and Domain details. Begin with a browser-local plan and a portable handoff the table can review. Verify that a shared plan round-trips without overwriting individual character drafts.
+**Coterie and Domain planner.** Use the Relationship Map as the starting point for organizing multiple characters around shared coterie and Domain details. Begin with a browser-local plan and a portable handoff the table can review. Verify that a shared plan round-trips without overwriting individual character drafts.
 
 Keep Foundry export in discovery until there is a specific V5 system and version to target, a supported import format, and a sample actor to round-trip. Revisit a private Storyteller workspace once access, data ownership, and export expectations are clear. Use player and Storyteller feedback from the live release to refine the [ordered roadmap](roadmap/roadmap.json).

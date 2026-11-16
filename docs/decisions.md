@@ -90,4 +90,10 @@ The brief shows evaluated mechanics and open rulings with generic labels for man
 
 **Consequences.** The guide can still edit creation details. If a required choice becomes open, the journal pauses until creation is complete again. Print and the Storyteller brief use the current applied ratings and separate XP totals. Version 6 backups carry the whole journal, and mechanical links share the creation build.
 
+## 12 Keep the Relationship Map in the full draft
+
+**Decision.** Derive the map’s starting relationships from the sire, coterie, and Touchstone fields. Use stable IDs for added people and keep the recorded role and name with connections to existing relationships.
+
+**Consequences.** A changed or removed narrative field leaves its previous connections visible with their original name. Removing an added person removes their connections. The full draft carries the map, and the mechanical build link continues to carry creation mechanics.
+
 See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the full flow.

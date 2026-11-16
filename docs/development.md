@@ -16,6 +16,7 @@
 | `src/catalog/starting-options.ts`, `src/rules/starting-xp.ts` | Starting Advantage and Flaw options, generation and Blood Potency, and ordered XP rules. |
 | `src/rules/advancement.ts`, `src/components/AdvancementJournal.tsx` | Earned XP awards and ordered purchases against the finished creation build. |
 | `src/rules/table-reference.ts`, `src/components/TableReference.tsx` | Searchable rule summaries, citations, and a dialog that preserves the open draft. |
+| `src/rules/relationship-map.ts`, `src/components/RelationshipMap.tsx` | Recorded relationships and keyboard-accessible editing of added people and connections. |
 | `src/rules/character-guide.ts`, `src/components/CharacterSheet.tsx` | Shared draft evaluation, review issues, and the printable sheet. |
 | `src/drafts/`, `src/components/DraftControls.tsx` | Draft input validation, browser storage, recovery download, and draft controls. |
 | `src/drafts/chronicle-presets.ts`, `src/components/ChroniclePresets.tsx` | Browser-local chronicle presets and a preview of the changes to the open draft. |
@@ -52,6 +53,8 @@ For draft changes, run the [browser storage tests](../tests/browser-drafts.test.
 For chronicle presets, run the [preset tests](../tests/chronicle-presets.test.ts). Save one preset with a chronicle name, a Tenet, and the Player’s Guide enabled. Preview it in two named drafts with different settings, cancel one preview, then apply it to both. Check that unrelated character fields keep their values. Reload a draft and restore its downloaded JSON under a new name to verify the three settings.
 
 For the table reference, run the [search tests](../tests/table-reference.test.ts). From a named draft partway through the guide, use the keyboard to open search, find `Spark of Rage` and page `137`, and dismiss the dialog with **Esc**. Confirm focus returns to the opener and the draft and step stay selected. At a narrow viewport, search for `Blood Potency`, scroll the results, and close the dialog. Repeat with an unsaved edit and confirm it remains in the open draft.
+
+For the Relationship Map, run the [map tests](../tests/relationship-map.test.ts). Record a sire, a coterie, and a Touchstone, then add a person and a connection using the keyboard. Restore a downloaded backup as a copy and verify the people, endpoints, and labels. Compare mechanical build links before and after the map edits and check the decoded payload for private relationship details.
 
 For backup changes, run the [backup tests](../tests/draft-backup.test.ts). In the browser, restore a finished Mara Vale backup and one unfinished character, then reload both at their saved steps. Verify that cancelling a preview or choosing malformed JSON, an unsupported ruleset, or invalid inputs leaves the open draft and saved library intact.
 
