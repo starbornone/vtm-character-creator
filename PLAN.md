@@ -67,11 +67,11 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 10. **Review & Print** links each open choice to the field or option group where it can be resolved. The same evaluation controls the Draft marker on the sheet. [Review issue navigation checks](docs/release-verification.md#review-issue-navigation)
 11. The [Storyteller brief preview](docs/getting-started.md#export-a-storyteller-brief) shows **Open Rulings** alongside the Markdown on desktop and above it on a narrow screen. The same rulings appear in the download with the selected narrative options.
 12. The two [JSON restore controls](docs/getting-started.md#back-up-and-restore-a-draft) identify a valid file meant for the other tool and name the matching control.
+13. The [live character summary](docs/getting-started.md#check-the-live-character-summary) shows key choices, current tracks, starting XP, and section progress while editing. It appears beside the desktop editor and opens through a labeled control on mobile.
 
 ## Next priorities
 
-1. **Add a live character summary across the editing steps.** Put the compact summary beside the editor on desktop and behind a labeled disclosure on mobile, as planned for the guide. Show the age profile, clan or blood status, applicable Predator Type, key tracks, starting XP balance, and section progress using the existing evaluator. Verify updates across steps and after restoring a named draft.
-2. **Recheck print output for expanded character builds.** Compare actual print previews or PDFs of Mara’s sheet before and after resolving her final open choice. Then check a Thin-blood sheet and a completed sheet with advancement on US Letter and A4 for readable ratings, complete sections, and sensible page breaks. [Previous print checks](docs/release-verification.md#review-issue-navigation)
+1. **Recheck print output for expanded character builds.** Compare actual print previews or PDFs of Mara’s sheet before and after resolving her final open choice. Then check a Thin-blood sheet and a completed sheet with advancement on US Letter and A4 for readable ratings, complete sections, and sensible page breaks. [Previous print checks](docs/release-verification.md#review-issue-navigation)
 
 ### Deferred external handoff feedback
 

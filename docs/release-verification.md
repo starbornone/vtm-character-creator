@@ -18,6 +18,12 @@ In the local production preview, Enter and Space on two Concept issues focused A
 
 Restoring [Mara Vale’s handoff draft](examples/mara-vale-handoff-draft.json) left one open issue and 6 starting XP. Brave’s one-page print preview showed **Draft · Open choices**. Following the XP issue and buying Drive 2 spent the final 6 XP, cleared the review list, and removed the label from the shared review and print sheet. Browser automation stopped before the second native print preview could be inspected.
 
+## Live character summary
+
+In the local production preview at 1440 × 900, the summary sat beside the editor. Switching to Fledgling showed 0 starting XP and hid Predator Type. Switching back to Neonate and selecting Brujah and Alleycat showed Humanity 6. Setting Stamina to 3, Composure to 2, and Resolve to 3 showed Health 6 and Willpower 5. Completing the Conviction and Touchstone updated section progress.
+
+At 390 × 844, Tab reached the collapsed summary, Space opened it, and Enter closed it while keeping focus on the button. The open card fit above the editor without horizontal overflow. A copy of [Mara’s handoff draft](examples/mara-vale-handoff-draft.json) saved at **Advantages & XP** restored at that step. The summary showed Neonate, Brujah, Alleycat, Health 6, Willpower 5, Humanity 6, Blood Potency 1, 6 starting XP remaining, and 4 of 5 sections complete. Buying Drive 2 changed the balance to 0 and progress to 5 of 5. Both values persisted across a step change and a named-draft reload.
+
 ## Public site
 
 Vercel reported the notice commit `e70e956` ready for production on 16 November 2026. The live creator and a shared build preview both displayed the official Dark Pack logo, the Paradox copyright and trademark notice, and the unofficial designation. The logo loaded from the public domain and linked to the Dark Pack Agreement. [Public character creator](https://vtm.astralarchives.games/) · [Dark Pack Agreement](https://www.paradoxinteractive.com/games/world-of-darkness/community/dark-pack-agreement) · [Official V5 resources](https://renegadegamestudios.com/vampire)

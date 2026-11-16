@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-17T00:11:59+11:00",
+  "updatedAt": "2026-11-17T00:19:09+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -9,12 +9,6 @@
     "summary": "A browser-based Vampire: The Masquerade V5 creator with Core and optional Player’s Guide choices, XP advancement, chronicle presets, a searchable rules reference, and local character and coterie planning tools."
   },
   "items": [
-    {
-      "id": "add-live-character-summary",
-      "title": "Add a live character summary to the editing steps",
-      "group": "Guide usability",
-      "notes": "Use current evaluator totals for age profile, clan or blood status, applicable Predator Type, key tracks, starting XP, and section progress. Place the summary beside the editor on desktop and behind a labeled disclosure on mobile. Verify keyboard operation at phone width, live updates across steps, and matching values after restoring a named draft."
-    },
     {
       "id": "verify-expanded-character-sheet-print-output",
       "title": "Verify print output for incomplete and expanded character builds",

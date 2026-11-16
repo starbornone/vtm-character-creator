@@ -15,6 +15,10 @@ Open the **Local** URL printed by Vite. The dev server defaults to port `5173` a
 
 If npm reports a missing `package.json`, return to the repository root. For a registry or network error during `npm ci`, check access to the npm registry and retry. If your browser cannot connect, check that Vite is running and use its printed URL.
 
+## Check the live character summary
+
+The **Character summary** sits beside the editor on desktop. On a narrow screen, tab to **Character summary** and press Enter or Space to open or close it. It shows your age profile, clan or blood status, applicable Predator Type, Health, Willpower, Humanity, Blood Potency, starting XP remaining, and completed sections. The values follow your edits as you move through the guide or restore a draft. **Review & Print** shows the full sheet.
+
 ## Choose an age profile
 
 In **Concept**, use **Age profile** to choose **Fledgling**, **Neonate**, or **Ancilla**. A newly Embraced fledgling starts with 0 XP and develops a Predator Type in play. A neonate chooses an eligible Predator Type and starts with 15 XP. Named-clan and Caitiff fledglings and neonates use 12th or 13th Generation. Thin-bloods use the Fledgling profile and 14th to 16th Generation. An ancilla also chooses an eligible Predator Type and starts at 10th or 11th Generation with Blood Potency 2, Humanity 6 before Predator adjustments, 9 base Advantage dots, 4 base Flaw dots, and 35 XP.

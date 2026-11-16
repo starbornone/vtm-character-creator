@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-17T00:08:24+11:00",
+  "updatedAt": "2026-11-17T00:19:09+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -224,6 +224,13 @@
       "group": "Local handoff usability",
       "notes": "Both restore controls identify valid files for the other tool and name the matching picker. Verified both directions with the documented samples, malformed JSON rejection, preservation of the open draft and step and unsaved plan edit, and reopening the saved draft and plan after reload.",
       "completedAt": "2026-11-17T00:08:24+11:00"
+    },
+    {
+      "id": "add-live-character-summary",
+      "title": "Add a live character summary to the editing steps",
+      "group": "Guide usability",
+      "notes": "Added a desktop summary and mobile disclosure powered by the existing evaluator. Verified live age, clan, Predator Type, track, XP, and progress changes across editing steps, Tab, Space, and Enter at 390 px, and all expected values when restoring and reloading the named Mara Vale draft.",
+      "completedAt": "2026-11-17T00:19:09+11:00"
     }
   ]
 }

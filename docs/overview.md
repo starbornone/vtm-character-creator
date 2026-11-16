@@ -9,6 +9,8 @@ The Vampire: The Masquerade Character Creator helps players prepare a V5 vampire
 3. Record Advantages, Flaws, Convictions, Touchstones, and relevant relationships. Use the Relationship Map to add people and connections. Apply starting XP if the age profile grants it and review the resulting sheet and any open Storyteller rulings.
 4. Open **Review & Print**, select any open choice to jump to its field or option group, then print the character sheet.
 
+Use the [Character summary](getting-started.md#check-the-live-character-summary) while editing to check your key choices, tracks, starting XP, and progress.
+
 Name a browser draft at any step to autosave it. Each saved character resumes at its own last step. Download a full JSON backup to restore the draft elsewhere, share a read-only mechanical build link, or export a Markdown Storyteller brief with open rulings and selected narrative sections.
 
 Use the V5 table reference from any creation step to look up supported rules and their printed page references while the draft stays open.
