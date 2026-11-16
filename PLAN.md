@@ -2,7 +2,7 @@
 
 Build a guided Vampire: The Masquerade Fifth Edition (V5) creator that takes a player from character concept to a rules-checked starting sheet they can print or send to their Storyteller. Use Vite, React, TypeScript, Tailwind CSS, and shadcn/ui. Ship a static app with browser-local drafts and portable files. Store the rules edition in every draft and export. V5 is the proposed first edition. White Wolf’s V6 FAQ describes an alpha with materially different rules. [White Wolf’s V6 FAQ](https://www.paradoxinteractive.com/games/world-of-darkness/news/vtm-sixth-edition-faq) · [shadcn/ui Vite setup](https://ui.shadcn.com/docs/installation/vite)
 
-The core clan and Predator Type catalog is available through **Review & Print**. See [Getting started](docs/getting-started.md) for the walkthrough and [First-release verification](docs/release-verification.md) for the release candidate checks.
+The first release is live with the Core Rulebook guide for standard clan neonates. See [Getting started](docs/getting-started.md) for the walkthrough and [First-release verification](docs/release-verification.md) for the desktop, mobile, print, and live notice checks.
 
 ## What to take from the reference projects
 
@@ -55,4 +55,9 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 
 ## After the first release
 
-Expand to additional V5 profiles such as fledglings, ancillae, Caitiff, and Thin-bloods through explicit rules and fixtures for each. Add Player’s Guide options as a source pack, then consider chronicle presets, a shared coterie and Domain planner, a Relationship Map, long-term XP advancement, and a table reference. Treat Foundry export and a private Storyteller workspace as separate additions with their own interchange and access requirements. [Renegade’s V5 Player’s Guide](https://renegadegamestudios.com/pdf-vampire-the-masquerade-roleplaying-game-5th-edition-players-guide/)
+1. Add standard-clan fledgling and ancilla creation. Start with fledglings to exercise profile selection and the guide’s conditional choices. Verify that first-release neonate drafts, backups, and build links still resolve as neonates.
+2. Add Caitiff and Thin-blood creation as separate work items. Model age and clan or blood status independently, and cover supported combinations with hand-checked fixtures.
+3. Add an opt-in Player’s Guide source pack. Start with a documented set of options and the prerequisites and grants needed to finish those builds. Keep the Core selection available as the default. [Renegade’s V5 Player’s Guide](https://renegadegamestudios.com/pdf-vampire-the-masquerade-roleplaying-game-5th-edition-players-guide/)
+4. Add an XP advancement journal that uses the finished character as its baseline and records earned and spent XP separately from creation.
+
+Consider chronicle presets and a table reference before the Relationship Map and shared coterie and Domain planner. Scope Foundry export around its target system and import format. Revisit access and data ownership before planning a private Storyteller workspace. Use player and Storyteller feedback from the live release to refine priorities as it arrives. The [roadmap](roadmap/roadmap.json) tracks the ordered implementation queue.

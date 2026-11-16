@@ -1,12 +1,49 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T16:47:22+11:00",
+  "updatedAt": "2026-11-16T17:10:52+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
     "status": "active",
     "summary": "A browser-based Vampire: The Masquerade V5 creator for standard clan neonates with a live rules ledger, local drafts, and printable sheets."
   },
-  "items": []
+  "items": [
+    {
+      "id": "add-fledgling-creation",
+      "title": "Add standard-clan fledgling creation",
+      "group": "Creation profiles",
+      "notes": "Make age profile explicit and keep neonate as the default for first-release drafts, backups, and build links. Apply the pinned Core fledgling rules to starting budgets and Predator Type eligibility. Verify Mara Vale’s existing build and a hand-checked fledgling through review, print, and a backup round-trip."
+    },
+    {
+      "id": "add-ancilla-creation",
+      "title": "Add standard-clan ancilla creation",
+      "group": "Creation profiles",
+      "notes": "Extend the age profiles with Core ancilla Generation, Blood Potency, Humanity, and starting budgets. Verify a hand-checked ancilla build, starting XP purchase order, and how the guide handles selections affected by a profile change."
+    },
+    {
+      "id": "add-caitiff-creation",
+      "title": "Add Caitiff creation",
+      "group": "Creation profiles",
+      "notes": "Add Caitiff as a distinct choice alongside clan, with source-cited Discipline selection, costs, and restrictions. Verify a hand-checked Caitiff build through review, print, and backup restore."
+    },
+    {
+      "id": "add-thin-blood-creation",
+      "title": "Add Thin-blood creation",
+      "group": "Creation profiles",
+      "notes": "Add source-cited Thin-blood restrictions and starting choices, including applicable Merits, Flaws, and Alchemy choices. Verify a hand-checked fixture through review, print, and restore, and check that unsupported combinations are clearly identified."
+    },
+    {
+      "id": "add-players-guide-source-pack",
+      "title": "Add an opt-in Player’s Guide source pack",
+      "group": "Catalog",
+      "notes": "Start with a documented set of Player’s Guide options and the prerequisites, grants, and choices required to finish those builds. Tag each option with its source and preserve Core-only results. Verify a mixed-source fixture and show unavailable sources in backup and build-link previews."
+    },
+    {
+      "id": "add-xp-advancement-journal",
+      "title": "Add a post-creation XP advancement journal",
+      "group": "Advancement",
+      "notes": "Start from a finished character and track earned XP, ordered purchases, and remaining XP separately from starting allocations. Verify dependent purchases, undo or removal, reload, and a backup round-trip with a hand-checked advancement fixture."
+    }
+  ]
 }
