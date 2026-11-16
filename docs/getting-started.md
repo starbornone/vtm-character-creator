@@ -63,6 +63,10 @@ Expand **Browser drafts**, enter a **Draft name**, and select **Save draft**. On
 
 Drafts belong to the current browser and site address. If saving fails, the last saved version stays in the browser and the current edits stay open. Use **Retry save** after storage is available or choose **Download current draft** before reloading to save a JSON copy with the current edits and step.
 
+### Duplicate a draft
+
+Open a named draft and expand **Browser drafts**. Select **Duplicate draft**, accept or edit the suggested **Copy name**, then select **Save copy**. The copy opens at the same step with the current character inputs. From then on, the two drafts autosave separately. If saving the copy fails, the original stays open at the same step and the copy form shows the error.
+
 ## Back up and restore a draft
 
 Select **Download current draft** to save a JSON backup of the character and current step, including an unfinished or unnamed character. The backup includes narrative fields, Storyteller notes, and the XP advancement journal when present.

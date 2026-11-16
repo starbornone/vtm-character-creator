@@ -69,11 +69,11 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 12. The two [JSON restore controls](docs/getting-started.md#back-up-and-restore-a-draft) identify a valid file meant for the other tool and name the matching control.
 13. The [live character summary](docs/getting-started.md#check-the-live-character-summary) shows key choices, current tracks, starting XP, and section progress while editing. It appears beside the desktop editor and opens through a labeled control on mobile.
 14. [Expanded print checks](docs/release-verification.md#expanded-character-sheet-printing) confirmed the Draft marker before and after Mara’s last purchase and verified the Thin-blood and advancement fixtures on US Letter and A4.
+15. [Draft duplication](docs/getting-started.md#duplicate-a-draft) creates a named browser copy from the current character inputs and step. Each draft saves independently.
 
 ## Next priorities
 
-1. **Duplicate a browser draft.** Let players make a named copy of the current draft in **Browser drafts** before trying a different clan, Predator Type, or XP path. Today that takes a JSON download and restore. Copy the character inputs and current step under a fresh ID. Verify that edits to the copy stay separate after reload and that a failed save keeps the original draft open.
-2. **Expand the opt-in Player’s Guide catalog by one clan.** The pack currently offers the Ministry as its only additional clan. Choose one more clan whose Disciplines the evaluator already supports. Add its cited creation choices and any powers needed to finish a starting build. Verify a hand-checked fixture through review, print, backup restore, and a mechanical build link. Check that existing Core and Ministry drafts still resolve as before. [Rules sources and fixtures](docs/v5-rules.md)
+1. **Expand the opt-in Player’s Guide catalog by one clan.** The pack currently offers the Ministry as its only additional clan. Choose one more clan whose Disciplines the evaluator already supports. Add its cited creation choices and any powers needed to finish a starting build. Verify a hand-checked fixture through review, print, backup restore, and a mechanical build link. Check that existing Core and Ministry drafts still resolve as before. [Rules sources and fixtures](docs/v5-rules.md)
 
 ### Deferred external handoff feedback
 

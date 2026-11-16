@@ -37,6 +37,12 @@ Rendered eight PDFs from the local Vite production build with Chrome’s print r
 
 The initial advancement sheet split Beliefs & Relationships onto a second page on Letter and left just the Conviction and Touchstone on page two on A4. Tightening print spacing kept all of the fixture’s sections on one page at both sizes with the same text size. The print stylesheet also keeps Beliefs & Relationships together when the section fits on a page. Editing controls and the site footer stayed off the printed sheets.
 
+## Browser draft duplication
+
+In the local production preview, a named draft on **Relationships** suggested a copy name and rejected an existing name with different capitalization. Saving under a different name opened the copy at **Relationships** with the same Touchstone. After editing only the copy and moving to **Advantages & XP**, reload reopened the copy at that step. The original reopened at **Relationships** with its original Touchstone, and the copy kept its separate edit.
+
+A second tab then saved a newer edit to the original. Saving another copy in the older tab showed the storage conflict in the copy form and left the original open at **Relationships**. After reloading, the library still held only the original and the first copy, and the newer edit was present. The browser draft test also checks that a quota failure leaves the stored library byte-for-byte intact.
+
 ## Public site
 
 Vercel reported the notice commit `e70e956` ready for production on 16 November 2026. The live creator and a shared build preview both displayed the official Dark Pack logo, the Paradox copyright and trademark notice, and the unofficial designation. The logo loaded from the public domain and linked to the Dark Pack Agreement. [Public character creator](https://vtm.astralarchives.games/) · [Dark Pack Agreement](https://www.paradoxinteractive.com/games/world-of-darkness/community/dark-pack-agreement) · [Official V5 resources](https://renegadegamestudios.com/vampire)

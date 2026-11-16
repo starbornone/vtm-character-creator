@@ -11,7 +11,7 @@ The Vampire: The Masquerade Character Creator helps players prepare a V5 vampire
 
 Use the [Character summary](getting-started.md#check-the-live-character-summary) while editing to check your key choices, tracks, starting XP, and progress.
 
-Name a browser draft at any step to autosave it. Each saved character resumes at its own last step. Download a full JSON backup to restore the draft elsewhere, share a read-only mechanical build link, or export a Markdown Storyteller brief with open rulings and selected narrative sections.
+Name a browser draft at any step to autosave it. Each saved character resumes at its own last step. Use **Duplicate draft** to try a different build from a separate copy. Download a full JSON backup to restore the draft elsewhere, share a read-only mechanical build link, or export a Markdown Storyteller brief with open rulings and selected narrative sections.
 
 Use the V5 table reference from any creation step to look up supported rules and their printed page references while the draft stays open.
 
