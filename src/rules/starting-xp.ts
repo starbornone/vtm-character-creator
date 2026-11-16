@@ -2,7 +2,7 @@ import { allDisciplinePowers, disciplines, type DisciplineId } from '../catalog/
 import { playersGuideDisabled, sourceEnabled } from '../catalog/source-packs.ts'
 import { advantageIds, startingAdvantages, startingFlaws, type AdvantageId, type FlawId } from '../catalog/starting-options.ts'
 import { skillIds, traitGroups, traitLabel, type AttributeId, type SkillId } from '../catalog/traits.ts'
-import { caitiffStatusIssue, isStatusAdvantage, type evaluateClanPath } from './clan-path.ts'
+import { caitiffStatusIssue, isNoHavenFlaw, isStatusAdvantage, ravnosNoHavenIssue, type evaluateClanPath } from './clan-path.ts'
 import { generationForProfile, type StartingGeneration } from './creation-profiles.ts'
 import { isRestrictedThinBloodOption, thinBloodBackgroundIssue } from './thin-blood.ts'
 import { specialtySkills, type evaluateTraitLedger, type TraitDraft } from './trait-ledger.ts'
@@ -67,6 +67,7 @@ function evaluateOptions(draft: StartingDraft, path: ClanPath, hasLingeringKiss:
     id, path.advantages.filter(grant => grant.name === startingAdvantages[id].name).reduce((sum, grant) => sum + grant.dots, 0),
   ])) as Record<AdvantageId, number>
   const grantedFlaws = [...path.flaws, ...path.clanFlaws]
+  const noHavenIssue = path.clan?.id === 'ravnos' ? ravnosNoHavenIssue : undefined
   const advantages = advantageIds.flatMap(id => {
     const dots = draft.advantages[id] ?? 0
     if (dots === 0) return []
@@ -80,7 +81,8 @@ function evaluateOptions(draft: StartingDraft, path: ClanPath, hasLingeringKiss:
   const active = advantages.filter(option => !option.issue)
   const flaws = [...new Set(draft.flaws)].map(id => ({
     id, dots: startingFlaws[id].dots,
-    issue: grantedFlaws.some(flaw => flaw.name === startingFlaws[id].name) ? 'Already granted by the clan or Predator Type.'
+    issue: id === 'no-haven' && noHavenIssue ? noHavenIssue
+      : grantedFlaws.some(flaw => flaw.name === startingFlaws[id].name) ? 'Already granted by the clan or Predator Type.'
       : id === 'ugly' && path.hasNosferatuBane ? 'The Nosferatu Bane already imposes Repulsive.'
       : active.some(option => flawConflict(id, option.id)) ? 'Conflicts with a selected Advantage.'
       : advantageIds.some(advantage => grantedAdvantages[advantage] && flawConflict(id, advantage)) ? 'Conflicts with a granted Advantage.' : undefined,
@@ -95,6 +97,7 @@ function evaluateOptions(draft: StartingDraft, path: ClanPath, hasLingeringKiss:
     const issue = !name || !source ? 'Enter a name and source or Storyteller note.'
       : path.thinBlood && isRestrictedThinBloodOption(name) ? thinBloodBackgroundIssue
       : path.isCaitiff && option.kind === 'advantage' && isStatusAdvantage(name) ? caitiffStatusIssue
+      : noHavenIssue && option.kind === 'flaw' && isNoHavenFlaw(name) ? noHavenIssue
       : !Number.isInteger(option.dots) || option.dots < 1 || option.dots > (option.kind === 'advantage' ? 5 : 2) ? 'Choose a valid starting dot rating.'
       : duplicate ? 'This option already appears in the catalog, grants, or manual entries.' : undefined
     return { ...option, name, source, issue }
@@ -105,6 +108,7 @@ function evaluateOptions(draft: StartingDraft, path: ClanPath, hasLingeringKiss:
     flaws,
     manualOptions,
     grantedAdvantages,
+    noHavenIssue,
     advantageBudget: budget(active.reduce((sum, option) => sum + option.dots, manualDots('advantage')), path.profile.advantages),
     flawBudget: budget(flaws.filter(option => !option.issue).reduce((sum, option) => sum + option.dots, manualDots('flaw')), path.profile.flaws),
   }

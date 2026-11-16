@@ -11,9 +11,14 @@ export const manualOptionId = 'manual'
 
 const suspect = { name: 'Suspect', dots: 1 }
 export const caitiffStatusIssue = 'Caitiff cannot take positive Status during character creation. Core p. 107.'
+export const ravnosNoHavenIssue = 'Ravnos cannot take No Haven during character creation. Player’s Guide p. 42.'
 
 export function isStatusAdvantage(name: string) {
   return /\bstatus\b/i.test(name)
+}
+
+export function isNoHavenFlaw(name: string) {
+  return /^no\s+haven$/i.test(name.trim())
 }
 
 export interface ManualClan {
@@ -163,7 +168,9 @@ export function evaluateClanPath(draft: ClanPathDraft, includeCustomText = true,
   const predatorUnavailable = Boolean(profile.predatorAllowed && predatorOption && !sourceEnabled(sourcePacks, predatorOption))
   const predatorIssue = profile.predatorAllowed && !predatorUnavailable
     ? (isCaitiff && predatorOption?.advantages?.some(grant => isStatusAdvantage(grant.name))
-      ? caitiffStatusIssue : predatorRestriction(clan?.id, draft.predatorType, profile.bloodPotency))
+      ? caitiffStatusIssue
+      : clan?.id === 'ravnos' && predatorOption?.flaws?.some(grant => isNoHavenFlaw(grant.name)) ? ravnosNoHavenIssue
+      : predatorRestriction(clan?.id, draft.predatorType, profile.bloodPotency))
     : undefined
   const predator = profile.predatorAllowed && clan && !predatorIssue && !predatorUnavailable ? predatorOption : undefined
   const specialtyOption = predator?.specialties.find(option => option.skill === draft.predatorSpecialty)

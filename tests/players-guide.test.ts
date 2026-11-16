@@ -7,11 +7,78 @@ import { editCharacter, evaluateCharacter } from '../src/rules/character-guide.t
 import { quotePurchase } from '../src/rules/starting-xp.ts'
 import { buildLinkPrefix, decodeBuildLink, encodeBuildLink } from '../src/sharing/build-link.ts'
 import { eliasCharacter } from './fixtures/elias-voss.ts'
+import { lenaCharacter } from './fixtures/lena-ortiz.ts'
 import { maraCharacter } from './fixtures/mara-vale.ts'
 
 const complete = evaluateCharacter(eliasCharacter)
 const backup = { name: 'Elias Voss', step: 'review' as const, character: eliasCharacter }
 const wrappedLink = (payload: unknown) => buildLinkPrefix + Buffer.from(JSON.stringify(payload)).toString('base64url')
+
+test('Ravnos creation applies the Siren grant before purchasing Fata Morgana', () => {
+  const { path, sheet, starting } = evaluateCharacter(lenaCharacter)
+  assert.deepEqual(path.clan?.disciplines, ['animalism', 'obfuscate', 'presence'])
+  assert.equal(sheet.identity.clan, 'Ravnos')
+  assert.equal(sheet.identity.predator, 'Siren')
+  assert.equal(sheet.identity.generation, 13)
+  assert.equal(sheet.bane, 'Doomed')
+  assert.equal(sheet.compulsion, 'Tempting Fate')
+  assert.equal(sheet.draft, false)
+  assert.deepEqual(sheet.tracks, { health: 6, willpower: 5, humanity: 7, bloodPotency: 1, baneSeverity: 2, bloodSurge: 2 })
+  assert.deepEqual(sheet.disciplines, [
+    { name: 'Obfuscate', rating: 3, powers: ['Cloak of Shadows', 'Chimerstry', 'Fata Morgana'] },
+    { name: 'Presence', rating: 2, powers: ['Awe', 'Daunt'] },
+  ])
+  assert.ok(sheet.advantages.some(grant => grant.name === 'Beautiful' && grant.dots === 2 && grant.source === 'Siren'))
+  assert.ok(sheet.flaws.some(grant => grant.name === 'Enemy' && grant.dots === 1 && grant.source === 'Siren'))
+  assert.equal(starting.final.specialties.persuasion?.[0], 'Seduction')
+  assert.deepEqual([sheet.advantageDots, sheet.flawDots, sheet.xpSpent, sheet.xpRemaining], [9, 3, 15, 0])
+
+  const noPresenceGrant = editCharacter(lenaCharacter, { type: 'clan-path', update: { predatorDiscipline: 'fortitude' } })
+  assert.match(evaluateCharacter(noPresenceGrant).starting.entries[0].issue ?? '', /Amalgam/)
+})
+
+test('Ravnos reject No Haven and preserve previous selections for a clan switch', () => {
+  const withFlaw = editCharacter(lenaCharacter, { type: 'starting', update: {
+    advantages: { mask: 2, resources: 4 }, flaws: ['stake-bait', 'no-haven'],
+    manualOptions: [{ name: 'No haven', source: 'Table notes', kind: 'flaw', dots: 1 }],
+  } })
+  const blocked = evaluateCharacter(withFlaw)
+  assert.match(blocked.starting.flaws.find(flaw => flaw.id === 'no-haven')?.issue ?? '', /Ravnos cannot take No Haven/)
+  assert.match(blocked.starting.manualOptions[0].issue ?? '', /Ravnos cannot take No Haven/)
+  assert.ok(!blocked.sheet.flaws.some(flaw => flaw.name === 'No Haven'))
+  assert.equal(blocked.sheet.draft, true)
+  const switched = evaluateCharacter(editCharacter(withFlaw, { type: 'clan-path', update: { clan: 'ministry' } }))
+  assert.ok(switched.sheet.flaws.some(flaw => flaw.name === 'No Haven'))
+  const manualPredator = editCharacter(lenaCharacter, { type: 'clan-path', update: {
+    predatorType: 'manual', manualPredator: { name: 'House option', source: 'Table notes', flaw: { name: 'No Haven', dots: 1 } },
+  } })
+  assert.match(evaluateCharacter(manualPredator).path.predatorIssue ?? '', /Ravnos cannot take No Haven/)
+})
+
+test('Ravnos pack selections survive backup and build-link round trips with the source on and off', () => {
+  const fixture = { name: 'Lena Ortiz', step: 'review' as const, character: lenaCharacter }
+  for (const enabled of [true, false]) {
+    const character = editCharacter(lenaCharacter, { type: 'players-guide', enabled })
+    const { sheet } = evaluateCharacter(character)
+    const raw = serializeDraftDownload({ ...fixture, character })
+    assert.equal(JSON.parse(raw).schemaVersion, 5)
+    const restored = readDraftBackup(raw)
+    assert.ok(restored.draft, restored.issue)
+    assert.deepEqual(evaluateCharacter(restored.draft.character).sheet, sheet)
+
+    const link = encodeBuildLink(character)
+    assert.ok(link)
+    const decoded = decodeBuildLink(link)
+    assert.ok('draft' in decoded, decoded.issue)
+    assert.equal(decoded.draft.clanPath.clan, 'ravnos')
+    assert.equal(decoded.draft.concept.name, '')
+    assert.equal(decoded.draft.relationships.convictions[0].touchstone, '')
+    const preview = evaluateCharacter(decoded.draft)
+    assert.equal(preview.sheet.identity.clan, enabled ? 'Ravnos' : undefined)
+    assert.deepEqual(preview.sheet.disciplines, sheet.disciplines)
+    assert.deepEqual(preview.sourceIssues, enabled ? [] : [playersGuideDisabled])
+  }
+})
 
 test('Elias Voss completes a mixed Core and Player’s Guide creation', () => {
   const { path, sheet, starting } = complete

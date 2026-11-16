@@ -174,7 +174,12 @@ const ministry: ClanOption = {
   bane: 'Abhors the Light', compulsion: 'Transgression', source: 'Player’s Guide pp. 35–36', sourcePack: playersGuide.id,
 }
 
-export const clanChoices: readonly ClanOption[] = [...coreClans, caitiffOption, thinBloodOption, ministry]
+const ravnos: ClanOption = {
+  id: 'ravnos', name: 'Ravnos', disciplines: ['animalism', 'obfuscate', 'presence'],
+  bane: 'Doomed', compulsion: 'Tempting Fate', source: 'Player’s Guide pp. 41–42', sourcePack: playersGuide.id,
+}
+
+export const clanChoices: readonly ClanOption[] = [...coreClans, caitiffOption, thinBloodOption, ministry, ravnos]
 
 export interface SpecialtyOption {
   skill: SkillId

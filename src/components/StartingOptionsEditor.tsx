@@ -115,13 +115,15 @@ export function StartingOptionsEditor({ draft, build, onChange }: {
             {build.isCaitiff && <p className="text-sm text-muted-foreground">Suspect adds 1 Flaw dot outside the base budget. Caitiff cannot purchase positive Status. Core pp. 107, 194.</p>}
             {flawIds.map(id => {
               const flaw = startingFlaws[id]
+              const checked = draft.flaws.includes(id)
               const issue = build.flaws.find(entry => entry.id === id)?.issue
+              const unavailable = !checked && id === 'no-haven' ? build.noHavenIssue : undefined
               return <div key={id} className="rounded-md border border-border/70 px-3 py-2">
                 <label className="flex min-h-8 items-center gap-2 text-sm">
-                  <input type="checkbox" className="size-4 accent-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300" checked={draft.flaws.includes(id)} aria-invalid={Boolean(issue) || undefined} aria-describedby={issue ? `issue-${id}` : undefined} onChange={event => onChange({ flaws: event.target.checked ? [...draft.flaws, id] : draft.flaws.filter(selected => selected !== id) })} />
+                  <input type="checkbox" className="size-4 accent-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300" checked={checked} disabled={Boolean(unavailable)} aria-invalid={Boolean(issue) || undefined} aria-describedby={issue || unavailable ? `issue-${id}` : undefined} onChange={event => onChange({ flaws: event.target.checked ? [...draft.flaws, id] : draft.flaws.filter(selected => selected !== id) })} />
                   {flaw.name} · {flaw.dots} {flaw.dots === 1 ? 'dot' : 'dots'}
                 </label>
-                {issue && <p id={`issue-${id}`} className="text-xs text-rose-300">{issue}</p>}
+                {(issue || unavailable) && <p id={`issue-${id}`} className="text-xs text-rose-300">{issue ?? unavailable}</p>}
                 <p className="text-xs text-muted-foreground">Core p. {flaw.page}</p>
               </div>
             })}
