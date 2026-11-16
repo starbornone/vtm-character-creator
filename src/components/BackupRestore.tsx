@@ -111,6 +111,7 @@ function BackupSummary({ draft }: { draft: DraftSnapshot }) {
     ['Source pack', sheet.sourcePack],
     ['Resume at', step?.title],
     ['Status', sheet.draft ? `Draft · ${openSteps.length} open ${openSteps.length === 1 ? 'section' : 'sections'}` : 'Complete'],
+    ['Advancement XP', sheet.advancement && `${sheet.advancement.earned} earned · ${sheet.advancement.spent} spent · ${sheet.advancement.remaining} remaining${sheet.advancement.paused ? ' · Paused' : ''}`],
   ]
   return (
     <>

@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowRight, BookOpen, Compass, Droplets, FileText, NotebookP
 import { useEffect, useRef, useState } from 'react'
 import { playersGuide } from '@/catalog/source-packs'
 import { traitGroups } from '@/catalog/traits'
+import { AdvancementJournal } from '@/components/AdvancementJournal'
 import { AllocationEditor } from '@/components/AllocationEditor'
 import { CharacterSheet } from '@/components/CharacterSheet'
 import { ClanPathEditor } from '@/components/ClanPathEditor'
@@ -61,7 +62,7 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
   const { dispatch } = drafts
   const panel = useRef<HTMLDivElement>(null)
   const shouldFocus = useRef(false)
-  const { ageProfile, path, traits, starting, tracks, sheet, pending, sourceIssues } = evaluateCharacter(draft)
+  const { ageProfile, path, traits, starting, advancement, tracks, sheet, pending, sourceIssues } = evaluateCharacter(draft)
   const { attributes, skills, specialties } = traits
   const { health, willpower } = tracks
   const { predatorGrant } = specialties
@@ -212,6 +213,10 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
               </li>)}
             </ul>}
           </section>
+        )}
+        {step === 'review' && (
+          <AdvancementJournal key={id ?? 'unnamed'} journal={draft.advancement} result={advancement} creationComplete={!sheet.draft}
+            onChange={journal => dispatch({ type: 'advancement', journal })} />
         )}
 
         <div className="flex flex-wrap items-center justify-between gap-3">

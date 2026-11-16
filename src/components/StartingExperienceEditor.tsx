@@ -6,7 +6,7 @@ import { advantageIds, startingAdvantages } from '@/catalog/starting-options'
 import { skillIds, traitLabel } from '@/catalog/traits'
 import { CatalogSelect } from '@/components/CatalogSelect'
 import { Card, CardContent } from '@/components/ui/card'
-import { attributeIds, bloodPotencyRatings, purchaseLabel, quotePurchase, type evaluateStartingBuild, type Purchase } from '@/rules/starting-xp'
+import { attributeIds, bloodPotencyRatings, purchaseLabel, quotePurchase, type evaluateStartingBuild, type ExperienceState, type Purchase } from '@/rules/starting-xp'
 import { specialtySkills } from '@/rules/trait-ledger'
 
 type Build = ReturnType<typeof evaluateStartingBuild>
@@ -14,7 +14,7 @@ const categories = {
   skill: 'Skill', attribute: 'Attribute', specialty: 'Specialty', discipline: 'Discipline', advantage: 'Advantage', 'blood-potency': 'Blood Potency',
 } satisfies Record<Purchase['kind'], string>
 const kinds = Object.keys(categories) as Purchase['kind'][]
-function targets(kind: Purchase['kind'], state: Build['final']): { id: string; label: string; source?: string }[] {
+function targets(kind: Purchase['kind'], state: ExperienceState): { id: string; label: string; source?: string }[] {
   switch (kind) {
     case 'skill':
     case 'specialty': return skillIds.map(id => ({ id, label: traitLabel(id) }))
@@ -25,7 +25,7 @@ function targets(kind: Purchase['kind'], state: Build['final']): { id: string; l
   }
 }
 
-function purchaseFor(kind: Purchase['kind'], target: string, name: string, state: Build['final'], confirmedLearning: boolean): Purchase | undefined {
+function purchaseFor(kind: Purchase['kind'], target: string, name: string, state: ExperienceState, learning?: 'caitiffLearning' | 'outOfClanLearning'): Purchase | undefined {
   switch (kind) {
     case 'skill': {
       const id = skillIds.find(id => id === target)
@@ -46,7 +46,7 @@ function purchaseFor(kind: Purchase['kind'], target: string, name: string, state
       const id = disciplineIds.find(id => id === target)
       if (id) {
         const to = (state.disciplines[id] ?? 0) + 1
-        return { kind, id, to, power: name, ...(state.isCaitiff && to === 1 && confirmedLearning ? { caitiffLearning: true } : {}) }
+        return { kind, id, to, power: name, ...(learning ? { [learning]: true } : {}) }
       }
       break
     }
@@ -70,10 +70,6 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
   purchases: readonly Purchase[]
   onChange: (purchases: Purchase[]) => void
 }) {
-  const [kind, setKind] = useState<Purchase['kind']>('skill')
-  const [target, setTarget] = useState('')
-  const [name, setName] = useState('')
-  const [confirmedLearning, setConfirmedLearning] = useState(false)
   if (build.profile.xp === 0) return (
     <Card className="gap-0 py-0" role="region" aria-labelledby="starting-xp-heading">
       <CardContent className="space-y-2 p-5 sm:p-7">
@@ -83,10 +79,40 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
       </CardContent>
     </Card>
   )
-  const purchase = purchaseFor(kind, target, name, build.final, confirmedLearning)
-  const quote = purchase ? quotePurchase(build.final, purchase) : undefined
+  return (
+    <Card className="gap-0 py-0" role="region" aria-labelledby="starting-xp-heading">
+      <CardContent className="space-y-4 p-5 sm:p-7">
+        <div>
+          <h2 id="starting-xp-heading" className="text-2xl font-semibold tracking-tight">Starting XP</h2>
+          <p role="status" className="mt-1 text-sm text-muted-foreground">{build.final.remaining} / {build.profile.xp} XP remaining</p>
+          {build.isCaitiff && <p className="mt-1 text-sm text-muted-foreground">Caitiff Discipline dots cost 6 XP times the new rating. Core pp. 107, 137.</p>}
+        </div>
+        <ExperiencePurchases state={build.final} entries={build.entries} purchases={purchases} onChange={onChange} />
+      </CardContent>
+    </Card>
+  )
+}
+
+export function ExperiencePurchases({ state, entries, purchases, onChange, advancing = false }: {
+  state: ExperienceState
+  entries: Build['entries']
+  purchases: readonly Purchase[]
+  onChange: (purchases: Purchase[]) => void
+  advancing?: boolean
+}) {
+  const [kind, setKind] = useState<Purchase['kind']>('skill')
+  const [target, setTarget] = useState('')
+  const [name, setName] = useState('')
+  const [confirmedLearning, setConfirmedLearning] = useState(false)
+  const discipline = kind === 'discipline' ? state.readyDisciplines.find(id => id === target) : undefined
+  const learning = discipline && !state.disciplines[discipline]
+    ? state.isCaitiff ? 'caitiffLearning'
+      : advancing && !state.isThinBlood && !state.clanDisciplines.includes(discipline) ? 'outOfClanLearning' : undefined
+    : undefined
+  const purchase = purchaseFor(kind, target, name, state, confirmedLearning ? learning : undefined)
+  const quote = purchase ? quotePurchase(state, purchase, advancing) : undefined
   const needsName = kind === 'specialty' || (purchase?.kind === 'skill' && purchase.to === 1 && specialtySkills.some(id => id === purchase.id))
-  const powers = purchase?.kind === 'discipline' ? allDisciplinePowers[purchase.id].filter(power => sourceEnabled(build.final.sourcePacks, power) && power.level <= purchase.to && !build.final.powers.includes(power.id)) : []
+  const powers = purchase?.kind === 'discipline' ? allDisciplinePowers[purchase.id].filter(power => sourceEnabled(state.sourcePacks, power) && power.level <= purchase.to && !state.powers.includes(power.id)) : []
 
   function move(index: number, offset: number) {
     const next = [...purchases]
@@ -96,64 +122,57 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
   }
 
   return (
-    <Card className="gap-0 py-0" role="region" aria-labelledby="starting-xp-heading">
-      <CardContent className="space-y-4 p-5 sm:p-7">
-        <div>
-          <h2 id="starting-xp-heading" className="text-2xl font-semibold tracking-tight">Starting XP</h2>
-          <p role="status" className="mt-1 text-sm text-muted-foreground">{build.final.remaining} / {build.profile.xp} XP remaining</p>
-          {build.isCaitiff && <p className="mt-1 text-sm text-muted-foreground">Caitiff Discipline dots cost 6 XP times the new rating. Core pp. 107, 137.</p>}
+    <>
+      <div className="grid items-end gap-3 rounded-lg border border-border p-3 sm:grid-cols-3">
+        <label className="grid gap-1 text-sm">Purchase type
+          <select className="ledger-field" value={kind} onChange={event => {
+            const selected = kinds.find(item => item === event.target.value)
+            if (selected) setKind(selected)
+            setTarget('')
+            setName('')
+            setConfirmedLearning(false)
+          }}>
+            {kinds.map(id => <option key={id} value={id}>{categories[id]}</option>)}
+          </select>
+        </label>
+        {kind !== 'blood-potency' && <CatalogSelect key={kind} label="Purchase target" value={target} choices={targets(kind, state)} searchable={kind === 'skill' || kind === 'specialty'} onChange={value => { setTarget(value); setName(''); setConfirmedLearning(false) }} />}
+        {needsName && <label className="grid gap-1 text-sm">{kind === 'skill' ? 'Granted first-dot Specialty' : 'Purchased Specialty name'}
+          <input className="ledger-field" value={name} onChange={event => setName(event.target.value)} />
+        </label>}
+        {purchase?.kind === 'discipline' && <label className="grid gap-1 text-sm">New Discipline power
+          <select className="ledger-field" value={name} onChange={event => setName(event.target.value)}>
+            <option value="">Choose…</option>
+            {powers.map(power => <option key={power.id} value={power.id}>{power.name} · {powerSource(power)}</option>)}
+          </select>
+        </label>}
+        {learning && <label className="flex items-center gap-2 text-sm sm:col-span-3">
+          <input type="checkbox" className="size-4 accent-rose-300" checked={confirmedLearning} onChange={event => setConfirmedLearning(event.target.checked)} />
+          The character has tasted a wielder’s blood and meets the learning requirements.
+        </label>}
+        <div className="flex flex-wrap items-center gap-3 sm:col-span-3">
+          <button type="button" className={actionClass} disabled={!purchase || Boolean(quote?.issue)} onClick={() => {
+            if (purchase && !quote?.issue) onChange([...purchases, purchase])
+            setName('')
+            setConfirmedLearning(false)
+          }}><Plus aria-hidden="true" />Add purchase</button>
+          <p className="text-sm text-muted-foreground" role="status">
+            {purchase && quote?.cost !== undefined && `${purchaseLabel(purchase)} · ${quote.cost} XP. `}{quote?.issue ?? (!purchase && target ? 'This option is already at its maximum.' : '')}
+          </p>
         </div>
-        <div className="grid items-end gap-3 rounded-lg border border-border p-3 sm:grid-cols-3">
-          <label className="grid gap-1 text-sm">Purchase type
-            <select className="ledger-field" value={kind} onChange={event => {
-              const selected = kinds.find(item => item === event.target.value)
-              if (selected) setKind(selected)
-              setTarget('')
-              setName('')
-              setConfirmedLearning(false)
-            }}>
-              {kinds.map(id => <option key={id} value={id}>{categories[id]}</option>)}
-            </select>
-          </label>
-          {kind !== 'blood-potency' && <CatalogSelect key={kind} label="Purchase target" value={target} choices={targets(kind, build.final)} searchable={kind === 'skill' || kind === 'specialty'} onChange={value => { setTarget(value); setName(''); setConfirmedLearning(false) }} />}
-          {needsName && <label className="grid gap-1 text-sm">{kind === 'skill' ? 'Granted first-dot Specialty' : 'Purchased Specialty name'}
-            <input className="ledger-field" value={name} onChange={event => setName(event.target.value)} />
-          </label>}
-          {purchase?.kind === 'discipline' && <label className="grid gap-1 text-sm">New Discipline power
-            <select className="ledger-field" value={name} onChange={event => setName(event.target.value)}>
-              <option value="">Choose…</option>
-              {powers.map(power => <option key={power.id} value={power.id}>{power.name} · {powerSource(power)}</option>)}
-            </select>
-          </label>}
-          {build.isCaitiff && purchase?.kind === 'discipline' && purchase.to === 1 && <label className="flex items-center gap-2 text-sm sm:col-span-3">
-            <input type="checkbox" className="size-4 accent-rose-300" checked={confirmedLearning} onChange={event => setConfirmedLearning(event.target.checked)} />
-            The character has tasted a wielder’s blood and meets the learning requirements.
-          </label>}
-          <div className="flex flex-wrap items-center gap-3 sm:col-span-3">
-            <button type="button" className={actionClass} disabled={!purchase || Boolean(quote?.issue)} onClick={() => {
-              if (purchase && !quote?.issue) onChange([...purchases, purchase])
-              setName('')
-              setConfirmedLearning(false)
-            }}><Plus aria-hidden="true" />Add purchase</button>
-            <p className="text-sm text-muted-foreground" role="status">
-              {purchase && quote?.cost !== undefined && `${purchaseLabel(purchase)} · ${quote.cost} XP. `}{quote?.issue ?? (!purchase && target ? 'This option is already at its maximum.' : '')}
-            </p>
+      </div>
+      {entries.length > 0 && <ol aria-label={advancing ? 'Ordered advancement purchases' : 'Ordered XP purchases'} className="space-y-2">
+        {entries.map((entry, index) => <li key={index} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border/70 px-3 py-2">
+          <div>
+            <p className="font-medium">{entry.label}</p>
+            <p className={`text-sm ${entry.issue ? 'text-rose-300' : 'text-muted-foreground'}`}>{entry.issue ?? `${entry.cost} XP · ${entry.remaining} left`}</p>
           </div>
-        </div>
-        {build.entries.length > 0 && <ol aria-label="Ordered XP purchases" className="space-y-2">
-          {build.entries.map((entry, index) => <li key={index} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border/70 px-3 py-2">
-            <div>
-              <p className="font-medium">{entry.label}</p>
-              <p className={`text-sm ${entry.issue ? 'text-rose-300' : 'text-muted-foreground'}`}>{entry.issue ?? `${entry.cost} XP · ${entry.remaining} left`}</p>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              <button type="button" className={actionClass} aria-label={`Move ${entry.label} earlier`} disabled={index === 0} onClick={() => move(index, -1)}><ArrowUp aria-hidden="true" />Earlier</button>
-              <button type="button" className={actionClass} aria-label={`Move ${entry.label} later`} disabled={index === purchases.length - 1} onClick={() => move(index, 1)}><ArrowDown aria-hidden="true" />Later</button>
-              <button type="button" className={actionClass} aria-label={`Remove ${entry.label}`} onClick={() => onChange(purchases.filter((_, offset) => offset !== index))}><Trash2 aria-hidden="true" />Remove</button>
-            </div>
-          </li>)}
-        </ol>}
-      </CardContent>
-    </Card>
+          <div className="flex flex-wrap gap-1.5">
+            <button type="button" className={actionClass} aria-label={`Move ${entry.label} earlier`} disabled={index === 0} onClick={() => move(index, -1)}><ArrowUp aria-hidden="true" />Earlier</button>
+            <button type="button" className={actionClass} aria-label={`Move ${entry.label} later`} disabled={index === purchases.length - 1} onClick={() => move(index, 1)}><ArrowDown aria-hidden="true" />Later</button>
+            <button type="button" className={actionClass} aria-label={`Remove ${entry.label}`} onClick={() => onChange(purchases.filter((_, offset) => offset !== index))}><Trash2 aria-hidden="true" />Remove</button>
+          </div>
+        </li>)}
+      </ol>}
+    </>
   )
 }

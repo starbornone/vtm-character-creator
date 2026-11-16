@@ -16,7 +16,7 @@ export function CharacterSheet({ sheet, mechanicalOnly = false }: { sheet: Sheet
   const tracksAndExperience: Detail[] = [
     ['Health', tracks.health ?? '—'], ['Willpower', tracks.willpower ?? '—'], ['Humanity', tracks.humanity],
     ['Blood Potency', tracks.bloodPotency], ['Bane Severity', tracks.baneSeverity], ['Blood Surge dice', tracks.bloodSurge],
-    ['XP remaining', sheet.xpRemaining],
+    ['Starting XP remaining', sheet.xpRemaining],
   ]
   return (
     <article className="character-sheet" aria-labelledby="sheet-name">
@@ -71,6 +71,14 @@ export function CharacterSheet({ sheet, mechanicalOnly = false }: { sheet: Sheet
           <ol className="sheet-list" aria-label="Applied XP purchases">
             {sheet.purchases.map((entry, index) => <li key={index}>{entry.label} · {entry.cost} XP</li>)}
           </ol>
+          {sheet.advancement && <>
+            <h3>Advancement XP</h3>
+            <p>{sheet.advancement.earned} earned · {sheet.advancement.spent} spent · {sheet.advancement.remaining} remaining</p>
+            {sheet.advancement.pendingPurchases > 0 && <p>{sheet.advancement.pendingPurchases} unapplied {sheet.advancement.pendingPurchases === 1 ? 'purchase' : 'purchases'}</p>}
+            <ol className="sheet-list" aria-label="Applied advancement purchases">
+              {sheet.advancement.purchases.map((entry, index) => <li key={index}>{entry.label} · {entry.cost} XP</li>)}
+            </ol>
+          </>}
         </section>
         <section aria-labelledby="sheet-advantages">
           <h3 id="sheet-advantages">Advantages &amp; Flaws</h3>

@@ -40,6 +40,7 @@ export function ShareBuildControls({ draft }: { draft: CharacterDraft }) {
           </label>
           <button type="button" className="guide-button guide-action" onClick={copy}><Copy aria-hidden="true" />Copy link</button>
           <p className="w-full text-sm text-muted-foreground">Anyone with the link can view the included mechanics. Names, notes, and other free text stay in your draft.</p>
+          {draft.advancement && <p className="w-full text-sm text-muted-foreground">This link shares creation choices. Use a JSON backup to transfer the XP advancement journal.</p>}
           <p role="status" className={copyStatus ? 'w-full text-sm text-muted-foreground' : 'sr-only'}>{copyStatus}</p>
         </div>
       : <p role="alert" className="text-sm text-rose-300">This build is too large for a link. Use a JSON backup to share the full draft.</p>)}
