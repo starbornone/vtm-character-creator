@@ -1,12 +1,31 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T22:59:22+11:00",
+  "updatedAt": "2026-11-16T23:03:08+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
     "status": "active",
     "summary": "A browser-based Vampire: The Masquerade V5 creator with Core and optional Player’s Guide choices, XP advancement, chronicle presets, a searchable rules reference, and local character and coterie planning tools."
   },
-  "items": []
+  "items": [
+    {
+      "id": "verify-foundry-v5-actor-import",
+      "title": "Verify Foundry V5 actor import compatibility",
+      "group": "Foundry interoperability",
+      "notes": "Start with the World of Darkness 5e system (wod5e). Record the exact system and Foundry versions. Export a sample vampire actor, import it into a disposable actor, and compare the re-export. Document which fields and embedded items survive, which need table review or mapping, and the scope of a first exporter."
+    },
+    {
+      "id": "review-player-storyteller-handoffs",
+      "title": "Review sample handoffs with a player and a Storyteller",
+      "group": "Product feedback",
+      "notes": "Prepare a sample Storyteller brief and coterie plan from fictional fixtures. Walk through sharing, review, and plan restore with a player and a Storyteller. Record the feedback and any evidence gaps in the release verification record, then rank actionable follow-ups."
+    },
+    {
+      "id": "scope-private-storyteller-workspace",
+      "title": "Scope a private Storyteller workspace",
+      "group": "Chronicle discovery",
+      "notes": "Use the handoff feedback to identify shared chronicle work that the current planner and portable files leave unresolved. Record the first useful workflow, player and Storyteller access, data ownership, export and deletion expectations, and a decision on whether to pursue implementation."
+    }
+  ]
 }
