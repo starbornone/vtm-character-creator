@@ -1,20 +1,14 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T17:32:00+11:00",
+  "updatedAt": "2026-11-16T17:43:53+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
     "status": "active",
-    "summary": "A browser-based Vampire: The Masquerade V5 creator for standard-clan neonates and newly Embraced fledglings with a live rules ledger, local drafts, and printable sheets."
+    "summary": "A browser-based Vampire: The Masquerade V5 creator for standard-clan fledglings, neonates, and ancillae with a live rules ledger, local drafts, and printable sheets."
   },
   "items": [
-    {
-      "id": "add-ancilla-creation",
-      "title": "Add standard-clan ancilla creation",
-      "group": "Creation profiles",
-      "notes": "Extend the age profiles with Core ancilla Generation, Blood Potency, Humanity, and starting budgets. Verify a hand-checked ancilla build, starting XP purchase order, and how the guide handles selections affected by a profile change."
-    },
     {
       "id": "add-caitiff-creation",
       "title": "Add Caitiff creation",

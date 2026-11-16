@@ -20,7 +20,7 @@ Distributions count how many distinct traits have each rating. Remaining Skill r
 
 ## Core clan and Predator Type catalog
 
-The [catalog](../src/catalog/clan-path.ts) covers Brujah, Gangrel, Malkavian, Nosferatu, Toreador, Tremere, and Ventrue, with the three clan Disciplines, Bane, and Compulsion for each. Use Core pp. 65–103 and 210–211 for clan data. Powers through level three cover the Discipline ratings a standard neonate can reach with this starting allocation and XP budget. Use Core pp. 244–274 for powers and Amalgams. Fortitude’s Resilience adds the current Fortitude rating to Health (Core p. 258). A character with Blood Sorcery may choose one free level-one Ritual (Core pp. 272, 276–277).
+The [catalog](../src/catalog/clan-path.ts) covers Brujah, Gangrel, Malkavian, Nosferatu, Toreador, Tremere, and Ventrue, with the three clan Disciplines, Bane, and Compulsion for each. Use Core pp. 65–103 and 210–211 for clan data. The catalog includes Core powers through level four, the highest Discipline rank reachable with the starting allocation and 35 ancilla XP. Use Core pp. 244–274 for powers and Amalgams. Fortitude’s Resilience adds the current Fortitude rating to Health (Core p. 258). A character with Blood Sorcery may choose one free level-one Ritual (Core pp. 272, 276–277).
 
 The ten Predator Types are Alleycat, Bagger, Blood Leech, Cleaver, Consensualist, Farmer, Osiris, Sandman, Scene Queen, and Siren. Their grants sit outside the base Advantage, Flaw, and Skill budgets. If a Predator Type grants a Specialty for an unrated Skill, it gives a dot in that Skill. Core pp. 136, 149, 175–178.
 
@@ -33,7 +33,7 @@ The ten Predator Types are Alleycat, Bagger, Blood Leech, Cleaver, Consensualist
 | Scene Queen | Choose Disliked outside the scene or Prey Exclusion for another scene. | p. 178 |
 | Nosferatu | The Bane supplies Repulsive outside the base Flaw budget. The sheet flags the Siren’s Beautiful grant for Storyteller review and excludes it from the total. | pp. 85, 178–179 |
 
-Manual options record a source or table note. The evaluator applies the supported starting dot and grant structure and exposes the entry for Storyteller review. The clan catalog serves standard-clan neonates and fledglings. The Predator catalog is available to neonates. Caitiff, Thin-bloods, and other age profiles have separate starting rules.
+Manual options record a source or table note. The evaluator applies the supported starting dot and grant structure and exposes the entry for Storyteller review. The clan catalog serves standard-clan fledglings, neonates, and ancillae. The Predator catalog is available to neonates and ancillae. Caitiff, Thin-bloods, and other age profiles have separate starting rules.
 
 ## Hand-checked fixture
 
@@ -104,3 +104,28 @@ Rowan Pike is a Gangrel night courier in *Last Stop at the River*, Embraced in 2
 | Final tracks | 12th Generation, Health 8 (Stamina 3 + 3 + Fortitude 2 from Resilience), Willpower 5 (Composure 3 + Resolve 2), Humanity 7, Blood Potency 1, Bane Severity 2, two Blood Surge dice, and 0 XP spent or remaining. |
 
 The [fixture](../tests/fixtures/rowan-pike.ts) and [creation profile tests](../tests/creation-profiles.test.ts) verify the evaluated sheet, inactive Predator Type and XP choices, and fledgling and neonate transfers. The browser walkthrough matched the calculation through review, a one-page US Letter print, reload, backup restore, and the read-only mechanical link.
+
+## Silas Ward ancilla fixture
+
+Core pp. 136–137, 140, and 149 give a standard-clan ancilla 10th or 11th Generation, Blood Potency 2, and 35 starting XP. Add two dots to each base budget for 9 Advantage and 4 Flaw dots, then apply Predator grants separately. Subtract 1 from the usual starting Humanity of 7, then apply the Predator modifier. Blood Leech brings Blood Potency to 3 and Humanity to 5 (Core p. 176). Farmer can start at Blood Potency 2, and selecting it blocks an XP purchase that would increase Blood Potency to 3 (Core p. 177). Core p. 214 sets the ancilla Generation cap at Blood Potency 4. The XP cost to reach 4 from 3 is 40, above the starting budget.
+
+Silas Ward is an 11th-Generation Toreador night archivist in *The Uncatalogued City*, Embraced in 1912. His Ambition is to preserve the city’s missing histories and his Desire is to return the missing ledger to its curator. Helen Finch is his sire. The Chronicle Tenet is to give back what was entrusted to you. His Conviction “Preserve the truth” is tied to Imani Cole, a living book conservator.
+
+| Category | Choices and expected results |
+| --- | --- |
+| Attributes | Strength 1, Dexterity 3, Stamina 2, Charisma 3, Manipulation 2, Composure 3, Intelligence 4, Wits 2, Resolve 2. |
+| Balanced Skills | 3 in Academics, Investigation, and Stealth. 2 in Awareness, Etiquette, Insight, Occult, and Persuasion. 1 in Athletics, Craft, Drive, Larceny, Medicine, Politics, and Streetwise. All others start at 0. |
+| Base Specialties | Academics (Local history), Craft (Bookbinding), and Investigation (Provenance) as the free Specialty. |
+| Clan | Celerity 2 with Cat’s Grace and Fleetness, and Auspex 1 with Heightened Senses (Core pp. 87–91, 249, 252–253). |
+| Sandman | Stealth (Break-in), Auspex 2 with Premonition, and 1 Resources dot (Core pp. 177, 249). |
+| Base Advantages and Flaws | Unbondable 5 + Mask 2 + Resources 2 = 9 Advantage dots. Stake Bait 2 + Ugly 1 + No Haven 1 = 4 Flaw dots. Sandman brings Resources to 3 and total Advantages to 10 (Core pp. 177, 179, 181–182, 188, 192–193). |
+| Final tracks | Health 5 (Stamina 2 + 3), Willpower 5 (Composure 3 + Resolve 2), Humanity 6, Blood Potency 2, Bane Severity 2, and two Blood Surge dice. |
+
+| XP purchase | Cost | XP left |
+| --- | ---: | ---: |
+| Auspex 2 → 3, Scry the Soul (Core p. 249) | 15 | 20 |
+| Auspex 3 → 4, Spirit’s Touch (Core p. 250) | 20 | 0 |
+
+Moving Auspex 4 to the top of the journal skips that purchase as ineligible, then applies Auspex 3. Returning the purchases to their original order spends all 35 XP and restores Auspex 4. Under Neonate, Silas’s 11th Generation becomes inactive, both dot budgets are two over, and only the 15 XP purchase applies. Switching back to Ancilla restores the original result when those saved choices are still present.
+
+The [fixture](../tests/fixtures/silas-ward.ts) and [ancilla tests](../tests/ancilla-creation.test.ts) cover the totals, XP replay and power prerequisites, profile switches, and transfers. Browser verification built Silas from Concept through **Review & Print**, reordered the journal, reloaded after switching to Neonate, paused grants and purchases under Fledgling, returned to Ancilla, and opened the read-only link.

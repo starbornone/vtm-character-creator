@@ -52,4 +52,12 @@ The brief shows evaluated mechanics and open rulings with generic labels for man
 
 **Consequences.** First-release data keeps the same Neonate mechanics. Version 2 stores the fledgling choice so older clients can identify an unsupported format. Backups preserve paused inputs and mechanical links carry active mechanics.
 
+## 7 Ancilla profile switching retains draft inputs
+
+**Context.** Core pp. 137 and 140 give standard-clan ancillae a different Generation range and budgets from the younger profiles. A profile change can invalidate part of an existing build.
+
+**Decision.** Reevaluate the player’s current choices after a switch. Keep an unavailable Generation in the draft and leave it off the sheet until the player picks an eligible Generation or switches back. Replay the XP journal in order against the current budget and power prerequisites. Resolve a conflict between Farmer and Blood Potency 3 by rejecting the XP purchase while Farmer is selected.
+
+**Consequences.** A profile switch can send the player back to **Advantages & XP**. Full drafts preserve choices for that review, including across reload and backup. Mechanical build links omit a paused Generation. Version 2 carries the ancilla profile and rank-four purchases while the established neonate and fledgling payloads still open.
+
 See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the full flow.

@@ -17,9 +17,9 @@ If npm reports a missing `package.json`, return to the repository root. For a re
 
 ## Choose an age profile
 
-In **Concept**, choose **Neonate** or **Fledgling**. Neonates choose an eligible Predator Type and have 15 starting XP. Choose **Fledgling** for a newly Embraced standard-clan character who will develop a Predator Type during play. The guide skips that choice and gives the character 0 starting XP. Both profiles start at 12th or 13th Generation and use the same base Attribute, Skill, Advantage, and Flaw allocations.
+In **Concept**, use **Age profile** to choose **Fledgling**, **Neonate**, or **Ancilla**. A newly Embraced fledgling starts with 0 XP and develops a Predator Type in play. A neonate chooses an eligible Predator Type and starts with 15 XP. Both profiles use 12th or 13th Generation. An ancilla also chooses an eligible Predator Type and starts at 10th or 11th Generation with Blood Potency 2, Humanity 6 before Predator adjustments, 9 base Advantage dots, 4 base Flaw dots, and 35 XP.
 
-If you switch a neonate to fledgling, the guide pauses the Predator Type choices and XP purchases. Switch back to **Neonate** to use them again. Browser drafts and JSON backups preserve those choices. Fledgling build links carry the active mechanics only. First-release drafts, backups, and links open as neonates.
+Switching profiles checks the selected Generation, dot budgets, and XP journal against the new rules. If a Generation becomes unavailable, the guide keeps it in the full draft until you choose a new one. Switching back can make the saved choice active again. Fledgling pauses the Predator Type and XP choices. Browser drafts and JSON backups preserve those choices. Mechanical build links carry the choices supported by the current profile. First-release drafts, backups, and links open as neonates.
 
 ## Save and reopen browser drafts
 
@@ -77,6 +77,12 @@ In **Concept**, choose **Fledgling**. Use [Rowan Pike’s fixture](v5-rules.md#r
 
 Complete **Relationships** and open **Review & Print**. Rowan’s sheet shows Health 8, Willpower 5, Humanity 7, and Blood Potency 1. Verify the Fledgling label and print the sheet. You can also save a named draft, reload at **Review & Print**, and restore a downloaded backup as a second draft.
 
+## Build Silas Ward
+
+In **Concept**, choose **Ancilla**. Use the [Silas Ward fixture](v5-rules.md#silas-ward-ancilla-fixture) to build an 11th-Generation Toreador with Sandman and Auspex 2 before XP. Under **Starting XP**, buy Scry the Soul for Auspex 3 (15 XP), then Spirit’s Touch for Auspex 4 (20 XP). Move the second purchase earlier to see its rank requirement and the 20 XP left unspent. Move it back to finish the build.
+
+Try **Neonate** in **Concept** and return to **Advantages & XP**. The guide flags Silas’s 11th Generation and the two extra dots in each base budget. Auspex 3 still fits the smaller XP budget and the Auspex 4 purchase stays in the journal. Choose **Ancilla** again to return to the completed sheet.
+
 ## Verify the production build
 
 ```sh
@@ -85,6 +91,6 @@ npm run build
 npm run preview
 ```
 
-The tests check Mara’s and Rowan’s complete sheets, age profile compatibility, core path and grant rules, browser draft storage, JSON backup round-trips, the build link allowlist, and narrative opt-ins for the Storyteller brief. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
+The tests check the complete Mara, Rowan, and Silas sheets, age profile compatibility, core path and grant rules, browser draft storage, JSON backup round-trips, the build link allowlist, and narrative opt-ins for the Storyteller brief. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
 
 See the [overview](overview.md) for first-release scope and [Development](development.md) for contributor checks.

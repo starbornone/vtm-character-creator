@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T17:32:00+11:00",
+  "updatedAt": "2026-11-16T17:43:53+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -126,6 +126,13 @@
       "group": "Creation profiles",
       "notes": "Added the newly Embraced standard-clan fledgling profile. Verified Rowan Pike through review, a one-page US Letter print, browser reload, JSON backup restore, and the read-only mechanical link. Verified that the first-release Mara Vale browser draft, JSON backup, and build link retain the original neonate mechanics.",
       "completedAt": "2026-11-16T17:32:00+11:00"
+    },
+    {
+      "id": "add-ancilla-creation",
+      "title": "Add standard-clan ancilla creation",
+      "group": "Creation profiles",
+      "notes": "Added Core ancilla creation and rank-four Discipline powers. Built Silas Ward through browser review, checked the 35 XP journal in both orders, reloaded after switching to Neonate, paused Predator Type and XP under Fledgling, then restored the ancilla sheet and opened its mechanical link. Automated checks cover the hand calculations, prerequisites, Blood Potency, and draft and backup round-trips.",
+      "completedAt": "2026-11-16T17:43:53+11:00"
     }
   ]
 }
