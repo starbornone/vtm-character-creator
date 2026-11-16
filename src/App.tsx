@@ -9,6 +9,7 @@ import { ChroniclePresets } from '@/components/ChroniclePresets'
 import { ClanPathEditor } from '@/components/ClanPathEditor'
 import { CoteriePlanner } from '@/components/CoteriePlanner'
 import { DraftControls } from '@/components/DraftControls'
+import { HandoffPrototype } from '@/components/HandoffPrototype'
 import { ConceptEditor, RelationshipEditor } from '@/components/NarrativeEditors'
 import { RelationshipMap } from '@/components/RelationshipMap'
 import { ShareBuildControls, SharedBuild } from '@/components/SharedBuild'
@@ -98,6 +99,7 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
         <div className="flex flex-wrap gap-2">
           <TableReference />
           <CoteriePlanner drafts={drafts.library.drafts} />
+          <HandoffPrototype />
         </div>
       </header>
 
