@@ -1,12 +1,37 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T21:45:01+11:00",
+  "updatedAt": "2026-11-16T21:53:38+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
     "status": "active",
     "summary": "A browser-based Vampire: The Masquerade V5 creator with the named Core clans, Caitiff, Thin-bloods, an opt-in Player’s Guide pack, and post-creation XP advancement."
   },
-  "items": []
+  "items": [
+    {
+      "id": "add-chronicle-presets",
+      "title": "Add reusable chronicle presets",
+      "group": "Chronicle tools",
+      "notes": "Save named browser-local presets for chronicle name, Tenets, and enabled rule sources. Preview field changes before applying a preset. Verify reuse across two drafts, preservation of unrelated character inputs, and backup restore of the applied settings."
+    },
+    {
+      "id": "add-v5-table-reference",
+      "title": "Add a searchable V5 table reference",
+      "group": "Rules reference",
+      "notes": "Start with creation budgets, XP costs, Discipline prerequisites, and derived tracks in the supported rules. Use original summaries and pinned book and page references. Verify keyboard search, mobile use, and returning to the same draft and step."
+    },
+    {
+      "id": "add-character-relationship-map",
+      "title": "Add a Relationship Map for one character",
+      "group": "Chronicle tools",
+      "notes": "Use the recorded sire, coterie, and Touchstones as starting points. Let players add people and connections, provide a keyboard-accessible way to review them, and verify backup restore. Keep relationship data out of mechanical build links."
+    },
+    {
+      "id": "add-coterie-domain-planner",
+      "title": "Add a coterie and Domain planner with a portable handoff",
+      "group": "Chronicle tools",
+      "notes": "Build on the single-character Relationship Map. Organize several characters and their shared coterie and Domain details in a named browser-local plan. Verify a reviewable portable handoff, a plan round-trip, and that individual character drafts remain intact."
+    }
+  ]
 }
