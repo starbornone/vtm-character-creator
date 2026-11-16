@@ -62,9 +62,8 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 5. [Chronicle presets](docs/getting-started.md#reuse-chronicle-settings) reuse the chronicle name, Tenets, and enabled rule sources across drafts in one browser. Players preview the field changes before applying a preset. The applied values travel with the character’s JSON backup.
 6. The searchable [V5 table reference](docs/getting-started.md#look-up-v5-rules) covers creation budgets, XP costs, Discipline prerequisites, and derived tracks with book and page references. Players can open it from any creation step and return to the same draft.
 7. The [Character Relationship Map](docs/getting-started.md#map-a-characters-relationships) starts with the recorded sire, coterie, and Touchstones. Players can add people and labeled connections. The map travels with the full draft backup.
+8. The [Coterie and Domain planner](docs/getting-started.md#plan-a-coterie-and-domain) organizes several characters in a named browser plan. Players can preview and transfer the shared purpose, Domain ratings, member names, and selected relationship details as JSON. Restoring a plan creates a separate copy and leaves individual character drafts intact.
 
-## Next priorities
-
-**Coterie and Domain planner.** Use the Relationship Map as the starting point for organizing multiple characters around shared coterie and Domain details. Begin with a browser-local plan and a portable handoff the table can review. Verify that a shared plan round-trips without overwriting individual character drafts.
+## Further discovery
 
 Keep Foundry export in discovery until there is a specific V5 system and version to target, a supported import format, and a sample actor to round-trip. Revisit a private Storyteller workspace once access, data ownership, and export expectations are clear. Use player and Storyteller feedback from the live release to refine the [ordered roadmap](roadmap/roadmap.json).

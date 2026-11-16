@@ -45,6 +45,14 @@ Use **Tab** to reach the fields, arrow keys to move through the endpoint choices
 
 Named drafts autosave the map. The JSON backup preview shows the counts of added people and connections before you restore the draft as a copy. Mechanical build links share creation choices without relationship details.
 
+## Plan a coterie and Domain
+
+Select **Coterie & Domain** in the header. Name the plan and describe the coterie’s shared purpose. Add members by name or choose a saved **Character draft** and select **Add from draft**. By default this copies the character’s display name. Check **Include Relationship Map details** before adding a draft when you want its people and connections in the plan. The plan keeps a snapshot of the selected details.
+
+Name the Domain, record the table’s agreed Chasse, Lien, and Portillon ratings, and add notes such as boundaries or shared obligations. Use **Save plan** to store it in this browser. Reopen it later under **Saved plans**.
+
+Select **Preview handoff** and review the shared purpose, Domain details, member names, and any opted-in relationships. Select **Download coterie JSON** to save the file. On another browser or in the same planner, use **Choose coterie JSON**, review the preview, and select **Restore as new plan**. This creates a separate plan and leaves individual character drafts and their saved steps intact.
+
 ## Save and reopen browser drafts
 
 Expand **Browser drafts**, enter a **Draft name**, and select **Save draft**. Once named, the character and current step autosave as you work. Reload the page to resume the last open saved draft. Use **New draft** for another character, or choose a name under **Saved drafts** and select **Open draft** to resume that character at its own last step. Edit the draft name and select **Save draft** to rename it.

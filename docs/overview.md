@@ -13,6 +13,8 @@ Name a browser draft at any step to autosave it. Each saved character resumes at
 
 Use the V5 table reference from any creation step to look up supported rules and their printed page references while the draft stays open.
 
+Open the Coterie and Domain planner to organize several characters and shared Domain details. A plan is saved separately in the browser and can be shared through a previewable JSON handoff.
+
 ## Release boundaries
 
 The first release covers one vampire at a time and the seven named core clans. The supported workflow includes manual entries where the core rules can represent the choice. Those entries carry a Storyteller review flag. The fledgling profile gives newly Embraced characters room to develop a Predator Type during play. The ancilla profile adds a larger starting XP and dot budget. Caitiff can choose any two Core Disciplines, use their own XP rate, and start with Suspect. Thin-blood creation covers the Core fledgling path. The optional Player’s Guide pack adds a documented set of clan, Predator Type, and power choices. After completing creation, players can record earned XP and replay purchases in the advancement journal. Drafts stay in the browser until players export or share them.

@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T22:44:50+11:00",
+  "updatedAt": "2026-11-16T22:59:22+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -182,6 +182,13 @@
       "group": "Chronicle tools",
       "notes": "Added a map seeded from the sire, coterie, and Touchstones, with keyboard-accessible editing for added people and labeled connections. Verified live relationship changes, a 390 px viewport, and restoring Mara’s downloaded backup as a separate draft that reopened at Relationships. The decoded mechanical link contained no relationship details and matched the link from before the map edits.",
       "completedAt": "2026-11-16T22:44:50+11:00"
+    },
+    {
+      "id": "add-coterie-domain-planner",
+      "title": "Add a coterie and Domain planner with a portable handoff",
+      "group": "Chronicle tools",
+      "notes": "Added named local plans with multiple members, optional Relationship Map details, shared purpose, and Domain ratings and notes. Verified the handoff preview at 390 px, download, import cancellation, restore as a separate plan, and reload. In the browser Mara and Rowan retained their original relationships and saved steps. Automated coverage verifies that plan operations leave the character library byte-for-byte unchanged.",
+      "completedAt": "2026-11-16T22:59:22+11:00"
     }
   ]
 }

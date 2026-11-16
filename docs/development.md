@@ -17,6 +17,7 @@
 | `src/rules/advancement.ts`, `src/components/AdvancementJournal.tsx` | Earned XP awards and ordered purchases against the finished creation build. |
 | `src/rules/table-reference.ts`, `src/components/TableReference.tsx` | Searchable rule summaries, citations, and a dialog that preserves the open draft. |
 | `src/rules/relationship-map.ts`, `src/components/RelationshipMap.tsx` | Recorded relationships and keyboard-accessible editing of added people and connections. |
+| `src/rules/coterie-plan.ts`, `src/drafts/coterie-plans.ts`, `src/components/CoteriePlanner.tsx` | Coterie and Domain plan inputs, independent browser storage, and previewable handoff import and export. |
 | `src/rules/character-guide.ts`, `src/components/CharacterSheet.tsx` | Shared draft evaluation, review issues, and the printable sheet. |
 | `src/drafts/`, `src/components/DraftControls.tsx` | Draft input validation, browser storage, recovery download, and draft controls. |
 | `src/drafts/chronicle-presets.ts`, `src/components/ChroniclePresets.tsx` | Browser-local chronicle presets and a preview of the changes to the open draft. |
@@ -55,6 +56,8 @@ For chronicle presets, run the [preset tests](../tests/chronicle-presets.test.ts
 For the table reference, run the [search tests](../tests/table-reference.test.ts). From a named draft partway through the guide, use the keyboard to open search, find `Spark of Rage` and page `137`, and dismiss the dialog with **Esc**. Confirm focus returns to the opener and the draft and step stay selected. At a narrow viewport, search for `Blood Potency`, scroll the results, and close the dialog. Repeat with an unsaved edit and confirm it remains in the open draft.
 
 For the Relationship Map, run the [map tests](../tests/relationship-map.test.ts). Record a sire, a coterie, and a Touchstone, then add a person and a connection using the keyboard. Restore a downloaded backup as a copy and verify the people, endpoints, and labels. Compare mechanical build links before and after the map edits and check the decoded payload for private relationship details.
+
+For the planner, run the [coterie plan tests](../tests/coterie-plans.test.ts). Save two characters with different steps. Add one to a named plan with Relationship Map details and the other with its name only. Set Domain ratings, preview and download the handoff, and restore it under a new plan name. Reopen both plans after reload and check that the original characters and their saved steps are intact. Try a character backup as the input and confirm the planner rejects it.
 
 For backup changes, run the [backup tests](../tests/draft-backup.test.ts). In the browser, restore a finished Mara Vale backup and one unfinished character, then reload both at their saved steps. Verify that cancelling a preview or choosing malformed JSON, an unsupported ruleset, or invalid inputs leaves the open draft and saved library intact.
 

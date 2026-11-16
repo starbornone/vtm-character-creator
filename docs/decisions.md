@@ -96,4 +96,10 @@ The brief shows evaluated mechanics and open rulings with generic labels for man
 
 **Consequences.** A changed or removed narrative field leaves its previous connections visible with their original name. Removing an added person removes their connections. The full draft carries the map, and the mechanical build link continues to carry creation mechanics.
 
+## 13 Keep shared coterie plans independent of characters
+
+**Decision.** Use a separate browser library and portable format for Coterie and Domain plans. Copy names from selected drafts and include Relationship Map details only when selected. Store the Domain ratings agreed at the table.
+
+**Consequences.** Handoffs can move between browsers and restore as new plans. The planner leaves the original character drafts and their saved steps intact. A later change to a character stays with that character until a planner member is added again from the draft.
+
 See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the full flow.
