@@ -76,7 +76,7 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
     <Card className="gap-0 py-0" role="region" aria-labelledby="starting-xp-heading">
       <CardContent className="space-y-2 p-5 sm:p-7">
         <h2 id="starting-xp-heading" className="text-2xl font-semibold tracking-tight">Starting XP</h2>
-        <p className="text-sm text-muted-foreground">Fledglings start with 0 XP. Core p. 140.</p>
+        <p className="text-sm text-muted-foreground">{build.isThinBlood ? 'Thin-bloods start with 0 XP. Core p. 140.' : 'Fledglings start with 0 XP. Core p. 140.'}</p>
         {purchases.length > 0 && <p className="text-sm text-muted-foreground">Your starting XP purchases are paused for this profile.</p>}
       </CardContent>
     </Card>

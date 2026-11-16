@@ -89,13 +89,14 @@ export function StartingOptionsEditor({ draft, build, onChange }: {
           <fieldset className="min-w-0 space-y-2 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Base Advantages</legend>
             <BudgetStatus budget={build.advantageBudget} />
+            {build.isThinBlood && <p className="text-sm text-muted-foreground">Thin-bloods cannot buy Bonding, Mawla, Retainers, or Status. Core p. 149.</p>}
             {advantageIds.map(id => {
               const option = startingAdvantages[id]
               const issue = build.advantages.find(entry => entry.id === id)?.issue
               return <div key={id} className="rounded-md border border-border/70 px-3 py-2">
                 <div className="flex items-center justify-between gap-2">
                   <label htmlFor={`base-${id}`} className="text-sm">{option.name}</label>
-                  <select id={`base-${id}`} className="ledger-field w-18" value={draft.advantages[id] ?? 0} aria-invalid={Boolean(issue) || undefined} aria-describedby={issue ? `issue-${id}` : undefined} onChange={event => onChange({ advantages: { ...draft.advantages, [id]: Number(event.target.value) } })}>
+                  <select id={`base-${id}`} className="ledger-field w-18" value={draft.advantages[id] ?? 0} disabled={build.isThinBlood && id === 'unbondable' && !draft.advantages[id]} aria-invalid={Boolean(issue) || undefined} aria-describedby={issue ? `issue-${id}` : undefined} onChange={event => onChange({ advantages: { ...draft.advantages, [id]: Number(event.target.value) } })}>
                     <option value="0">0</option>
                     {option.dots.map(dots => <option key={dots} value={dots}>{dots}</option>)}
                   </select>
@@ -109,6 +110,7 @@ export function StartingOptionsEditor({ draft, build, onChange }: {
           <fieldset className="min-w-0 space-y-2 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Base Flaws</legend>
             <BudgetStatus budget={build.flawBudget} />
+            {build.isThinBlood && <p className="text-sm text-muted-foreground">Thin-blood Merits and Flaws have their own count under Clan &amp; Predator Type.</p>}
             {build.isCaitiff && <p className="text-sm text-muted-foreground">Suspect adds 1 Flaw dot outside the base budget. Caitiff cannot purchase positive Status. Core pp. 107, 194.</p>}
             {flawIds.map(id => {
               const flaw = startingFlaws[id]

@@ -159,7 +159,7 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
             </AllocationEditor>
             <SpecialtyEditor draft={draft.traits} specialties={specialties} dispatch={dispatch} />
         </>}
-        {step === 'clan' && <ClanPathEditor draft={draft.clanPath} path={path} predatorGrant={predatorGrant} finalRatings={starting.final.disciplines} onChange={update => dispatch({ type: 'clan-path', update })} />}
+        {step === 'clan' && <ClanPathEditor draft={draft.clanPath} path={path} predatorGrant={predatorGrant} finalRatings={starting.final.disciplines} useFledgling={() => dispatch({ type: 'age-profile', profile: 'fledgling' })} onChange={update => dispatch({ type: 'clan-path', update })} />}
         {step === 'starting' && <>
             <StartingOptionsEditor draft={draft.starting} build={starting} onChange={update => dispatch({ type: 'starting', update })} />
             <StartingExperienceEditor build={starting} purchases={draft.starting.purchases} onChange={purchases => dispatch({ type: 'starting', update: { purchases } })} />

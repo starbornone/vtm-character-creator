@@ -3,6 +3,8 @@ import { traitLabel } from '@/catalog/traits'
 import { manualOptionId, predatorRestriction, type ClanPathDraft, type evaluateClanPath, type ManualClan, type ManualPredator, type PowerSlot } from '@/rules/clan-path'
 import type { evaluateTraitLedger } from '@/rules/trait-ledger'
 import { CatalogSelect } from '@/components/CatalogSelect'
+import { ThinBloodEditor } from '@/components/ThinBloodEditor'
+import { initialThinBlood } from '@/rules/thin-blood'
 import { Card, CardContent } from '@/components/ui/card'
 
 type Path = ReturnType<typeof evaluateClanPath>
@@ -118,11 +120,12 @@ interface ClanPathEditorProps {
   path: Path
   predatorGrant: ReturnType<typeof evaluateTraitLedger>['specialties']['predatorGrant']
   finalRatings: Partial<Record<DisciplineId, number>>
+  useFledgling: () => void
   onChange: (update: Partial<ClanPathDraft>) => void
 }
 
-export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onChange }: ClanPathEditorProps) {
-  const { clan, isCaitiff, predator, clanSlots, predatorSlot, humanity, ledger } = path
+export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, useFledgling, onChange }: ClanPathEditorProps) {
+  const { clan, isCaitiff, thinBlood, predator, clanSlots, predatorSlot, humanity, ledger } = path
   const { predatorAllowed } = path.profile
   const grantLabel = predatorGrant && (predatorGrant.kind === 'skill-dot'
     ? `${traitLabel(predatorGrant.skill)} +1 · Skill dot while the Skill is unrated`
@@ -145,17 +148,19 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
         <div>
           <h2 id="clan-path-heading" className="text-2xl font-semibold tracking-tight">Clan &amp; Predator Type</h2>
           <p role="status" className="mt-1 text-sm text-muted-foreground">
-            {!predatorAllowed
+            {thinBlood ? (path.complete ? 'Thin-blood choices complete' : 'Resolve the Thin-blood starting choices.') : !predatorAllowed
               ? (path.complete ? 'Fledgling clan choices complete' : 'Choose a clan and assign its Disciplines and powers.')
               : (path.complete && predatorGrant?.kind !== 'pending' ? 'Clan and Predator Type choices complete' : 'Choose a clan, Predator Type, and their grants.')}
           </p>
         </div>
         <div className="grid items-start gap-5 lg:grid-cols-2">
           <fieldset className="min-w-0 space-y-3 rounded-lg border border-border px-4 pb-4">
-            <legend className="px-1.5 text-sm font-semibold">Clan or Caitiff</legend>
+            <legend className="px-1.5 text-sm font-semibold">Clan or blood status</legend>
             <CatalogSelect searchable label="Starting clan" value={draft.clan} choices={ancestryChoices} onChange={clan => onChange({ clan })} />
             {draft.clan === manualOptionId && <ManualClanFields entry={draft.manualClan ?? emptyClan} onChange={manualClan => onChange({ manualClan })} />}
-            {clan && (
+            {thinBlood && <ThinBloodEditor draft={draft.thinBlood ?? initialThinBlood} rules={thinBlood} ageIssue={path.ageIssue}
+              useFledgling={useFledgling} onChange={update => onChange({ thinBlood: { ...(draft.thinBlood ?? initialThinBlood), ...update } })} />}
+            {clan && !thinBlood && (
               <>
                 {isCaitiff
                   ? <p className="text-sm text-muted-foreground">Choose any two Core Disciplines. Caitiff have no shared clan Bane or Compulsion and start with Suspect. The Storyteller may apply a Social test penalty with Kindred who know you are Caitiff.</p>
@@ -211,7 +216,7 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
             )}
           </fieldset> : <fieldset className="min-w-0 space-y-2 rounded-lg border border-border px-4 pb-4">
             <legend className="px-1.5 text-sm font-semibold">Predator Type</legend>
-            <p className="text-sm text-muted-foreground">The fledgling’s feeding style develops in play. Core pp. 149, 175.</p>
+            <p className="text-sm text-muted-foreground">{thinBlood ? 'Thin-bloods develop a feeding style in play and gain no starting Predator Type. Core p. 149.' : 'The fledgling’s feeding style develops in play. Core pp. 149, 175.'}</p>
             {draft.predatorType && <p className="text-sm text-muted-foreground">Your Predator Type choices are paused for this profile.</p>}
           </fieldset>}
         </div>
@@ -220,13 +225,13 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
         {path.reviews.length > 0 && <ul className="space-y-1 text-sm text-muted-foreground" aria-label="Storyteller review">
           {path.reviews.map(note => <li key={note}>{note}</li>)}
         </ul>}
-        {clan && <dl aria-label="Discipline totals" className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+        {clan && ledger.length > 0 && <dl aria-label="Discipline totals" className="grid grid-cols-1 gap-2 sm:grid-cols-3">
           {ledger.filter(row => !isCaitiff || row.total > 0 || finalRatings[row.discipline]).map(row => {
             const total = finalRatings[row.discipline] ?? row.total
             const xpDots = total - row.total
             return <div className="rounded-lg bg-background/60 px-3 py-2" key={row.discipline}>
               <dt className="font-medium">{disciplines[row.discipline]}</dt>
-              <dd className="mt-0.5 text-sm text-muted-foreground">{total} total · {isCaitiff ? 'Base' : clan.name} {row.clanDots}{predatorAllowed && ` · ${predator?.name ?? 'Predator Type'} ${row.predatorDots}`}{xpDots > 0 && ` · XP +${xpDots}`}</dd>
+              <dd className="mt-0.5 text-sm text-muted-foreground">{total} total · {thinBlood ? 'Discipline Affinity' : `${isCaitiff ? 'Base' : clan.name} ${row.clanDots}`}{predatorAllowed && ` · ${predator?.name ?? 'Predator Type'} ${row.predatorDots}`}{xpDots > 0 && ` · XP +${xpDots}`}</dd>
             </div>
           })}
         </dl>}

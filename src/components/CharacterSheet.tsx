@@ -12,7 +12,7 @@ function Details({ rows }: { rows: readonly Detail[] }) {
 }
 
 export function CharacterSheet({ sheet, mechanicalOnly = false }: { sheet: Sheet; mechanicalOnly?: boolean }) {
-  const { identity, tracks, relationships } = sheet
+  const { identity, tracks, relationships, thinBlood } = sheet
   const tracksAndExperience: Detail[] = [
     ['Health', tracks.health ?? '—'], ['Willpower', tracks.willpower ?? '—'], ['Humanity', tracks.humanity],
     ['Blood Potency', tracks.bloodPotency], ['Bane Severity', tracks.baneSeverity], ['Blood Surge dice', tracks.bloodSurge],
@@ -64,6 +64,7 @@ export function CharacterSheet({ sheet, mechanicalOnly = false }: { sheet: Sheet
               {discipline.powers.length > 0 && <span> {discipline.powers.join(', ')}</span>}
             </li>)}
           </ul>
+          {thinBlood?.alchemy && <p><strong>Thin-blood Alchemy {thinBlood.alchemy.rating}</strong> · {thinBlood.alchemy.method.name} · {thinBlood.alchemy.formula.name}</p>}
           {sheet.ritual && <p><strong>Starting Ritual</strong> {sheet.ritual.name} · Core p. {sheet.ritual.page}</p>}
           <h3>Starting XP</h3>
           <p>{sheet.xpSpent} spent · {sheet.xpRemaining} remaining</p>
@@ -80,6 +81,13 @@ export function CharacterSheet({ sheet, mechanicalOnly = false }: { sheet: Sheet
           <ul className="sheet-list" aria-label="Flaws">
             {sheet.flaws.map((option, index) => <li key={index}>{option.name} · {option.dots} Flaw {option.dots === 1 ? 'dot' : 'dots'}{option.source && ` · ${option.source}`}</li>)}
           </ul>
+          {thinBlood && <>
+            <h3>Thin-blood Merits &amp; Flaws</h3>
+            <ul className="sheet-list">
+              {thinBlood.merits.length > 0 && <li><strong>Merits</strong> · {thinBlood.merits.map(option => option.name).join(', ')}</li>}
+              {thinBlood.flaws.length > 0 && <li><strong>Flaws</strong> · {thinBlood.flaws.map(option => option.id === 'clan-curse' && thinBlood.cursedClan ? `Clan Curse (${thinBlood.cursedClan})` : option.name).join(', ')}</li>}
+            </ul>
+          </>}
         </section>
       </div>
 

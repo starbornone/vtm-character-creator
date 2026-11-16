@@ -23,7 +23,7 @@ function details(rows: readonly Detail[]) {
 
 export function makeStorytellerBrief(draft: CharacterDraft, narrative: BriefNarrative = {}) {
   const { sheet, pending, starting } = evaluateCharacter(draft, { includeCustomText: narrative.custom === true })
-  const { identity, tracks, relationships } = sheet
+  const { identity, tracks, relationships, thinBlood } = sheet
   const lines = ['# Storyteller Brief', '', 'Vampire: The Masquerade · Fifth Edition', '']
 
   function section(heading: string, content: readonly string[]) {
@@ -60,6 +60,10 @@ export function makeStorytellerBrief(draft: CharacterDraft, narrative: BriefNarr
 
   const disciplines = sheet.disciplines.map(({ name, rating, powers }) =>
     `- **${name} ${rating}**${powers.length ? ` · ${powers.join(', ')}` : ''}`)
+  if (thinBlood?.alchemy) {
+    const { rating, method, formula } = thinBlood.alchemy
+    disciplines.push(`- **Thin-blood Alchemy ${rating}** · ${method.name} · ${formula.name}`)
+  }
   if (sheet.ritual) disciplines.push(`- **Starting Ritual:** ${sheet.ritual.name} (Core p. ${sheet.ritual.page})`)
   section('### Disciplines', disciplines.length ? disciplines : ['No Disciplines assigned.'])
 
@@ -67,6 +71,11 @@ export function makeStorytellerBrief(draft: CharacterDraft, narrative: BriefNarr
     `${sheet.advantageDots} Advantage dots · ${sheet.flawDots} Flaw dots`, '',
     ...sheet.advantages.map(option => `- **Advantage:** ${inline(option.name)} · ${option.dots} ${option.dots === 1 ? 'dot' : 'dots'} · ${inline(option.source)}`),
     ...sheet.flaws.map(option => `- **Flaw:** ${inline(option.name)} · ${option.dots} ${option.dots === 1 ? 'dot' : 'dots'}${option.source ? ` · ${inline(option.source)}` : ''}`),
+  ])
+
+  if (thinBlood) section('### Thin-blood Merits & Flaws', [
+    ...thinBlood.merits.map(option => `- **Merit:** ${option.name}`),
+    ...thinBlood.flaws.map(option => `- **Flaw:** ${option.name}${option.id === 'clan-curse' && thinBlood.cursedClan ? ` (${thinBlood.cursedClan})` : ''}`),
   ])
 
   section('### Starting XP', [
