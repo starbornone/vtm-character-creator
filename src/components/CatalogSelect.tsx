@@ -1,3 +1,4 @@
+import { Search } from 'lucide-react'
 import { useId, useState } from 'react'
 
 export interface CatalogChoice {
@@ -29,7 +30,10 @@ export function CatalogSelect({ label, value, choices, onChange, disabled, inval
     <div className="grid min-w-0 gap-1.5 text-sm">
       {searchable && <label className="grid min-w-0 gap-1.5">
         <span className="text-muted-foreground">Search {label.toLowerCase()}</span>
-        <input type="search" className="ledger-field w-full" value={query} disabled={disabled} onChange={event => setQuery(event.target.value)} />
+        <span className="relative">
+          <Search aria-hidden="true" className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
+          <input type="search" className="ledger-field w-full pl-8" value={query} disabled={disabled} onChange={event => setQuery(event.target.value)} />
+        </span>
       </label>}
       <label htmlFor={id}>{label}</label>
       <select id={id} className="ledger-field w-full" value={value} disabled={disabled} aria-invalid={invalid || undefined} onChange={event => {

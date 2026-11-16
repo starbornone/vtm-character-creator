@@ -1,3 +1,4 @@
+import { ArrowDown, ArrowUp, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { allDisciplinePowers, disciplineIds, disciplines } from '@/catalog/clan-path'
 import { powerSource, sourceEnabled } from '@/catalog/source-packs'
@@ -62,7 +63,7 @@ function purchaseFor(kind: Purchase['kind'], target: string, name: string, state
   }
 }
 
-const actionClass = 'rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 disabled:opacity-40'
+const actionClass = 'guide-action rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 disabled:opacity-40'
 
 export function StartingExperienceEditor({ build, purchases, onChange }: {
   build: Build
@@ -133,7 +134,7 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
               if (purchase && !quote?.issue) onChange([...purchases, purchase])
               setName('')
               setConfirmedLearning(false)
-            }}>Add purchase</button>
+            }}><Plus aria-hidden="true" />Add purchase</button>
             <p className="text-sm text-muted-foreground" role="status">
               {purchase && quote?.cost !== undefined && `${purchaseLabel(purchase)} · ${quote.cost} XP. `}{quote?.issue ?? (!purchase && target ? 'This option is already at its maximum.' : '')}
             </p>
@@ -146,9 +147,9 @@ export function StartingExperienceEditor({ build, purchases, onChange }: {
               <p className={`text-sm ${entry.issue ? 'text-rose-300' : 'text-muted-foreground'}`}>{entry.issue ?? `${entry.cost} XP · ${entry.remaining} left`}</p>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              <button type="button" className={actionClass} aria-label={`Move ${entry.label} earlier`} disabled={index === 0} onClick={() => move(index, -1)}>Earlier</button>
-              <button type="button" className={actionClass} aria-label={`Move ${entry.label} later`} disabled={index === purchases.length - 1} onClick={() => move(index, 1)}>Later</button>
-              <button type="button" className={actionClass} aria-label={`Remove ${entry.label}`} onClick={() => onChange(purchases.filter((_, offset) => offset !== index))}>Remove</button>
+              <button type="button" className={actionClass} aria-label={`Move ${entry.label} earlier`} disabled={index === 0} onClick={() => move(index, -1)}><ArrowUp aria-hidden="true" />Earlier</button>
+              <button type="button" className={actionClass} aria-label={`Move ${entry.label} later`} disabled={index === purchases.length - 1} onClick={() => move(index, 1)}><ArrowDown aria-hidden="true" />Later</button>
+              <button type="button" className={actionClass} aria-label={`Remove ${entry.label}`} onClick={() => onChange(purchases.filter((_, offset) => offset !== index))}><Trash2 aria-hidden="true" />Remove</button>
             </div>
           </li>)}
         </ol>}

@@ -1,3 +1,4 @@
+import { ArchiveRestore, Upload } from 'lucide-react'
 import { useRef, useState, type ChangeEvent } from 'react'
 import { suggestRestoreName, type DraftLibrary } from '@/drafts/browser-drafts'
 import { readDraftBackup, type DraftSnapshot } from '@/drafts/draft-backup'
@@ -54,8 +55,8 @@ export function BackupRestore({ library, onRestore }: BackupRestoreProps) {
 
   return (
     <>
-      <label className="guide-button cursor-pointer focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-rose-300">
-        Choose JSON backup
+      <label className="guide-button guide-action cursor-pointer focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-rose-300">
+        <Upload aria-hidden="true" />Choose JSON backup
         <input ref={chooser} type="file" accept=".json,application/json" className="sr-only" onChange={chooseFile} />
       </label>
       {selection?.status === 'reading' && (
@@ -86,7 +87,7 @@ export function BackupRestore({ library, onRestore }: BackupRestoreProps) {
                 setSelection({ ...selection, name: event.target.value, issue: undefined })
               }} />
             </label>
-            <button type="submit" className="guide-button guide-button-primary">Restore as new draft</button>
+            <button type="submit" className="guide-button guide-action guide-button-primary"><ArchiveRestore aria-hidden="true" />Restore as new draft</button>
             <button type="button" className="guide-button" onClick={cancel}>Cancel restore</button>
             {selection.issue && <p role="alert" className="w-full text-sm text-rose-300">{selection.issue}</p>}
           </form>

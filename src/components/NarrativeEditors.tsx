@@ -1,3 +1,4 @@
+import { Plus, Trash2 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { maxConvictions, type ConceptDraft, type RelationshipDraft } from '@/rules/character-guide'
 import { ageProfileIds, ageProfiles, type AgeProfileId } from '@/rules/creation-profiles'
@@ -88,10 +89,10 @@ export function RelationshipEditor({ draft, onChange }: { draft: RelationshipDra
               <NarrativeField label={`Conviction ${index + 1}`} value={pair.conviction} onChange={value => updatePair(index, 'conviction', value)} />
               <NarrativeField label={`Touchstone ${index + 1}`} value={pair.touchstone} onChange={value => updatePair(index, 'touchstone', value)} />
             </div>
-            {draft.convictions.length > 1 && <button type="button" className="guide-button" onClick={() => onChange({ convictions: draft.convictions.filter((_, offset) => offset !== index) })} aria-label={`Remove Conviction and Touchstone ${index + 1}`}>Remove pair</button>}
+            {draft.convictions.length > 1 && <button type="button" className="guide-button guide-action" onClick={() => onChange({ convictions: draft.convictions.filter((_, offset) => offset !== index) })} aria-label={`Remove Conviction and Touchstone ${index + 1}`}><Trash2 aria-hidden="true" />Remove pair</button>}
           </fieldset>
         ))}
-        {draft.convictions.length < maxConvictions && <button type="button" className="guide-button" onClick={() => onChange({ convictions: [...draft.convictions, { conviction: '', touchstone: '' }] })}>Add Conviction and Touchstone</button>}
+        {draft.convictions.length < maxConvictions && <button type="button" className="guide-button guide-action" onClick={() => onChange({ convictions: [...draft.convictions, { conviction: '', touchstone: '' }] })}><Plus aria-hidden="true" />Add Conviction and Touchstone</button>}
       </CardContent>
     </Card>
   )

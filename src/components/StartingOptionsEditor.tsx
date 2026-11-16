@@ -1,3 +1,4 @@
+import { Plus, Trash2 } from 'lucide-react'
 import { advantageIds, flawIds, startingAdvantages, startingFlaws } from '@/catalog/starting-options'
 import { Card, CardContent } from '@/components/ui/card'
 import type { evaluateStartingBuild, ManualStartingOption, StartingDraft } from '@/rules/starting-xp'
@@ -47,11 +48,11 @@ function ManualOptions({ options, evaluated, onChange }: {
         <input className="ledger-field w-full" value={option.source} onChange={event => edit(index, { source: event.target.value })} />
       </label>
       <div className="flex flex-wrap items-center gap-2 sm:col-span-2">
-        <button type="button" className="guide-button" aria-label={`Remove manual entry ${index + 1}`} onClick={() => onChange(options.filter((_, position) => position !== index))}>Remove</button>
+        <button type="button" className="guide-button guide-action" aria-label={`Remove manual entry ${index + 1}`} onClick={() => onChange(options.filter((_, position) => position !== index))}><Trash2 aria-hidden="true" />Remove</button>
         {evaluated[index]?.issue && <span className="text-sm text-rose-300">{evaluated[index].issue}</span>}
       </div>
     </fieldset>)}
-    <button type="button" className="guide-button" onClick={() => onChange([...options, { kind: 'advantage', name: '', dots: 1, source: '' }])}>Add manual entry</button>
+    <button type="button" className="guide-button guide-action" onClick={() => onChange([...options, { kind: 'advantage', name: '', dots: 1, source: '' }])}><Plus aria-hidden="true" />Add manual entry</button>
   </fieldset>
 }
 

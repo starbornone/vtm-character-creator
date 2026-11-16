@@ -1,3 +1,4 @@
+import { ArrowLeft, Copy, FilePlus, Link2 } from 'lucide-react'
 import { useState } from 'react'
 import { CharacterSheet } from '@/components/CharacterSheet'
 import { suggestRestoreName, type DraftLibrary } from '@/drafts/browser-drafts'
@@ -27,17 +28,17 @@ export function ShareBuildControls({ draft }: { draft: CharacterDraft }) {
   }
 
   return <div className="space-y-2">
-    <button type="button" className="guide-button" aria-expanded={showLink} onClick={() => {
+    <button type="button" className="guide-button guide-action" aria-expanded={showLink} onClick={() => {
       setShowLink(!showLink)
       setCopyStatus('')
-    }}>Share mechanical build</button>
+    }}><Link2 aria-hidden="true" />Share mechanical build</button>
     {showLink && (link
       ? <div className="flex flex-wrap items-end gap-2 rounded-md border border-border p-3">
           <label className="grid min-w-0 flex-1 gap-1 text-sm">
             Mechanical build link
             <input className="ledger-field w-full" readOnly value={link} onFocus={event => event.currentTarget.select()} />
           </label>
-          <button type="button" className="guide-button" onClick={copy}>Copy link</button>
+          <button type="button" className="guide-button guide-action" onClick={copy}><Copy aria-hidden="true" />Copy link</button>
           <p className="w-full text-sm text-muted-foreground">Anyone with the link can view the included mechanics. Names, notes, and other free text stay in your draft.</p>
           <p role="status" className={copyStatus ? 'w-full text-sm text-muted-foreground' : 'sr-only'}>{copyStatus}</p>
         </div>
@@ -58,7 +59,7 @@ export function SharedBuild({ hash, library, onClose, onSave }: SharedBuildProps
   const [name, setName] = useState(() => suggestRestoreName(library, 'Shared build'))
   const [saveIssue, setSaveIssue] = useState<string>()
   const decoded = decodeBuildLink(hash)
-  const returnButton = <button type="button" className="guide-button print:hidden" onClick={onClose}>Return to character creator</button>
+  const returnButton = <button type="button" className="guide-button guide-action print:hidden" onClick={onClose}><ArrowLeft aria-hidden="true" />Return to character creator</button>
 
   if (decoded.issue !== undefined) return (
     <main className="mx-auto max-w-4xl space-y-4 px-4 py-8 sm:px-8">
@@ -100,7 +101,7 @@ export function SharedBuild({ hash, library, onClose, onSave }: SharedBuildProps
           <label className="grid min-w-40 gap-1 text-sm">New draft name
             <input className="ledger-field w-full" value={name} onChange={event => { setName(event.target.value); setSaveIssue(undefined) }} />
           </label>
-          <button type="submit" className="guide-button guide-button-primary">Save as new draft</button>
+          <button type="submit" className="guide-button guide-action guide-button-primary"><FilePlus aria-hidden="true" />Save as new draft</button>
           {returnButton}
           {saveIssue && <p role="alert" className="w-full text-sm text-rose-300">{saveIssue}</p>}
         </form>

@@ -1,3 +1,4 @@
+import { ChevronDown, Download, FilePlus, FolderOpen, Save } from 'lucide-react'
 import { useState } from 'react'
 import type { DraftLibrary } from '@/drafts/browser-drafts'
 import type { DraftSnapshot } from '@/drafts/draft-backup'
@@ -29,7 +30,7 @@ export function DraftControls(props: DraftControlsProps) {
             <span id="draft-controls-heading" className="font-semibold">Browser drafts</span>
             <span id="draft-controls-status" role="status" className={issue ? 'text-rose-300' : 'text-muted-foreground'}>{status}</span>
           </span>
-          <span aria-hidden="true" className="mr-1 size-2 shrink-0 rotate-45 border-r border-b border-current group-open:-rotate-[135deg]" />
+          <ChevronDown aria-hidden="true" className="size-4 shrink-0 group-open:rotate-180" />
         </summary>
         <DraftFields key={activeId ?? 'unnamed'} {...props} />
       </details>
@@ -58,7 +59,7 @@ function DraftFields({ library, activeId, name, dirty, issue, onSave, onSwitch, 
               setNameIssue(undefined)
             }} aria-invalid={Boolean(nameIssue) || undefined} aria-describedby={nameIssue ? 'draft-name-error' : undefined} />
           </label>
-          <button type="submit" className="guide-button">{issue ? 'Retry save' : 'Save draft'}</button>
+          <button type="submit" className="guide-button guide-action"><Save aria-hidden="true" />{issue ? 'Retry save' : 'Save draft'}</button>
           {nameIssue && <p id="draft-name-error" role="alert" className="w-full text-sm text-rose-300">{nameIssue}</p>}
         </form>
 
@@ -70,19 +71,19 @@ function DraftFields({ library, activeId, name, dirty, issue, onSave, onSwitch, 
               {library.drafts.map(draft => <option key={draft.id} value={draft.id}>{draft.name}</option>)}
             </select>
           </label>
-          <button type="button" className="guide-button disabled:opacity-50" disabled={!selectedId || selectedId === activeId} onClick={() => onSwitch(selectedId)}>Open draft</button>
+          <button type="button" className="guide-button guide-action disabled:opacity-50" disabled={!selectedId || selectedId === activeId} onClick={() => onSwitch(selectedId)}><FolderOpen aria-hidden="true" />Open draft</button>
         </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <button type="button" className="guide-button disabled:opacity-50" disabled={!activeId && !dirty} onClick={() => {
+        <button type="button" className="guide-button guide-action disabled:opacity-50" disabled={!activeId && !dirty} onClick={() => {
           if (onSwitch(null)) {
             setLabel('')
             setNameIssue(undefined)
             setSelectedId('')
           }
-        }}>New draft</button>
-        <button type="button" className="guide-button" onClick={onDownload}>Download current draft</button>
+        }}><FilePlus aria-hidden="true" />New draft</button>
+        <button type="button" className="guide-button guide-action" onClick={onDownload}><Download aria-hidden="true" />Download current draft</button>
         <BackupRestore library={library} onRestore={onRestore} />
       </div>
     </CardContent>

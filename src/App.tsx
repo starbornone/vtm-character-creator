@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight, BookOpen, Compass, Droplets, FileText, NotebookPen, Printer, SlidersHorizontal, UsersRound } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { playersGuide } from '@/catalog/source-packs'
 import { traitGroups } from '@/catalog/traits'
@@ -19,6 +20,14 @@ import { buildLinkPrefix } from '@/sharing/build-link'
 const attributeGroups = traitGroups.map(({ name, attributes }) => ({ name, ids: attributes }))
 const skillGroups = traitGroups.map(({ name, skills }) => ({ name, ids: skills }))
 const editSteps = guideSteps.filter(step => step.id !== 'review')
+const stepIcons = {
+  concept: NotebookPen,
+  clan: Droplets,
+  traits: SlidersHorizontal,
+  starting: Compass,
+  relationships: UsersRound,
+  review: FileText,
+}
 
 export function App() {
   const [hash, setHash] = useState(() => window.location.hash)
@@ -103,9 +112,15 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
 
       <nav aria-label="Character creation steps" className="print:hidden">
         <ol className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-          {guideSteps.map(option => <li key={option.id}>
-            <button type="button" className="guide-button h-full w-full text-left" aria-current={option.id === step ? 'step' : undefined} onClick={() => goTo(option.id)}>{option.title}</button>
-          </li>)}
+          {guideSteps.map(option => {
+            const Icon = stepIcons[option.id]
+            return <li key={option.id}>
+              <button type="button" className="guide-button guide-action h-full w-full text-left" aria-current={option.id === step ? 'step' : undefined} onClick={() => goTo(option.id)}>
+                <Icon aria-hidden="true" />
+                {option.title}
+              </button>
+            </li>
+          })}
         </ol>
       </nav>
 
@@ -114,7 +129,7 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
           <ConceptEditor draft={draft.concept} onChange={update => dispatch({ type: 'concept', update })}
             ageProfile={ageProfile} onAgeProfile={profile => dispatch({ type: 'age-profile', profile })} />
           <fieldset className="space-y-2 rounded-xl border border-border bg-card p-5 sm:p-7">
-            <legend className="px-2 font-semibold">Rule sources</legend>
+            <legend className="px-2 font-semibold"><span className="guide-action"><BookOpen aria-hidden="true" />Rule sources</span></legend>
             <label className="flex min-h-9 items-center gap-2 text-sm">
               <input type="checkbox" className="size-4 accent-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300"
                 checked={path.sourcePacks.includes(playersGuide.id)} onChange={event => dispatch({ type: 'players-guide', enabled: event.target.checked })} />
@@ -184,7 +199,7 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
                 <h2 id="review-heading" className="text-2xl font-semibold tracking-tight">Review &amp; Print</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{sheet.draft ? 'Open choices remain. The printed sheet will be marked Draft.' : sheet.reviews.length ? 'Starting choices are filled in. See the Storyteller review notes on the sheet.' : 'All starting choices are resolved.'}</p>
               </div>
-              <button type="button" className="guide-button guide-button-primary" onClick={() => window.print()}>Print character sheet</button>
+              <button type="button" className="guide-button guide-action guide-button-primary" onClick={() => window.print()}><Printer aria-hidden="true" />Print character sheet</button>
             </div>
             <ShareBuildControls key={id ?? 'unnamed'} draft={draft} />
             <StorytellerBrief key={`brief-${id ?? 'unnamed'}`} draft={draft} />
@@ -200,9 +215,9 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
         )}
 
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>{previous && <button type="button" className="guide-button" onClick={() => goTo(previous.id)}>Back to {previous.title}</button>}</div>
+          <div>{previous && <button type="button" className="guide-button guide-action" onClick={() => goTo(previous.id)}><ArrowLeft aria-hidden="true" />Back to {previous.title}</button>}</div>
           <p className="text-sm text-muted-foreground">{editSteps.length - openSteps.length} of {editSteps.length} sections complete</p>
-          {next && <button type="button" className="guide-button guide-button-primary" onClick={() => goTo(next.id)}>Continue to {next.title}</button>}
+          {next && <button type="button" className="guide-button guide-action guide-button-primary" onClick={() => goTo(next.id)}>Continue to {next.title}<ArrowRight aria-hidden="true" /></button>}
         </div>
       </div>
 

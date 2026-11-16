@@ -49,6 +49,14 @@
     @apply hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300;
   }
 
+  .guide-action {
+    @apply inline-flex items-center gap-2;
+  }
+
+  .guide-action > svg {
+    @apply size-4 shrink-0;
+  }
+
   .guide-button[aria-current="step"] {
     @apply border-rose-400 bg-muted;
   }
