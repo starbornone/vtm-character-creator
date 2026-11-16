@@ -4,7 +4,7 @@ import { advantageIds, startingAdvantages } from '@/catalog/starting-options'
 import { skillIds, traitLabel } from '@/catalog/traits'
 import { CatalogSelect } from '@/components/CatalogSelect'
 import { Card, CardContent } from '@/components/ui/card'
-import { attributeIds, purchaseLabel, quotePurchase, type evaluateStartingBuild, type Purchase } from '@/rules/starting-xp'
+import { attributeIds, bloodPotencyRatings, purchaseLabel, quotePurchase, type evaluateStartingBuild, type Purchase } from '@/rules/starting-xp'
 import { specialtySkills } from '@/rules/trait-ledger'
 
 type Build = ReturnType<typeof evaluateStartingBuild>
@@ -51,8 +51,10 @@ function purchaseFor(kind: Purchase['kind'], target: string, name: string, state
       if (id && to) return { kind, id, to }
       break
     }
-    case 'blood-potency':
-      if (state.bloodPotency < state.maxBloodPotency) return { kind, to: state.bloodPotency === 1 ? 2 : 3 }
+    case 'blood-potency': {
+      const to = bloodPotencyRatings.find(rating => rating === state.bloodPotency + 1 && rating <= state.maxBloodPotency)
+      if (to) return { kind, to }
+    }
   }
 }
 

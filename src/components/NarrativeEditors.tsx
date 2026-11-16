@@ -2,6 +2,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import { maxConvictions, type ConceptDraft, type RelationshipDraft } from '@/rules/character-guide'
 import { ageProfileIds, ageProfiles, type AgeProfileId } from '@/rules/creation-profiles'
 
+const ageProfileDescriptions: Record<AgeProfileId, string> = {
+  neonate: 'An established young vampire with a Predator Type and 15 starting XP.',
+  fledgling: 'A recently Embraced vampire with 0 starting XP. Predator Type is left open for play.',
+  ancilla: 'An older vampire with a Predator Type, 35 starting XP, and additional Advantage and Flaw dots.',
+}
+
 function NarrativeField({ label, value, onChange, multiline = false }: {
   label: string
   value: string
@@ -42,7 +48,7 @@ export function ConceptEditor({ draft, onChange, ageProfile, onAgeProfile }: {
             </select>
           </label>
           <p id="age-profile-summary" className="text-sm text-muted-foreground">
-            {ageProfile === 'fledgling' ? 'A recently Embraced vampire with 0 starting XP. Predator Type is left open for play.' : 'An established young vampire with a Predator Type and 15 starting XP.'}
+            {ageProfileDescriptions[ageProfile]}
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">

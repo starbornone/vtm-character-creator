@@ -128,7 +128,7 @@ export function ClanPathEditor({ draft, path, predatorGrant, finalRatings, onCha
     ? `${traitLabel(predatorGrant.skill)} +1 · Skill dot while the Skill is unrated`
     : `${traitLabel(predatorGrant.skill)} (${predatorGrant.name})${predatorGrant.kind === 'pending' ? ' · Resolve the Skill rating or competing Specialty' : ' · Specialty'}`)
   const predatorChoices = [...corePredators.map(option => {
-    const reason = predatorRestriction(clan?.id, option.id)
+    const reason = predatorRestriction(clan?.id, option.id, path.profile.bloodPotency)
     return { id: option.id, label: reason ? `${option.name} · ${reason}` : option.name, source: option.source, disabled: Boolean(reason) }
   }), manualChoice]
   const grantSummary = [

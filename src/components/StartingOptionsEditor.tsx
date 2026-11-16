@@ -67,12 +67,13 @@ export function StartingOptionsEditor({ draft, build, onChange }: {
           <h2 id="starting-options-heading" className="text-2xl font-semibold tracking-tight">Advantages &amp; Flaws</h2>
           <label className="grid gap-1 text-sm">
             Generation
-            <select className="ledger-field" value={draft.generation ?? ''} onChange={event => onChange({ generation: build.profile.generations.find(value => String(value) === event.target.value) })}>
+            <select className="ledger-field" value={build.generation ?? ''} aria-invalid={Boolean(build.generationIssue) || undefined} aria-describedby={build.generationIssue ? 'generation-issue' : undefined} onChange={event => onChange({ generation: build.profile.generations.find(value => String(value) === event.target.value) })}>
               <option value="">Choose…</option>
               {build.profile.generations.map(value => <option key={value} value={value}>{value}th</option>)}
             </select>
           </label>
         </div>
+        {build.generationIssue && <p id="generation-issue" role="status" className="text-sm text-rose-300">{build.generationIssue}</p>}
         <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Starting vampire totals">
           {[
             { name: 'Humanity', value: build.humanity },
