@@ -15,6 +15,12 @@ Open the **Local** URL printed by Vite. The dev server defaults to port `5173` a
 
 If npm reports a missing `package.json`, return to the repository root. For a registry or network error during `npm ci`, check access to the npm registry and retry. If your browser cannot connect, check that Vite is running and use its printed URL.
 
+## Save and reopen browser drafts
+
+Enter a **Draft name** and select **Save draft**. Once named, the character and current step autosave as you work. Reload the page to resume the last open saved draft. Use **New draft** for another character, or choose a name under **Saved drafts** and select **Open draft** to resume that character at its own last step. Edit the draft name and select **Save draft** to rename it.
+
+Drafts belong to the current browser and site address. If saving fails, the last saved version stays in the browser and the current edits stay open. Use **Retry save** after storage is available or choose **Download current draft** before reloading to save a JSON copy with the current edits and step. In-app JSON restore is the next sharing milestone.
+
 ## Choose options from the Core catalog
 
 Under **Clan & Predator Type**, use the search fields to filter the pickers by option name or source page. The picker shows eligibility restrictions. Once you choose a Predator Type, complete its Specialty, Discipline power, and any additional grant choices. Characters with Blood Sorcery can select an optional starting level-one Ritual.
@@ -29,7 +35,7 @@ Under **Clan & Predator Type**, choose Brujah and Alleycat. For Mara, put two cl
 
 In **Attributes & Skills**, assign ratings using the slots for the selected distribution. Brawl shows a bonus dot from Alleycat until you assign base dots to it. After you assign Brawl 3, the grant becomes Brawl (Grappling) in **Specialties**. Choose a rated Skill for the free Specialty and fill any first-dot Specialty slots that appear.
 
-Use the [neonate fixture’s base allocation](v5-rules.md#base-allocation) for a complete check. Mara fills both distributions and reaches Health 6 and Willpower 5. Choose Athletics (Climbing) for her free Specialty and Craft (Carpentry) for her first-dot Specialty. If you change distributions after assigning Skills, adjust any overfilled ratings shown in the ledger. The draft lasts for the page session and starts fresh on reload.
+Use the [neonate fixture’s base allocation](v5-rules.md#base-allocation) for a complete check. Mara fills both distributions and reaches Health 6 and Willpower 5. Choose Athletics (Climbing) for her free Specialty and Craft (Carpentry) for her first-dot Specialty. If you change distributions after assigning Skills, adjust any overfilled ratings shown in the ledger.
 
 Under **Advantages & Flaws**, choose 13th Generation, then set Beautiful 2, Haven 1, Mask 2, Resources 2, and Stake Bait. Mara uses all 7 base Advantage dots and all 2 Flaw dots. The Alleycat grant brings the Advantage total to 10. The character has Blood Potency 1 and Bane Severity 2.
 
@@ -47,6 +53,6 @@ npm run build
 npm run preview
 ```
 
-The tests check Mara’s complete sheet, core path and grant rules, and draft validation. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
+The tests check Mara’s complete sheet, core path and grant rules, and draft storage and recovery. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
 
 See the [overview](overview.md) for first-release scope and [Development](development.md) for contributor checks.

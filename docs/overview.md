@@ -7,7 +7,9 @@ The Vampire: The Masquerade Character Creator is in development for players prep
 1. Start with a character concept, Ambition, Desire, and clan. Record chronicle guidance as needed.
 2. Choose a clan, its Disciplines and powers, and an eligible Predator Type. Assign Attributes and Skills with the Predator Type’s grant visible in the ledger.
 3. Record Advantages, Flaws, Convictions, Touchstones, and relevant relationships. Apply starting XP and review the resulting sheet and any open Storyteller rulings.
-4. Open **Review & Print** to resolve open choices and print the character sheet. Named drafts, the Storyteller brief, JSON backups, and mechanical build links are later milestones.
+4. Open **Review & Print** to resolve open choices and print the character sheet.
+
+Name a browser draft at any step to autosave it. Each saved character resumes at its own last step. The guide can download the current draft as JSON. In-app JSON restore, the Storyteller brief, and mechanical build links are later milestones.
 
 ## Release boundaries
 

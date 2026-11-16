@@ -1,6 +1,6 @@
 # Decision records
 
-The static app, first neonate rules path, and print sheet are implemented. Draft storage and transfer formats are planned. See the [roadmap](../roadmap/roadmap.json) for delivery status.
+The static app, Core catalog, print sheet, and named browser drafts are implemented. See the [roadmap](../roadmap/roadmap.json) for delivery status.
 
 ## 1 Static Vite app with shadcn/ui
 
@@ -8,7 +8,7 @@ The static app, first neonate rules path, and print sheet are implemented. Draft
 
 **Decision.** Use Vite, React, TypeScript, Tailwind CSS, and shadcn/ui. Serve a static app and keep named drafts in browser storage.
 
-**Consequences.** A draft belongs to its browser and origin. The full backup is the supported path for moving it to another browser or recovering it after storage loss.
+**Consequences.** A draft belongs to its browser and origin. A failed write keeps the working copy open and downloadable. The JSON restore workflow will allow that copy to be opened in another browser.
 
 ## 2 V5 Core Rulebook neonates first
 

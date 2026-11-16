@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T15:08:05+11:00",
+  "updatedAt": "2026-11-16T15:26:23+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -84,6 +84,13 @@
       "group": "Catalog",
       "notes": "Added and tested all seven named Core clans and ten Predator Types, source-tagged searchable pickers, and manual entries for Storyteller review. Verified a complete Tremere Bagger build, Ventrue restrictions, and Osiris allocations in the browser.",
       "completedAt": "2026-11-16T15:08:05+11:00"
+    },
+    {
+      "id": "save-named-browser-drafts",
+      "title": "Save named browser drafts",
+      "group": "Drafts",
+      "notes": "Named V5 drafts autosave the character and current step. Verified independent reloads for a completed Mara Vale build and an unfinished draft. An injected quota error preserved the previous save and let the current draft download as JSON, then retry and restore.",
+      "completedAt": "2026-11-16T15:26:23+11:00"
     }
   ]
 }

@@ -37,7 +37,7 @@ Use the [pinned Core Rulebook printing, errata, and hand-checked neonate fixture
 
 ## Drafts, sharing, and print
 
-- **Browser drafts.** Autosave a named draft and the last step. Give each draft an ID. Keep draft data exportable if browser storage fails and show the user the save status.
+- **Browser drafts.** The guide autosaves named drafts and their last steps. Each draft has a stable ID. The guide reports save status and keeps the current draft downloadable if browser storage fails.
 - **Full backup.** Export a versioned JSON file at any stage with `format`, `schemaVersion`, `ruleset`, and the draft inputs. Validate imports and open them as new drafts after a preview. An invalid or unsupported file leaves saved drafts intact.
 - **Build link.** Generate a read-only preview from allowlisted mechanical fields and catalog IDs. Keep character names, notes, user-entered text, and relationships out of the payload. Show which choices a recipient will need to supply if a custom entry was omitted. Let the recipient save a copy as a new draft.
 - **Storyteller handoff and print.** Download a Markdown brief with the mechanical build, open rulings, and any narrative sections the player chooses to include in the preview. Treat shared links and files as readable by their recipients. Print the sheet from the same review model and include a draft marker when required choices are outstanding.

@@ -2,6 +2,8 @@
 
 The Vampire: The Masquerade Character Creator is a browser guide in development for making V5 standard clan neonates. Build with the seven named Core Rulebook clans and ten Core Predator Types, then review and print the character sheet. Use manual entries for table-specific options and include their sources or notes for Storyteller review. See [the product plan](PLAN.md) for first-release scope and implementation milestones.
 
+Name a draft to autosave the character and resume at the last step in the same browser. You can download the current draft as JSON at any point. See [Getting started](docs/getting-started.md#save-and-reopen-browser-drafts).
+
 ## Run locally
 
 With Node.js 24 or later, run `npm ci` and `npm run dev` from the repository root. Open the URL printed by Vite. Run `npm run build` to type-check and build the production files.

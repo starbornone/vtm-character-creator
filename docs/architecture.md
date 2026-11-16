@@ -9,7 +9,7 @@ The ledger uses stable Attribute and Skill IDs from [`src/catalog/traits.ts`](..
 | React guide | Collect draft inputs, expose the live ledger and step navigation, and show review, print, and share previews. |
 | `src/rules/` | Evaluate the draft under its V5 ruleset. Calculate totals, list the source of each grant, and attach issues to affected choices. |
 | `src/catalog/` | Hold stable option IDs, structured prerequisites and effects, and book and page references. |
-| Draft and transfer code | Save named drafts in the browser. Parse and validate versioned backups and mechanical links before preview. |
+| `src/drafts/` | Validate saved character inputs, store named drafts and steps, and generate the current draft download. |
 
 ```mermaid
 flowchart LR
@@ -29,7 +29,9 @@ Predator grant choices use stable IDs and are applied only while the current sel
 
 [`src/rules/starting-xp.ts`](../src/rules/starting-xp.ts) evaluates base Advantage and Flaw choices, then replays XP purchases in order from the base traits and active grants. Each purchase records its requested rating or Specialty. Entries that become invalid keep their place in the journal and apply neither cost nor effect. The editors use the same purchase validation to quote the next entry and show current totals with their sources.
 
-[`src/rules/character-guide.ts`](../src/rules/character-guide.ts) owns the draft reducer and combines those evaluations into a sheet and a list of open choices by step. The guide keeps one in-memory draft when moving between steps. [`src/components/CharacterSheet.tsx`](../src/components/CharacterSheet.tsx) renders that sheet for both review and print. Print CSS exposes the sheet and hides editing controls. A draft with open choices carries a Draft label in both views.
+[`src/rules/character-guide.ts`](../src/rules/character-guide.ts) owns the draft reducer and combines those evaluations into a sheet and a list of open choices by step. [`src/components/CharacterSheet.tsx`](../src/components/CharacterSheet.tsx) renders that sheet for both review and print. Print CSS exposes the sheet and hides editing controls. A draft with open choices carries a Draft label in both views.
+
+[`src/drafts/browser-drafts.ts`](../src/drafts/browser-drafts.ts) saves a versioned, V5 library under one `localStorage` key. It stores each named character’s inputs and step, plus the active draft ID. The working copy stays in memory during storage errors. Before writing, the app compares the stored value with the one it last read or wrote so an older open tab avoids replacing a newer save. Download serializes the working copy directly.
 
 A full backup carries the versioned draft. Build links are constructed from an allowlist of mechanical fields and catalog IDs. Import and share previews open before any saved draft changes. The Storyteller brief uses the evaluated sheet and the narrative fields the player selects.
 
