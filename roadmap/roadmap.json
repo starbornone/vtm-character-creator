@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T23:03:08+11:00",
+  "updatedAt": "2026-11-16T23:07:28+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -9,12 +9,6 @@
     "summary": "A browser-based Vampire: The Masquerade V5 creator with Core and optional Player’s Guide choices, XP advancement, chronicle presets, a searchable rules reference, and local character and coterie planning tools."
   },
   "items": [
-    {
-      "id": "verify-foundry-v5-actor-import",
-      "title": "Verify Foundry V5 actor import compatibility",
-      "group": "Foundry interoperability",
-      "notes": "Start with the World of Darkness 5e system (wod5e). Record the exact system and Foundry versions. Export a sample vampire actor, import it into a disposable actor, and compare the re-export. Document which fields and embedded items survive, which need table review or mapping, and the scope of a first exporter."
-    },
     {
       "id": "review-player-storyteller-handoffs",
       "title": "Review sample handoffs with a player and a Storyteller",
@@ -26,6 +20,12 @@
       "title": "Scope a private Storyteller workspace",
       "group": "Chronicle discovery",
       "notes": "Use the handoff feedback to identify shared chronicle work that the current planner and portable files leave unresolved. Record the first useful workflow, player and Storyteller access, data ownership, export and deletion expectations, and a decision on whether to pursue implementation."
+    },
+    {
+      "id": "verify-foundry-v5-actor-import",
+      "title": "Verify Foundry V5 actor import compatibility",
+      "group": "Foundry interoperability",
+      "notes": "Deferred until a disposable Foundry V5 test world or paired vampire actor exports are available. Start with the World of Darkness 5e system (wod5e). Record the exact versions and compare a sample vampire actor export with its re-export after import. Document fields and embedded items that survive, mapping gaps, and the scope of a first exporter."
     }
   ]
 }
