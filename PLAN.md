@@ -70,10 +70,11 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 13. The [live character summary](docs/getting-started.md#check-the-live-character-summary) shows key choices, current tracks, starting XP, and section progress while editing. It appears beside the desktop editor and opens through a labeled control on mobile.
 14. [Expanded print checks](docs/release-verification.md#expanded-character-sheet-printing) confirmed the Draft marker before and after Mara’s last purchase and verified the Thin-blood and advancement fixtures on US Letter and A4.
 15. [Draft duplication](docs/getting-started.md#duplicate-a-draft) creates a named browser copy from the current character inputs and step. Each draft saves independently.
+16. The optional Player’s Guide pack also supports Ravnos. [Lena Ortiz](docs/v5-rules.md#lena-ortiz-ravnos-fixture) verifies its creation rules, print, backup restore, and build link.
 
 ## Next priorities
 
-1. **Expand the opt-in Player’s Guide catalog by one clan.** The pack currently offers the Ministry as its only additional clan. Choose one more clan whose Disciplines the evaluator already supports. Add its cited creation choices and any powers needed to finish a starting build. Verify a hand-checked fixture through review, print, backup restore, and a mechanical build link. Check that existing Core and Ministry drafts still resolve as before. [Rules sources and fixtures](docs/v5-rules.md)
+The Ravnos catalog expansion is complete. The remaining roadmap items are deferred.
 
 ### Deferred external handoff feedback
 

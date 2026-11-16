@@ -209,6 +209,7 @@ The initial pack covers the entries below. It uses the Core age profiles, dot bu
 | Option | Creation choices and effects | Player’s Guide reference |
 | --- | --- | --- |
 | Ministry | Obfuscate, Presence, and Protean are clan Disciplines. The Bane is Abhors the Light and the Compulsion is Transgression. | pp. 35–36 |
+| Ravnos | Animalism, Obfuscate, and Presence are clan Disciplines. The Bane is Doomed and the Compulsion is Tempting Fate. The No Haven Flaw is unavailable at creation. | pp. 41–42 |
 | Extortionist | Choose Intimidation (Coercion) or Larceny (Security), and a dot of Dominate or Potence. Split three dots between Contacts and Resources. Choose the police or an escaped victim as a two-dot Enemy. | p. 107 |
 | Montero | Choose Leadership (Hunting Pack) or Stealth (Stakeout), and a dot of Dominate or Obfuscate. Add Retainers 2 and reduce Humanity by one. | p. 108 |
 | Pursuer | Choose Investigation (Profiling) or Stealth (Shadowing), and a dot of Animalism or Auspex. Add Bloodhound 1 and Contacts 1, and reduce Humanity by one. | pp. 108–109 |
@@ -232,3 +233,20 @@ Elias Voss is a 13th-Generation Ministry neonate and night market broker in *The
 | Final tracks | Health 6 (Stamina 3 + 3), Willpower 5 (Composure 3 + Resolve 2), Humanity 7, Blood Potency 1, Bane Severity 2, and two Blood Surge dice. |
 
 The [fixture](../tests/fixtures/elias-voss.ts) and [Player’s Guide tests](../tests/players-guide.test.ts) check the calculations, Amalgam prerequisites, grant choices, and the Core-only result. Browser checks covered opt-in, a complete review, JSON restore and reload, and a read-only build link. Both previews flagged the disabled selections and named an unknown source pack.
+
+### Lena Ortiz Ravnos fixture
+
+Lena Ortiz is a 13th-Generation Ravnos neonate and touring lighting technician in *After the Last Encore*. Her Conviction is to pay the crew first. Her Touchstone is Ruth Navarro, a living stage electrician.
+
+| Stage | Hand-checked result | Reference |
+| --- | --- | --- |
+| Base traits | Attributes fill the 4/3/2/1 slots with 1/3/4/1 choices. Balanced Skills fill three 3s, five 2s, and seven 1s. Technology (Stage lighting) uses the free Specialty. | Core pp. 136, 145 |
+| Ravnos | Obfuscate 2 with Cloak of Shadows and Chimerstry. Presence 1 with Awe meets the Chimerstry Amalgam. The sheet names Doomed and Tempting Fate. | Core pp. 136, 261, 267. Player’s Guide pp. 41–42, 76. |
+| Siren | Persuasion already has 3 dots, so Seduction adds a Specialty. The Presence grant raises it to 2 and adds Daunt. Beautiful 2 and Enemy 1 sit outside the base budgets. | Core pp. 136, 149, 178–179, 185, 267 |
+| Base budgets | Haven 2, Mask 2, and Resources 3 spend all 7 base Advantage dots. Stake Bait spends 2 base Flaw dots. With Siren, the sheet shows 9 Advantage dots and 3 Flaw dots. | Core pp. 136, 178–182, 185–188, 192–193 |
+| Starting XP | Presence 2 meets the Fata Morgana Amalgam. Obfuscate 3 costs 5 × 3 = 15 XP and leaves 0 XP. | Core p. 137. Player’s Guide p. 77. |
+| Final tracks | Health 6 (Stamina 3 + 3), Willpower 5 (Composure 3 + Resolve 2), Humanity 7, Blood Potency 1, Bane Severity 2, and two Blood Surge dice. | Core pp. 136–137, 216, with the Blood Potency correction above |
+
+The [fixture](../tests/fixtures/lena-ortiz.ts) and [Player’s Guide tests](../tests/players-guide.test.ts) cover the budget, the missing Presence prerequisite, the No Haven restriction, and version 5 transfers. A saved No Haven choice is flagged and excluded from the budget for Ravnos. The tests also reject the named Flaw when entered manually or supplied by a manual Predator Type.
+
+The production preview confirmed source opt-in, backup preview and restore, complete review, reload, and the generated read-only build link. Switching the pack off kept Ravnos selected but inactive. Re-enabling restored the completed build. A one-page US Letter PDF showed the same Discipline powers, budgets, and tracks. Against the previous commit, Mara’s Core sheet and Elias’s Ministry sheet were identical, and their backups and build links matched byte for byte.

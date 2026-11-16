@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-17T00:35:52+11:00",
+  "updatedAt": "2026-11-17T00:45:41+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -245,6 +245,13 @@
       "group": "Browser drafts",
       "notes": "Added a suggested name and a fresh ID for copies of the current named draft. Verified the working inputs and current step carried over and both drafts reopened independently after reload. A stale-tab save left the original open and preserved the newer saved data. A quota test confirmed the stored library stays intact on a failed copy.",
       "completedAt": "2026-11-17T00:35:52+11:00"
+    },
+    {
+      "id": "expand-players-guide-clan-catalog",
+      "title": "Add one more clan to the opt-in Player’s Guide catalog",
+      "group": "Rules coverage",
+      "notes": "Added Ravnos to the opt-in catalog with its cited creation choices and No Haven restriction. Verified the hand-checked Lena Ortiz fixture through review, Letter print, JSON restore and reload, and the mechanical build link. Confirmed opt-in behavior and identical Core and Ministry sheets, backups, and build links against the previous commit.",
+      "completedAt": "2026-11-17T00:45:41+11:00"
     }
   ]
 }

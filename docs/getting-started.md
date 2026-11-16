@@ -97,7 +97,7 @@ Use **Earlier**, **Later**, or **Remove** to correct the journal. You can also r
 
 ## Enable the Player’s Guide
 
-New drafts start with the Core catalog. In **Concept**, use **Rule sources** to enable the Player’s Guide for the current draft. Source tags include page references. Switch the pack off to return to Core choices. Saved pack choices stay in the draft and can take effect again when enabled.
+New drafts start with the Core catalog. In **Concept**, use **Rule sources** to enable the Player’s Guide for the current draft and choose the Ministry or Ravnos. Source tags include page references. Switch the pack off to return to Core choices. Saved pack choices stay in the draft and can take effect again when enabled.
 
 A supported pack enabled in a backup or link is active in its preview and saved with the new copy. If the pack is disabled and the draft still uses its options, the preview flags the open choices. A preview that names an unavailable pack ID requires a creator that supports it to restore or save the character.
 
@@ -154,6 +154,12 @@ Follow the fixture’s trait allocation and choose 15th Generation in **Advantag
 Enable the Player’s Guide in **Concept** and follow the [Elias Voss fixture](v5-rules.md#elias-voss-mixed-source-fixture). Set Obfuscate to 2 and Presence to 1 before choosing Chimerstry. Under **Extortionist Backgrounds**, assign two dots to Contacts and one to Resources, then choose the escaped victim as the Enemy. Buy Obfuscate 3 with Mask of a Thousand Faces for 15 XP.
 
 In **Review & Print**, confirm the Player’s Guide source, Obfuscate 3 with Chimerstry, and 10 total Advantage and 4 total Flaw dots. Download the backup and restore it as a new draft or open the mechanical build link to see the same ratings.
+
+## Build Lena Ortiz as Ravnos
+
+Enable the Player’s Guide in **Concept** and follow the [Lena Ortiz fixture](v5-rules.md#lena-ortiz-ravnos-fixture). Choose Ravnos, Obfuscate 2 with Chimerstry, and Presence 1 with Awe. The Siren grant adds Presence 2 with Daunt and unlocks Fata Morgana as an eligible Obfuscate 3 purchase. Under **Advantages & XP**, spend 15 XP on it. The No Haven Flaw is unavailable for Ravnos. If you switch to Ravnos after choosing it, clear the flagged choice to finish creation.
+
+In **Review & Print**, check Health 6, Willpower 5, Humanity 7, 0 XP remaining, and the Doomed Bane and Tempting Fate Compulsion. The full JSON backup restores at its saved step. A mechanical build link shares the same ratings and powers.
 
 ## Verify the production build
 
