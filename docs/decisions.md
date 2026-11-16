@@ -1,6 +1,6 @@
 # Decision records
 
-The static app scaffold is implemented. The rules engine, draft storage, and transfer formats are planned. See the [roadmap](../roadmap/roadmap.json) for delivery status.
+The static app, first neonate rules path, and print sheet are implemented. Draft storage and transfer formats are planned. See the [roadmap](../roadmap/roadmap.json) for delivery status.
 
 ## 1 Static Vite app with shadcn/ui
 
@@ -34,4 +34,10 @@ The static app scaffold is implemented. The rules engine, draft storage, and tra
 
 **Consequences.** Validate portable inputs before applying them. New draft fields require an explicit decision about backup, link, and brief behavior.
 
-See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the planned flow.
+## 5 Print from the review sheet
+
+**Decision.** Use the same evaluated sheet in Review & Print and the browser’s print dialog. Keep open choices visible in the review and mark incomplete sheets as Draft in both views.
+
+**Consequences.** Players can print a work in progress and use the review to return to any step with open choices. Chronicle Tenets and coterie details are optional because they can depend on the table.
+
+See [Architecture](architecture.md) and the [product plan](../PLAN.md) for the full flow.

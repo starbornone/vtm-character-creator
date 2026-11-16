@@ -8,7 +8,7 @@ The Vampire: The Masquerade Character Creator (`vtm-character-creator`) is a pla
 
 - [README.md](README.md) is the human entry point. [PLAN.md](PLAN.md) describes the player workflow and release scope.
 - [docs/](docs/) holds contributor documentation and the roadmap contract. [roadmap/](roadmap/) holds the ordered backlog and history.
-- [`src/main.tsx`](src/main.tsx) mounts the React app. [`src/App.tsx`](src/App.tsx) renders the Attribute and Skill ledger and clan and Predator Type choices. The [architecture](docs/architecture.md) describes `src/rules/` and `src/catalog/`.
+- [`src/main.tsx`](src/main.tsx) mounts the React app. [`src/App.tsx`](src/App.tsx) renders the character guide, review, and printable sheet. The [architecture](docs/architecture.md) describes `src/rules/` and `src/catalog/`.
 
 ## Working agreements
 

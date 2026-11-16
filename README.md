@@ -1,6 +1,6 @@
 # vtm-character-creator
 
-The Vampire: The Masquerade Character Creator is a browser guide in development for making V5 standard clan neonates, from character concept to a rules-checked starting sheet. The app supports the Attribute and Skill ledger, Brujah and Alleycat choices, and starting Advantage, Flaw, and XP budgets. See [the product plan](PLAN.md) for first-release scope and implementation milestones.
+The Vampire: The Masquerade Character Creator is a browser guide in development for making V5 standard clan neonates. The first playable path takes a Brujah with the Alleycat Predator Type from concept and starting choices to a rules-checked review and printable character sheet. See [the product plan](PLAN.md) for first-release scope and implementation milestones.
 
 ## Run locally
 

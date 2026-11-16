@@ -2,6 +2,8 @@
 
 Build a guided Vampire: The Masquerade Fifth Edition (V5) creator that takes a player from character concept to a rules-checked starting sheet they can print or send to their Storyteller. Use Vite, React, TypeScript, Tailwind CSS, and shadcn/ui. Ship a static app with browser-local drafts and portable files. Store the rules edition in every draft and export. V5 is the proposed first edition. White Wolf’s V6 FAQ describes an alpha with materially different rules. [White Wolf’s V6 FAQ](https://www.paradoxinteractive.com/games/world-of-darkness/news/vtm-sixth-edition-faq) · [shadcn/ui Vite setup](https://ui.shadcn.com/docs/installation/vite)
 
+The first playable Brujah and Alleycat path now runs through **Review & Print**. See [Getting started](docs/getting-started.md) for the walkthrough and the [roadmap](roadmap/roadmap.json) for the remaining milestones.
+
 ## What to take from the reference projects
 
 | Reference | Apply here |

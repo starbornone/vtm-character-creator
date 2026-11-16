@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T14:30:29+11:00",
+  "updatedAt": "2026-11-16T14:46:18+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -70,6 +70,13 @@
       "group": "Rules",
       "notes": "Track starting budgets and ordered purchases. Verify Generation, Humanity, Blood Potency, and the XP balance for the first fixture.",
       "completedAt": "2026-11-16T14:30:29+11:00"
+    },
+    {
+      "id": "complete-first-character-guide",
+      "title": "Complete the first character guide and print sheet",
+      "group": "Guide",
+      "notes": "Verified Mara Vale through all six guide steps and compared her evaluated sheet with one-page US Letter and A4 printouts. Confirmed that an unfinished sheet retains its Draft label in print.",
+      "completedAt": "2026-11-16T14:46:18+11:00"
     }
   ]
 }

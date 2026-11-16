@@ -27,6 +27,8 @@ The reducer also stores clan and Predator Type choices. [`src/rules/clan-path.ts
 
 [`src/rules/starting-xp.ts`](../src/rules/starting-xp.ts) evaluates base Advantage and Flaw choices, then replays XP purchases in order from the base traits and active grants. Each purchase records its requested rating or Specialty. Entries that become invalid keep their place in the journal and apply neither cost nor effect. The editors use the same purchase validation to quote the next entry and show current totals with their sources.
 
+[`src/rules/character-guide.ts`](../src/rules/character-guide.ts) owns the draft reducer and combines those evaluations into a sheet and a list of open choices by step. The guide keeps one in-memory draft when moving between steps. [`src/components/CharacterSheet.tsx`](../src/components/CharacterSheet.tsx) renders that sheet for both review and print. Print CSS exposes the sheet and hides editing controls. A draft with open choices carries a Draft label in both views.
+
 A full backup carries the versioned draft. Build links are constructed from an allowlist of mechanical fields and catalog IDs. Import and share previews open before any saved draft changes. The Storyteller brief uses the evaluated sheet and the narrative fields the player selects.
 
 For a new catalog entry, add the source reference, stable ID, and structured effects. For a rules change, update the evaluator and its hand-checked fixtures, then verify the result in the guide and print review. For a transfer change, check round-trips and unsupported input before altering the export format. See [Decisions](decisions.md) and [Development](development.md).
