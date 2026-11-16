@@ -1,4 +1,6 @@
 import { Plus, Trash2 } from 'lucide-react'
+import { useId } from 'react'
+import { FieldHelp } from '@/components/FieldHelp'
 import { Card, CardContent } from '@/components/ui/card'
 import { maxConvictions, type ConceptDraft, type RelationshipDraft } from '@/rules/character-guide'
 import { ageProfileIds, ageProfiles, type AgeProfileId } from '@/rules/creation-profiles'
@@ -9,19 +11,34 @@ const ageProfileDescriptions: Record<AgeProfileId, string> = {
   ancilla: 'An older vampire with a Predator Type, 35 starting XP, and additional Advantage and Flaw dots.',
 }
 
-function NarrativeField({ label, value, onChange, multiline = false }: {
+const conceptHelp = {
+  concept: 'A short phrase that captures who your character is. For example, “A former paramedic who still tries to save lives.”',
+  chronicle: 'The name of the ongoing story or campaign this character belongs to. Leave it blank if your group hasn’t named it.',
+  embraced: 'When your character became a vampire. A year or approximate date is enough. Your chosen age profile sets the creation rules.',
+  ambition: 'A long-term goal with a concrete outcome. For example, “Win control of the waterfront.”',
+  desire: 'A short-term goal your character can pursue this session. It can change from session to session. For example, “Find out who followed me home.”',
+}
+
+function NarrativeField({ label, value, onChange, multiline = false, help }: {
   label: string
   value: string
   onChange: (value: string) => void
   multiline?: boolean
+  help?: string
 }) {
+  const id = useId()
+  const helpId = help ? `${id}-help` : undefined
+
   return (
-    <label className="grid gap-1.5 text-sm">
-      {label}
+    <div className="grid min-w-0 gap-1.5 text-sm">
+      <div className="relative flex min-h-8 items-center gap-1.5">
+        <label htmlFor={id}>{label}</label>
+        {help && helpId && <FieldHelp id={helpId} label={label.replace(' (optional)', '')} text={help} />}
+      </div>
       {multiline
-        ? <textarea className="ledger-field min-h-18 resize-y" rows={2} value={value} onChange={event => onChange(event.target.value)} />
-        : <input className="ledger-field" type="text" value={value} onChange={event => onChange(event.target.value)} />}
-    </label>
+        ? <textarea id={id} aria-describedby={helpId} className="ledger-field min-h-18 resize-y" rows={2} value={value} onChange={event => onChange(event.target.value)} />
+        : <input id={id} aria-describedby={helpId} className="ledger-field" type="text" value={value} onChange={event => onChange(event.target.value)} />}
+    </div>
   )
 }
 
@@ -32,7 +49,7 @@ export function ConceptEditor({ draft, onChange, ageProfile, onAgeProfile }: {
   onAgeProfile: (profile: AgeProfileId) => void
 }) {
   return (
-    <Card role="region" aria-labelledby="concept-heading" className="gap-0 py-0">
+    <Card role="region" aria-labelledby="concept-heading" className="gap-0 overflow-visible py-0">
       <CardContent className="space-y-5 p-5 sm:p-7">
         <div>
           <h2 id="concept-heading" className="text-2xl font-semibold tracking-tight">Concept</h2>
@@ -54,11 +71,11 @@ export function ConceptEditor({ draft, onChange, ageProfile, onAgeProfile }: {
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <NarrativeField label="Character name" value={draft.name} onChange={name => onChange({ name })} />
-          <NarrativeField label="Concept" value={draft.concept} onChange={concept => onChange({ concept })} />
-          <NarrativeField label="Chronicle (optional)" value={draft.chronicle} onChange={chronicle => onChange({ chronicle })} />
-          <NarrativeField label="Embraced (optional)" value={draft.embraced} onChange={embraced => onChange({ embraced })} />
-          <NarrativeField label="Ambition" multiline value={draft.ambition} onChange={ambition => onChange({ ambition })} />
-          <NarrativeField label="Desire" multiline value={draft.desire} onChange={desire => onChange({ desire })} />
+          <NarrativeField label="Concept" help={conceptHelp.concept} value={draft.concept} onChange={concept => onChange({ concept })} />
+          <NarrativeField label="Chronicle (optional)" help={conceptHelp.chronicle} value={draft.chronicle} onChange={chronicle => onChange({ chronicle })} />
+          <NarrativeField label="Embraced (optional)" help={conceptHelp.embraced} value={draft.embraced} onChange={embraced => onChange({ embraced })} />
+          <NarrativeField label="Ambition" help={conceptHelp.ambition} multiline value={draft.ambition} onChange={ambition => onChange({ ambition })} />
+          <NarrativeField label="Desire" help={conceptHelp.desire} multiline value={draft.desire} onChange={desire => onChange({ desire })} />
         </div>
       </CardContent>
     </Card>

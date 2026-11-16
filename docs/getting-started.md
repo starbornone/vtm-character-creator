@@ -21,9 +21,11 @@ In **Concept**, use **Age profile** to choose **Fledgling**, **Neonate**, or **A
 
 Switching profiles checks the selected Generation, dot budgets, and XP journal against the new rules. If a Generation becomes unavailable, the guide keeps it in the full draft until you choose a new one. Switching back can make the saved choice active again. Fledgling pauses the Predator Type and XP choices. Browser drafts and JSON backups preserve those choices. Mechanical build links carry the choices supported by the current profile. First-release drafts, backups, and links open as neonates.
 
+The info buttons beside **Concept**, **Chronicle**, **Embraced**, **Ambition**, and **Desire** explain what to enter. Hover, focus, or tap a button to read its help.
+
 ## Save and reopen browser drafts
 
-Expand **Browser drafts**, enter a **Draft name** and select **Save draft**. Once named, the character and current step autosave as you work. Reload the page to resume the last open saved draft. Use **New draft** for another character, or choose a name under **Saved drafts** and select **Open draft** to resume that character at its own last step. Edit the draft name and select **Save draft** to rename it.
+Expand **Browser drafts**, enter a **Draft name**, and select **Save draft**. Once named, the character and current step autosave as you work. Reload the page to resume the last open saved draft. Use **New draft** for another character, or choose a name under **Saved drafts** and select **Open draft** to resume that character at its own last step. Edit the draft name and select **Save draft** to rename it.
 
 Drafts belong to the current browser and site address. If saving fails, the last saved version stays in the browser and the current edits stay open. Use **Retry save** after storage is available or choose **Download current draft** before reloading to save a JSON copy with the current edits and step.
 
