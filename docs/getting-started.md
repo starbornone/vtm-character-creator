@@ -35,6 +35,12 @@ In **Review & Print**, select **Share mechanical build** and copy the link. Anyo
 
 The preview identifies omitted choices that need to be re-entered. Select **Save as new draft** to add an editable copy to your own browser library. The copy starts at **Concept** so you can add its name and story. Use a [JSON backup](#back-up-and-restore-a-draft) when you want to share the full draft.
 
+## Export a Storyteller brief
+
+In **Review & Print**, select **Storyteller brief**. The Markdown preview includes evaluated mechanics, starting XP, and open rulings such as unresolved mechanical choices, rejected XP purchases, and manual options that need Storyteller review.
+
+Choose the narrative sections you want to share. Character identity and chronicle, Ambition and Desire, Convictions and Touchstones, relationships and Chronicle Tenets, and custom names and Storyteller notes each start unchecked. Manual options and custom Specialties use generic labels in the default brief, while their ratings, costs, and review flags remain visible. Select **Download Markdown** to save the text shown in the preview as `storyteller-brief.md`.
+
 ## Choose options from the Core catalog
 
 Under **Clan & Predator Type**, use the search fields to filter the pickers by option name or source page. The picker shows eligibility restrictions. Once you choose a Predator Type, complete its Specialty, Discipline power, and any additional grant choices. Characters with Blood Sorcery can select an optional starting level-one Ritual.
@@ -67,6 +73,6 @@ npm run build
 npm run preview
 ```
 
-The tests check Mara’s complete sheet, core path and grant rules, browser draft storage, JSON backup round-trips, and the build link allowlist. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
+The tests check Mara’s complete sheet, core path and grant rules, browser draft storage, JSON backup round-trips, the build link allowlist, and narrative opt-ins for the Storyteller brief. The build runs TypeScript and writes the static site to `dist/`. Open the preview’s printed **Local** URL to check the guide. Rebuild after editing source files. Use `npm run typecheck` when you only need the TypeScript check.
 
 See the [overview](overview.md) for first-release scope and [Development](development.md) for contributor checks.

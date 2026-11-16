@@ -37,6 +37,6 @@ Predator grant choices use stable IDs and are applied only while the current sel
 
 [`src/sharing/build-link.ts`](../src/sharing/build-link.ts) projects an explicit allowlist of mechanical IDs, ratings, and omission flags into a versioned URL fragment. The recipient validates the payload and runs the same evaluator with blank narrative fields. Manual choices and purchases that require a custom Specialty name use omission flags so the recipient knows what to enter again. The preview reads without writing to storage and uses the existing new-draft action when the recipient saves a copy.
 
-The planned Storyteller brief will use the evaluated sheet and the narrative fields the player selects.
+[`src/sharing/storyteller-brief.ts`](../src/sharing/storyteller-brief.ts) uses the evaluated sheet, open mechanical choices, and rejected XP entries to generate Markdown. The evaluator can hide custom labels and Storyteller notes in the brief while preserving ratings, grants, and costs. Narrative sections are added only when selected. The browser shows and downloads the same Markdown string.
 
 For a new catalog entry, add the source reference, stable ID, and structured effects. For a rules change, update the evaluator and its hand-checked fixtures, then verify the result in the guide and print review. For a transfer change, check round-trips and unsupported input before altering the export format. See [Decisions](decisions.md) and [Development](development.md).

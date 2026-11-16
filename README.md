@@ -6,6 +6,8 @@ Name a draft to autosave the character and resume at the last step in the same b
 
 Share a read-only build link with another player or Storyteller. The link carries catalog choices and ratings while names and notes stay in the draft. See [Share a mechanical build](docs/getting-started.md#share-a-mechanical-build).
 
+Preview and download a Storyteller brief with the build’s mechanics, open rulings, and the narrative sections you choose. See [Export a Storyteller brief](docs/getting-started.md#export-a-storyteller-brief).
+
 ## Run locally
 
 With Node.js 24 or later, run `npm ci` and `npm run dev` from the repository root. Open the URL printed by Vite. Run `npm run build` to type-check and build the production files.
