@@ -21,6 +21,16 @@ export const guideSteps = [
 export type GuideStep = (typeof guideSteps)[number]['id']
 export type EditStep = Exclude<GuideStep, 'review'>
 
+export interface ReviewTarget {
+  step: EditStep
+  id: string
+}
+
+interface OpenChoice {
+  message: string
+  target: ReviewTarget
+}
+
 export interface ConceptDraft {
   name: string
   concept: string
@@ -128,45 +138,79 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
     ...(unavailablePacks.length ? [unavailableSourceMessage(unavailablePacks)] : []),
     ...(path.sourceUnavailable || starting.entries.some(entry => entry.issue === playersGuideDisabled) ? [playersGuideDisabled] : []),
   ]
-  const pending: Record<EditStep, string[]> = {
-    concept: conceptFields.filter(({ key }) => !draft.concept[key].trim()).map(({ label }) => `Fill in ${label.toLowerCase()}.`),
-    traits: [], clan: [...sourceIssues], starting: [], relationships: [],
+  const openChoices: Record<EditStep, OpenChoice[]> = {
+    concept: [], traits: [], clan: [], starting: [], relationships: [],
   }
-  if (traits.attributes.open || traits.attributes.excess) pending.traits.push('Complete the Attribute allocation.')
-  if (traits.skills.open || traits.skills.excess) pending.traits.push('Complete the Skill distribution.')
-  if (traits.specialties.completed < traits.specialties.total) pending.traits.push('Name all eligible starting Specialties.')
+  function add(section: EditStep, message: string, id: string, step = section) {
+    openChoices[section].push({ message, target: { step, id } })
+  }
+  for (const { key, label } of conceptFields) {
+    if (!draft.concept[key].trim()) add('concept', `Fill in ${label.toLowerCase()}.`, `concept-${key}`)
+  }
+  if (traits.attributes.open || traits.attributes.excess) add('traits', 'Complete the Attribute allocation.', 'attributes-heading')
+  if (traits.skills.open || traits.skills.excess) add('traits', 'Complete the Skill distribution.', 'skills-heading')
+  if (traits.specialties.completed < traits.specialties.total) add('traits', 'Name all eligible starting Specialties.', 'specialties-heading')
 
-  if (!path.clan) pending.clan.push(draft.clanPath.clan === manualOptionId
-    ? 'Name the manual clan, add its source or note, and choose three distinct Disciplines.' : 'Choose a clan.')
-  else if (thinBlood) {
-    if (path.ageIssue) pending.clan.push(path.ageIssue)
-    pending.clan.push(...thinBlood.issues)
+  for (const issue of sourceIssues) {
+    add('clan', issue, issue === playersGuideDisabled ? 'enable-players-guide' : 'rule-sources', 'concept')
+  }
+  if (!path.clan) {
+    if (draft.clanPath.clan === manualOptionId) {
+      add('clan', 'Name the manual clan, add its source or note, and choose three distinct Disciplines.', 'manual-clan')
+    } else add('clan', 'Choose a clan.', 'starting-clan')
+  } else if (thinBlood) {
+    if (path.ageIssue) add('clan', path.ageIssue, 'use-fledgling')
+    for (const { message, id } of thinBlood.openChoices) add('clan', message, id)
   } else {
-    if (path.clanSlots.length < 3 || path.clanSlots.some(slot => !slot.selectedPower)) pending.clan.push(path.isCaitiff ? 'Assign two distinct starting Disciplines and their powers.' : 'Assign both clan Disciplines and their powers.')
+    const missingPower = path.clanSlots.find(slot => !slot.selectedPower)
+    const disciplineTarget = path.clanSlots.length < 3
+      ? (path.clanSlots.some(slot => slot.rank === 2) ? 'one-dot-discipline' : 'two-dot-discipline')
+      : missingPower && `clan-power-${missingPower.discipline}-${missingPower.rank}`
+    if (disciplineTarget) add('clan', path.isCaitiff ? 'Assign two distinct starting Disciplines and their powers.' : 'Assign both clan Disciplines and their powers.', disciplineTarget)
     if (profile.predatorAllowed) {
-      if (!path.predator) pending.clan.push(path.predatorIssue ?? (draft.clanPath.predatorType === manualOptionId
-        ? 'Complete the manual Predator Type’s name, source or note, and any grant details.' : 'Choose a Predator Type.'))
-      else {
-        if (!path.predatorSlot?.selectedPower) pending.clan.push('Choose the granted Discipline and an eligible power.')
-        if (!path.grantedSpecialty || traits.specialties.predatorGrant?.kind === 'pending') pending.clan.push('Resolve the Predator Type’s Specialty or Skill dot.')
-        for (const choice of path.grantChoices) if (!choice.complete) pending.clan.push(`Complete the ${choice.label} grant.`)
+      if (!path.predator) {
+        if (path.predatorIssue) add('clan', path.predatorIssue, 'starting-predator')
+        else if (draft.clanPath.predatorType === manualOptionId) {
+          add('clan', 'Complete the manual Predator Type’s name, source or note, and any grant details.', 'manual-predator')
+        } else add('clan', 'Choose a Predator Type.', 'starting-predator')
+      } else {
+        if (!path.predatorSlot?.selectedPower) {
+          const selectedDiscipline = path.predatorDisciplines.some(id => id === draft.clanPath.predatorDiscipline)
+          const target = path.predatorSlot ? 'predator-power'
+            : selectedDiscipline && disciplineTarget ? disciplineTarget : 'predator-discipline'
+          add('clan', 'Choose the granted Discipline and an eligible power.', target)
+        }
+        if (!path.grantedSpecialty || traits.specialties.predatorGrant?.kind === 'pending') {
+          add('clan', 'Resolve the Predator Type’s Specialty or Skill dot.', path.specialtyOption?.custom && !path.grantedSpecialty ? 'predator-specialty-name' : 'predator-specialty')
+        }
+        for (const choice of path.grantChoices) {
+          if (!choice.complete) add('clan', `Complete the ${choice.label} grant.`, `predator-grant-${choice.id}`)
+        }
       }
     }
   }
 
-  if (!starting.generation) pending.starting.push(starting.generationIssue ?? 'Choose a Generation.')
-  if (starting.advantageBudget.remaining !== 0 || starting.advantages.some(option => option.issue)) pending.starting.push('Resolve the base Advantage choices and their budget.')
-  if (starting.flawBudget.remaining !== 0 || starting.flaws.some(option => option.issue)) pending.starting.push('Resolve the base Flaw choices and their budget.')
-  if (starting.manualOptions.some(option => option.issue)) pending.starting.push('Resolve incomplete or duplicate manual Advantages and Flaws.')
-  if (starting.entries.some(entry => entry.issue)) pending.starting.push('Resolve ineligible XP purchases.')
-  if (starting.final.remaining > 0) pending.starting.push('Spend the remaining starting XP.')
+  if (!starting.generation) add('starting', starting.generationIssue ?? 'Choose a Generation.', 'starting-generation')
+  if (starting.advantageBudget.remaining !== 0 || starting.advantages.some(option => option.issue)) add('starting', 'Resolve the base Advantage choices and their budget.', 'base-advantages')
+  if (starting.flawBudget.remaining !== 0 || starting.flaws.some(option => option.issue)) add('starting', 'Resolve the base Flaw choices and their budget.', 'base-flaws')
+  const manualIssue = starting.manualOptions.findIndex(option => option.issue)
+  if (manualIssue >= 0) add('starting', 'Resolve incomplete or duplicate manual Advantages and Flaws.', `manual-starting-${manualIssue}`)
+  const xpIssue = starting.entries.findIndex(entry => entry.issue)
+  if (xpIssue >= 0) add('starting', 'Resolve ineligible XP purchases.', `starting-purchase-${xpIssue}`)
+  if (starting.final.remaining > 0) add('starting', 'Spend the remaining starting XP.', 'starting-xp-heading')
 
   const convictions = draft.relationships.convictions.map(pair => ({ conviction: pair.conviction.trim(), touchstone: pair.touchstone.trim() }))
-  if (convictions.length < 1 || convictions.length > maxConvictions || convictions.some(pair => !pair.conviction || !pair.touchstone)) {
-    pending.relationships.push('Complete one to three Convictions with a Touchstone for each.')
+  const incompletePair = convictions.findIndex(pair => !pair.conviction || !pair.touchstone)
+  if (convictions.length < 1 || convictions.length > maxConvictions || incompletePair >= 0) {
+    const target = convictions.length < 1 ? 'add-conviction'
+      : convictions.length > maxConvictions ? `remove-conviction-${maxConvictions}`
+      : `${convictions[incompletePair].conviction ? 'touchstone' : 'conviction'}-${incompletePair}`
+    add('relationships', 'Complete one to three Convictions with a Touchstone for each.', target)
   }
 
-  const creationDraft = Object.values(pending).some(issues => issues.length > 0)
+  const pending = Object.fromEntries(Object.entries(openChoices).map(([section, choices]) =>
+    [section, choices.map(choice => choice.message)])) as Record<EditStep, string[]>
+  const creationDraft = Object.values(openChoices).some(issues => issues.length > 0)
   const advancement = draft.advancement && evaluateAdvancement(draft.advancement, starting.final, !creationDraft, includeCustomText)
   const final = advancement?.final ?? starting.final
   function characterTracks(state: typeof final) {
@@ -255,5 +299,5 @@ export function evaluateCharacter(draft: CharacterDraft, { includeCustomText = t
     },
     draft: creationDraft,
   }
-  return { ageProfile, path, traits, starting, advancement, tracks, sheet, pending, sourceIssues }
+  return { ageProfile, path, traits, starting, advancement, tracks, sheet, pending, openChoices, sourceIssues }
 }

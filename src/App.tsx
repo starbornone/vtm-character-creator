@@ -19,7 +19,7 @@ import { StartingOptionsEditor } from '@/components/StartingOptionsEditor'
 import { StorytellerBrief } from '@/components/StorytellerBrief'
 import { TableReference } from '@/components/TableReference'
 import { useBrowserDrafts } from '@/drafts/use-browser-drafts'
-import { chronicleSettings, evaluateCharacter, guideSteps, type GuideStep } from '@/rules/character-guide'
+import { chronicleSettings, evaluateCharacter, guideSteps, type GuideStep, type ReviewTarget } from '@/rules/character-guide'
 import { skillDistributionIds, skillDistributions } from '@/rules/trait-ledger'
 import { buildLinkPrefix } from '@/sharing/build-link'
 
@@ -66,26 +66,30 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
   const { character: draft, step, id, name } = drafts.open
   const { dispatch } = drafts
   const panel = useRef<HTMLDivElement>(null)
-  const shouldFocus = useRef(false)
-  const { ageProfile, path, traits, starting, advancement, tracks, sheet, pending, sourceIssues } = evaluateCharacter(draft)
+  const focusRequest = useRef<{ step: GuideStep; id?: string } | null>(null)
+  const { ageProfile, path, traits, starting, advancement, tracks, sheet, openChoices, sourceIssues } = evaluateCharacter(draft)
   const { attributes, skills, specialties } = traits
   const { health, willpower } = tracks
   const { predatorGrant } = specialties
   const index = guideSteps.findIndex(option => option.id === step)
   const previous = guideSteps[index - 1]
   const next = guideSteps[index + 1]
-  const openSteps = editSteps.filter(option => pending[option.id].length > 0)
+  const openSteps = editSteps.filter(option => openChoices[option.id].length > 0)
 
   useEffect(() => {
-    if (shouldFocus.current) {
-      panel.current?.focus()
-      shouldFocus.current = false
-    }
+    const request = focusRequest.current
+    if (!request || request.step !== step) return
+    focusRequest.current = null
+    const field = request.id ? document.getElementById(request.id) : null
+    if (field && panel.current?.contains(field)) {
+      field.focus({ preventScroll: true })
+      field.scrollIntoView({ block: 'start' })
+    } else panel.current?.focus()
   }, [step])
 
-  function goTo(target: GuideStep) {
+  function goTo(target: GuideStep, field?: ReviewTarget['id']) {
     if (target === step) return
-    shouldFocus.current = true
+    focusRequest.current = { step: target, id: field }
     drafts.goTo(target)
   }
 
@@ -141,10 +145,10 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
         {step === 'concept' && <>
           <ConceptEditor draft={draft.concept} onChange={update => dispatch({ type: 'concept', update })}
             ageProfile={ageProfile} onAgeProfile={profile => dispatch({ type: 'age-profile', profile })} />
-          <fieldset className="rounded-xl border border-border bg-card px-5 pt-1 pb-5 sm:px-7 sm:pb-7">
+          <fieldset id="rule-sources" tabIndex={-1} className="rounded-xl border border-border bg-card px-5 pt-1 pb-5 sm:px-7 sm:pb-7">
             <legend className="px-2 font-semibold"><span className="guide-action"><BookOpen aria-hidden="true" />Rule sources</span></legend>
             <label className="flex min-h-9 items-center gap-2 text-sm">
-              <input type="checkbox" className="size-4 accent-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300"
+              <input id="enable-players-guide" type="checkbox" className="size-4 accent-rose-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300"
                 checked={path.sourcePacks.includes(playersGuide.id)} onChange={event => dispatch({ type: 'players-guide', enabled: event.target.checked })} />
               Enable Player’s Guide
             </label>
@@ -224,9 +228,12 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
             <StorytellerBrief key={`brief-${id ?? 'unnamed'}`} draft={draft} />
             {openSteps.length > 0 && <ul aria-label="Open choices" className="grid gap-3 sm:grid-cols-2">
               {openSteps.map(option => <li key={option.id} className="rounded-lg border border-border px-3 py-2">
-                <button type="button" className="font-medium text-rose-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-rose-300" onClick={() => goTo(option.id)}>{option.title}</button>
-                <ul className="mt-1 list-disc space-y-1 pl-4 text-sm text-muted-foreground">
-                  {pending[option.id].map(issue => <li key={issue}>{issue}</li>)}
+                <h3 className="font-medium">{option.title}</h3>
+                <ul className="mt-1 space-y-1 text-sm">
+                  {openChoices[option.id].map(({ message, target }) => <li key={message}>
+                    <button type="button" className="min-h-10 text-left text-rose-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-rose-300"
+                      onClick={() => goTo(target.step, target.id)}>{message}</button>
+                  </li>)}
                 </ul>
               </li>)}
             </ul>}

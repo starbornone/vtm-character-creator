@@ -40,18 +40,27 @@ test('Mara’s reviewed sheet combines her story, starting choices, and final me
   assert.deepEqual(physical?.skills.find(skill => skill.name === 'Brawl')?.specialties, ['Grappling'])
 })
 
-test('incomplete choices route back to their steps and mark the sheet Draft', () => {
+test('open choices target distinct editors and the last correction clears Draft', () => {
   const empty = evaluateCharacter(initialCharacterDraft)
   assert.equal(empty.sheet.draft, true)
   assert.ok(Object.values(empty.pending).every(issues => issues.length > 0))
   assert.equal(empty.sheet.tracks.health, undefined)
 
-  const changed = editCharacter(maraCharacter, { type: 'relationships', update: { convictions: [{ conviction: 'Keep my word', touchstone: '   ' }] } })
+  const noTouchstone = editCharacter(maraCharacter, { type: 'relationships', update: { convictions: [{ conviction: 'Keep my word', touchstone: '   ' }] } })
+  const changed = editCharacter(noTouchstone, { type: 'concept', update: { ambition: '', desire: '' } })
   const review = evaluateCharacter(changed)
   assert.equal(review.sheet.draft, true)
-  assert.deepEqual(Object.entries(review.pending).filter(([, issues]) => issues.length > 0).map(([step]) => step), ['relationships'])
+  assert.deepEqual(review.openChoices.concept.map(issue => issue.target), [
+    { step: 'concept', id: 'concept-ambition' },
+    { step: 'concept', id: 'concept-desire' },
+  ])
+  const finalIssue = evaluateCharacter(noTouchstone)
+  assert.equal(finalIssue.sheet.draft, true)
+  assert.deepEqual(Object.entries(finalIssue.pending).filter(([, issues]) => issues.length > 0).map(([step]) => step), ['relationships'])
+  assert.deepEqual(finalIssue.openChoices.relationships.map(issue => issue.target), [{ step: 'relationships', id: 'touchstone-0' }])
   assert.equal(review.sheet.relationships.convictions[0].touchstone, '')
-  assert.equal(evaluateCharacter(maraCharacter).sheet.draft, false)
+  const resolved = editCharacter(noTouchstone, { type: 'relationships', update: { convictions: maraCharacter.relationships.convictions } })
+  assert.equal(evaluateCharacter(resolved).sheet.draft, false)
 })
 
 test('the sheet excludes inactive picks and invalid journal entries', () => {

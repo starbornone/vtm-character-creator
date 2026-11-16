@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-16T23:35:04+11:00",
+  "updatedAt": "2026-11-16T23:51:00+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -9,12 +9,6 @@
     "summary": "A browser-based Vampire: The Masquerade V5 creator with Core and optional Player’s Guide choices, XP advancement, chronicle presets, a searchable rules reference, and local character and coterie planning tools."
   },
   "items": [
-    {
-      "id": "jump-to-open-character-choices",
-      "title": "Jump from review issues to the affected character choices",
-      "group": "Guide usability",
-      "notes": "Complete the field navigation described in PLAN.md. Link each actionable open choice in Review & Print to the corresponding field or option group, with focus on arrival. Verify keyboard and phone-width use with multiple open choices in one step, and confirm that fixing the final blocker updates the review and printed Draft marker."
-    },
     {
       "id": "surface-open-rulings-in-brief-preview",
       "title": "Show open rulings alongside the Storyteller brief preview",

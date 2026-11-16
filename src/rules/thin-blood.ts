@@ -33,20 +33,20 @@ export function curseRestriction(id: string, draft: ThinBloodDraft) {
 export function evaluateThinBlood(draft: ThinBloodDraft = initialThinBlood) {
   const merits = thinBloodMerits.filter(({ id }) => draft.merits.includes(id))
   const flaws = thinBloodFlaws.filter(({ id }) => draft.flaws.includes(id))
-  const issues: string[] = []
+  const openChoices: { message: string; id: string }[] = []
   if (merits.length < 1 || merits.length > 3 || merits.length !== flaws.length) {
-    issues.push('Choose one to three Thin-blood Merits and the same number of Thin-blood Flaws.')
+    openChoices.push({ message: 'Choose one to three Thin-blood Merits and the same number of Thin-blood Flaws.', id: 'thin-blood-traits' })
   }
   for (const [merit, flaw, message] of conflictingTraits) {
-    if (draft.merits.includes(merit) && draft.flaws.includes(flaw)) issues.push(message)
+    if (draft.merits.includes(merit) && draft.flaws.includes(flaw)) openChoices.push({ message, id: `thin-blood-flaw-${flaw}` })
   }
 
   let curse: (typeof coreClans)[number] | undefined
   if (draft.flaws.includes('clan-curse')) {
     const clan = coreClans.find(({ id }) => id === draft.curseClan)
     const issue = clan && curseRestriction(clan.id, draft)
-    if (!clan) issues.push('Choose a Core clan Bane for Clan Curse.')
-    else if (issue) issues.push(`Clan Curse · ${clan.name}: ${issue}`)
+    if (!clan) openChoices.push({ message: 'Choose a Core clan Bane for Clan Curse.', id: 'clan-curse-bane' })
+    else if (issue) openChoices.push({ message: `Clan Curse · ${clan.name}: ${issue}`, id: 'clan-curse-bane' })
     else curse = clan
   }
 
@@ -55,7 +55,7 @@ export function evaluateThinBlood(draft: ThinBloodDraft = initialThinBlood) {
     const discipline = disciplineIds.find(id => id === draft.affinity)
     const power = discipline && disciplinePowers[discipline].find(option => option.id === draft.affinityPower && option.level === 1)
     if (discipline && power) affinity = { discipline, power }
-    else issues.push('Choose one Core Discipline and a level-one power for Discipline Affinity.')
+    else openChoices.push({ message: 'Choose one Core Discipline and a level-one power for Discipline Affinity.', id: discipline ? 'affinity-power' : 'affinity-discipline' })
   }
 
   let alchemy: { rating: 1; method: (typeof alchemyMethods)[number]; formula: (typeof startingFormulae)[number] } | undefined
@@ -63,8 +63,8 @@ export function evaluateThinBlood(draft: ThinBloodDraft = initialThinBlood) {
     const method = alchemyMethods.find(({ id }) => id === draft.method)
     const formula = startingFormulae.find(({ id }) => id === draft.formula)
     if (method && formula) alchemy = { rating: 1, method, formula }
-    else issues.push('Choose a distillation method and a level-one formula for Thin-blood Alchemist.')
+    else openChoices.push({ message: 'Choose a distillation method and a level-one formula for Thin-blood Alchemist.', id: method ? 'starting-formula' : 'distillation-method' })
   }
 
-  return { merits, flaws, curse, affinity, alchemy, issues }
+  return { merits, flaws, curse, affinity, alchemy, openChoices, issues: openChoices.map(choice => choice.message) }
 }

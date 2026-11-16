@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-16T23:31:44+11:00",
+  "updatedAt": "2026-11-16T23:51:00+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -203,6 +203,13 @@
       "group": "Chronicle discovery",
       "notes": "Verified one fictional Storyteller and two players in the local browser: invitations, role visibility, submission, review, replacement with revised XP, per-handoff JSON export, and withdrawal without affecting the other player. Documented the walkthrough and deferred a hosted pilot pending player and Storyteller feedback.",
       "completedAt": "2026-11-16T23:31:44+11:00"
+    },
+    {
+      "id": "jump-to-open-character-choices",
+      "title": "Jump from review issues to the affected character choices",
+      "group": "Guide usability",
+      "notes": "Each open review choice focuses its field or option group. Verified distinct targets using Enter and Space and focus and scrolling at 390 px. A one-page native print preview of Mara showed the Draft marker. Buying Drive 2 with the last 6 XP cleared the open choice and the marker from the shared review and print sheet. The second native preview could not be inspected. See docs/release-verification.md.",
+      "completedAt": "2026-11-16T23:51:00+11:00"
     }
   ]
 }

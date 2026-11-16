@@ -113,7 +113,7 @@ Under **Starting XP**, select Skill and add Stealth twice, then add Drive. The j
 
 In **Relationships**, enter Inez Varga as Mara’s sire and “Protect people who depend on you” as the Chronicle Tenet. Pair the Conviction “Keep my word” with Jo Reyes, the living stage manager, as her Touchstone.
 
-Open **Review & Print**. Mara’s sheet shows Health 6, Willpower 5, Humanity 6, Blood Potency 1, and 0 XP remaining. Use **Print character sheet** to open your browser’s print dialog, where you can print or save to PDF. The same sheet is available for an incomplete build with a **Draft** label. Open choices in the review link back to their steps.
+Open **Review & Print**. Mara’s sheet shows Health 6, Willpower 5, Humanity 6, Blood Potency 1, and 0 XP remaining. Use **Print character sheet** to open your browser’s print dialog, where you can print or save to PDF. If the build is incomplete, select an item under **Open choices** to go to the field or group that needs attention. Keyboard focus moves there automatically. Fix the last open choice to clear the **Draft** label from the sheet and its printout.
 
 ## Build and print Rowan Pike
 

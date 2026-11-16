@@ -64,12 +64,12 @@ Keep the public app free and noncommercial under the Dark Pack terms. Use origin
 7. The [Character Relationship Map](docs/getting-started.md#map-a-characters-relationships) starts with the recorded sire, coterie, and Touchstones. Players can add people and labeled connections. The map travels with the full draft backup.
 8. The [Coterie and Domain planner](docs/getting-started.md#plan-a-coterie-and-domain) organizes several characters in a named browser plan. Players can preview and transfer the shared purpose, Domain ratings, member names, and selected relationship details as JSON. Restoring a plan creates a separate copy and leaves individual character drafts intact.
 9. The [local handoff review prototype](docs/storyteller-workspace.md#prototype-walkthrough) demonstrates submission, review, replacement, export, and withdrawal with one fictional Storyteller and two players.
+10. **Review & Print** links each open choice to the field or option group where it can be resolved. The same evaluation controls the Draft marker on the sheet. [Review issue navigation checks](docs/release-verification.md#review-issue-navigation)
 
 ## Next priorities
 
-1. **Jump from an open choice to its editor.** Review & Print currently links to the start of each step. Let players go straight to the field or group that needs attention, with focus in the right place for keyboard use. Verify that fixing the choice updates both review and the printed Draft marker.
-2. **Make open rulings visible in the Storyteller brief preview.** The internal walkthrough found that a Storyteller has to scroll past the mechanics to find unresolved choices on mobile. Show the rulings alongside the preview and check them against the Markdown download with narrative options off and on. [Internal handoff walkthrough](docs/release-verification.md#internal-walkthrough)
-3. **Guide players to the right JSON restore control.** When a valid character backup or coterie plan is opened in the other tool, name the matching restore control. Verify both directions and confirm that choosing a wrong or malformed file leaves the open draft and plan intact. [Internal handoff walkthrough](docs/release-verification.md#internal-walkthrough)
+1. **Make open rulings visible in the Storyteller brief preview.** The internal walkthrough found that a Storyteller has to scroll past the mechanics to find unresolved choices on mobile. Show the rulings alongside the preview and check them against the Markdown download with narrative options off and on. [Internal handoff walkthrough](docs/release-verification.md#internal-walkthrough)
+2. **Guide players to the right JSON restore control.** When a valid character backup or coterie plan is opened in the other tool, name the matching restore control. Verify both directions and confirm that choosing a wrong or malformed file leaves the open draft and plan intact. [Internal handoff walkthrough](docs/release-verification.md#internal-walkthrough)
 
 ### Deferred external handoff feedback
 

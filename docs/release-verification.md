@@ -12,6 +12,12 @@ Verified the release candidate on 16 November 2026 with Node.js 24, Vite’s pro
 | Print rendering | Chromium produced one-page grayscale PDFs of Mara’s sheet on US Letter and A4. The rendered sheets included the selected powers, 15 XP spent, zero XP remaining, and her Touchstone. A copy with the Touchstone blank retained the Draft label in print. Editing controls and the site footer stayed off the paper. |
 | Candidate notices | The creator and shared preview display the official Dark Pack logo, the Paradox copyright and trademark notice, and the unofficial designation. The footer links to the agreement and official V5 resources. |
 
+## Review issue navigation
+
+In the local production preview, Enter and Space on two Concept issues focused Ambition and Desire separately. Tab advanced from Ambition. The Skill distribution issue focused its heading. At 390 × 844, the base Flaws and Starting XP issues moved focus to their targets and scrolled them into view without horizontal overflow.
+
+Restoring [Mara Vale’s handoff draft](examples/mara-vale-handoff-draft.json) left one open issue and 6 starting XP. Brave’s one-page print preview showed **Draft · Open choices**. Following the XP issue and buying Drive 2 spent the final 6 XP, cleared the review list, and removed the label from the shared review and print sheet. Browser automation stopped before the second native print preview could be inspected.
+
 ## Public site
 
 Vercel reported the notice commit `e70e956` ready for production on 16 November 2026. The live creator and a shared build preview both displayed the official Dark Pack logo, the Paradox copyright and trademark notice, and the unofficial designation. The logo loaded from the public domain and linked to the Dark Pack Agreement. [Public character creator](https://vtm.astralarchives.games/) · [Dark Pack Agreement](https://www.paradoxinteractive.com/games/world-of-darkness/community/dark-pack-agreement) · [Official V5 resources](https://renegadegamestudios.com/vampire)

@@ -52,6 +52,14 @@
 }
 
 @layer components {
+  .creator-shell [id]:focus {
+    scroll-margin-block-start: 1rem;
+  }
+
+  .creator-shell [id][tabindex="-1"]:focus {
+    @apply outline-2 outline-offset-2 outline-rose-300;
+  }
+
   .ledger-field {
     @apply min-h-9 min-w-0 rounded-md border border-border bg-background px-2.5 py-1.5 text-sm text-foreground;
     @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 disabled:text-muted-foreground;
