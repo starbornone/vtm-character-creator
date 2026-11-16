@@ -1,7 +1,8 @@
 import { ArchiveRestore, Upload } from 'lucide-react'
 import { useRef, useState, type ChangeEvent } from 'react'
 import { suggestRestoreName, type DraftLibrary } from '@/drafts/browser-drafts'
-import { readDraftBackup, type DraftSnapshot } from '@/drafts/draft-backup'
+import type { DraftSnapshot } from '@/drafts/draft-backup'
+import { readDraftRestoreFile } from '@/drafts/restore-file'
 import { evaluateCharacter, guideSteps } from '@/rules/character-guide'
 
 interface BackupRestoreProps {
@@ -37,7 +38,7 @@ export function BackupRestore({ library, onRestore }: BackupRestoreProps) {
     const current = ++request.current
     setSelection({ status: 'reading' })
     try {
-      const result = readDraftBackup(await file.text())
+      const result = readDraftRestoreFile(await file.text())
       if (current !== request.current) return
       if (result.issue !== undefined) setSelection({ status: result.unavailableSources ? 'unavailable' : 'error', issue: result.issue })
       else setSelection({ status: 'preview', draft: result.draft, name: suggestRestoreName(library, result.draft.name) })

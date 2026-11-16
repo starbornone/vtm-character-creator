@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { draftLibraryKey, loadDraftLibrary, saveDraftLibrary, type GetStorage, type NamedDraft } from '../src/drafts/browser-drafts.ts'
 import { coteriePlansKey, loadCoteriePlans, readCoterieHandoff, saveCoteriePlan, serializeCoterieHandoff, suggestCoterieCopyName } from '../src/drafts/coterie-plans.ts'
+import { serializeDraftDownload } from '../src/drafts/draft-backup.ts'
+import { readCoterieRestoreFile, readDraftRestoreFile } from '../src/drafts/restore-file.ts'
 import { emptyCoteriePlan, memberFromDraft, type CoteriePlan } from '../src/rules/coterie-plan.ts'
 import { characterEndpoint } from '../src/rules/relationship-map.ts'
 import { maraCharacter } from './fixtures/mara-vale.ts'
@@ -79,6 +81,26 @@ test('invalid and foreign transfers cannot become plans', () => {
   ]) {
     assert.match(readCoterieHandoff(JSON.stringify({ ...envelope, plan: invalid })).issue ?? '', /invalid plan/)
   }
+})
+
+test('restore controls recognize only valid files meant for the other tool', () => {
+  const characterBackup = serializeDraftDownload(mara)
+  const coterieHandoff = serializeCoterieHandoff(plan)
+  const draftResult = readDraftRestoreFile(coterieHandoff)
+  const planResult = readCoterieRestoreFile(characterBackup)
+  assert.equal(draftResult.draft, undefined)
+  assert.match(draftResult.issue ?? '', /Coterie & Domain.*Choose coterie JSON/)
+  assert.equal(planResult.value, undefined)
+  assert.match(planResult.issue ?? '', /Browser drafts.*Choose JSON backup/)
+
+  const invalidDraft = JSON.stringify({ ...JSON.parse(characterBackup), draft: {} })
+  const invalidPlan = JSON.stringify({ ...JSON.parse(coterieHandoff), plan: {} })
+  assert.match(readDraftRestoreFile(invalidPlan).issue ?? '', /Choose a Character Creator draft backup/)
+  assert.match(readCoterieRestoreFile(invalidDraft).issue ?? '', /Choose a Coterie and Domain handoff file/)
+  assert.match(readDraftRestoreFile(invalidDraft).issue ?? '', /missing or invalid/)
+  assert.match(readCoterieRestoreFile(invalidPlan).issue ?? '', /invalid plan details/)
+  assert.match(readDraftRestoreFile('{').issue ?? '', /not valid JSON/)
+  assert.match(readCoterieRestoreFile('{').issue ?? '', /not valid JSON/)
 })
 
 test('plan edits reject duplicate names, stale writers, colliding copy IDs, and failed writes', () => {

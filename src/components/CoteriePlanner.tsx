@@ -2,7 +2,8 @@ import { Download, FileText, FolderOpen, Map, Plus, Save, Upload, X } from 'luci
 import { useRef, useState, type ChangeEvent } from 'react'
 import { CoterieHandoffSummary, CoteriePlanEditor } from '@/components/CoteriePlanEditor'
 import { browserStorage, type NamedDraft } from '@/drafts/browser-drafts'
-import { loadCoteriePlans, readCoterieHandoff, saveCoteriePlan, serializeCoterieHandoff, suggestCoterieCopyName } from '@/drafts/coterie-plans'
+import { loadCoteriePlans, saveCoteriePlan, serializeCoterieHandoff, suggestCoterieCopyName } from '@/drafts/coterie-plans'
+import { readCoterieRestoreFile } from '@/drafts/restore-file'
 import { emptyCoteriePlan, type CoteriePlan } from '@/rules/coterie-plan'
 import { downloadTextFile } from '@/sharing/download-text'
 
@@ -76,7 +77,7 @@ export function CoteriePlanner({ drafts }: { drafts: readonly NamedDraft[] }) {
     setStatus('')
     setReading(true)
     try {
-      const result = readCoterieHandoff(await file.text())
+      const result = readCoterieRestoreFile(await file.text())
       if (current !== request.current) return
       if (result.issue !== undefined) setIssue(result.issue)
       else setPreview({ kind: 'restore', plan: result.value, name: suggestCoterieCopyName(savedPlans, result.value.name) })
