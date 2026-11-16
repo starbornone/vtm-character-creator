@@ -53,11 +53,11 @@ Presence provides a check on power eligibility. The second dot can take a distin
 
 Alleycat can grant Brawl (Grappling) or Intimidation (Stickups). If the selected Skill has zero base dots, grant one dot in the Skill in place of the Specialty. Keep it outside the starting distribution. On a rated Skill the granted Specialty counts toward the Skill’s Specialty limit. Core pp. 149, 159, 175–176.
 
-The available powers cover Celerity and Potence through the third dot and Presence through the second. Potence’s Spark of Rage requires Presence 3, which this starting path cannot reach. The Companion also restricts Lingering Kiss for characters with Unbondable. That restriction belongs to Advantage validation when Unbondable becomes selectable. Core pp. 244, 252–267 and Companion p. 62.
+The clan and Predator Type selection covers Celerity and Potence through the third dot and Presence through the second. The XP editor can add a third Presence dot with an eligible power. Spark of Rage requires both Potence 3 and Presence 3. Selecting both Lingering Kiss and Unbondable leaves the conflicting purchase or base Advantage inactive until resolved. Core pp. 181, 244, 252–268 and Companion p. 62.
 
 ### Ordered starting XP
 
-Spend Skill XP at three times the new rating for each increase. This uses the Core experience costs and the neonate starting budget. Core pp. 130, 137.
+The starting XP editor supports Attribute dots, Skill dots, Specialties, clan Discipline dots with a power, and the listed Advantages. Each Attribute or clan Discipline dot costs five times the new rating. A Skill dot costs three times the new rating, a Specialty costs 3 XP, and an Advantage costs 3 XP per dot added. A rise from Blood Potency 1 to 2 costs 20 XP, over the neonate’s 15 XP budget. Core pp. 130, 137, 214, 244.
 
 | Purchase | New rating | XP cost | XP remaining |
 | --- | ---: | ---: | ---: |
@@ -67,4 +67,4 @@ Spend Skill XP at three times the new rating for each increase. This uses the Co
 
 The finished sheet shows Stealth 2 and Drive 2. The base allocation stays Balanced with Stealth 0 and Drive 1. Track the XP increases separately from the base Skill dots so the same fixture can verify both stages. The final sheet has Health 6, Willpower 5, Humanity 6, Blood Potency 1, Bane Severity 2, 10 total Advantage dots, 2 Flaw dots, and 0 XP left.
 
-The [ledger test](../tests/trait-ledger.test.ts) exercises the base allocation and its two Specialties. The [clan path test](../tests/clan-path.test.ts) verifies the third Specialty, Potence increase, Contacts, and Humanity adjustment. The ordered purchases describe the starting XP milestone.
+The [ledger test](../tests/trait-ledger.test.ts) exercises the base allocation and its two Specialties. The [clan path test](../tests/clan-path.test.ts) verifies the third Specialty, Potence increase, Contacts, and Humanity adjustment. The [starting XP test](../tests/starting-xp.test.ts) verifies the final budgets, generation, Blood Potency, and purchases, including what happens when purchases are reordered.

@@ -11,7 +11,8 @@
 | `src/components/ui/`, `src/index.css`, `components.json` | shadcn/ui components, Tailwind theme, and registry configuration. |
 | `src/catalog/traits.ts`, `src/rules/trait-ledger.ts` | Trait IDs and groups, in-memory draft edits, and the pure base allocation evaluator. |
 | `src/catalog/clan-path.ts`, `src/rules/clan-path.ts` | Brujah and Alleycat options, power slots, and derived grants. |
-| `tests/fixtures/mara-vale.ts`, `tests/trait-ledger.test.ts`, `tests/clan-path.test.ts` | Shared neonate fixture and rules regression tests. |
+| `src/catalog/starting-options.ts`, `src/rules/starting-xp.ts` | Starting Advantage and Flaw options, generation and Blood Potency, and ordered XP rules. |
+| `tests/fixtures/mara-vale.ts`, `tests/` | Shared neonate fixture and rules regression tests. |
 
 Start from a [roadmap item](../roadmap/roadmap.json) and read the relevant section of the [plan](../PLAN.md). For documentation changes, follow the relative links from the edited pages and parse the three roadmap files if any changed. Check schema values, matching project metadata, timestamps, and unique IDs across all three files. Review the diff for unrelated edits.
 

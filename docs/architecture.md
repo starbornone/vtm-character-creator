@@ -23,7 +23,9 @@ flowchart LR
   Draft --> Transfer[Autosave and export]
 ```
 
-The reducer also stores clan and Predator Type choices. [`src/rules/clan-path.ts`](../src/rules/clan-path.ts) resolves them against the [source-tagged catalog](../src/catalog/clan-path.ts), evaluates power slots by acquisition rank, and returns mandatory grants and the Discipline ledger. The Trait evaluator determines whether the Predator Specialty takes effect as a Specialty or as a separate Skill dot. Switching or clearing a choice preserves its saved powers for when the corresponding slot returns. Ordered XP purchases and starting Advantage and Flaw budgets follow in the next milestone.
+The reducer also stores clan and Predator Type choices. [`src/rules/clan-path.ts`](../src/rules/clan-path.ts) resolves them against the [source-tagged catalog](../src/catalog/clan-path.ts), evaluates power slots by acquisition rank, and returns mandatory grants and the Discipline ledger. The Trait evaluator determines whether the Predator Specialty takes effect as a Specialty or as a separate Skill dot. Switching or clearing a choice preserves its saved powers for when the corresponding slot returns.
+
+[`src/rules/starting-xp.ts`](../src/rules/starting-xp.ts) evaluates base Advantage and Flaw choices, then replays XP purchases in order from the base traits and active grants. Each purchase records its requested rating or Specialty. Entries that become invalid keep their place in the journal and apply neither cost nor effect. The editors use the same purchase validation to quote the next entry and show current totals with their sources.
 
 A full backup carries the versioned draft. Build links are constructed from an allowlist of mechanical fields and catalog IDs. Import and share previews open before any saved draft changes. The Storyteller brief uses the evaluated sheet and the narrative fields the player selects.
 
