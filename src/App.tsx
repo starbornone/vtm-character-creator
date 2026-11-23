@@ -1,8 +1,7 @@
 import { ArrowLeft, ArrowRight, BookOpen, Compass, Droplets, FileText, NotebookPen, Printer, SlidersHorizontal, UsersRound } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { playersGuide } from '@/catalog/source-packs'
 import { traitGroups } from '@/catalog/traits'
-import { AdvancementJournal } from '@/components/AdvancementJournal'
 import { AllocationEditor } from '@/components/AllocationEditor'
 import { CharacterSheet } from '@/components/CharacterSheet'
 import { CharacterSummary } from '@/components/CharacterSummary'
@@ -24,6 +23,11 @@ import { useBrowserDrafts } from '@/drafts/use-browser-drafts'
 import { chronicleSettings, evaluateCharacter, guideSteps, type GuideStep, type ReviewTarget } from '@/rules/character-guide'
 import { skillDistributionIds, skillDistributions } from '@/rules/trait-ledger'
 import { buildLinkPrefix } from '@/sharing/build-link'
+
+const AdvancementJournal = lazy(async () => {
+  const { AdvancementJournal } = await import('@/components/AdvancementJournal')
+  return { default: AdvancementJournal }
+})
 
 const attributeGroups = traitGroups.map(({ name, attributes }) => ({ name, ids: attributes }))
 const skillGroups = traitGroups.map(({ name, skills }) => ({ name, ids: skills }))
@@ -69,7 +73,9 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
   const { dispatch } = drafts
   const panel = useRef<HTMLDivElement>(null)
   const focusRequest = useRef<{ step: GuideStep; id?: string } | null>(null)
-  const { ageProfile, path, traits, starting, advancement, tracks, sheet, openChoices, sourceIssues } = evaluateCharacter(draft)
+  const { ageProfile, path, traits, starting, advancement, tracks, sheet, openChoices, sourceIssues } = useMemo(
+    () => evaluateCharacter(draft), [draft],
+  )
   const { attributes, skills, specialties } = traits
   const { health, willpower } = tracks
   const { predatorGrant } = specialties
@@ -98,17 +104,11 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
 
   return (
     <main className="creator-shell mx-auto max-w-6xl space-y-5 px-4 py-8 sm:px-8 sm:py-12">
-      <header className="flex flex-wrap items-end justify-between gap-x-5 gap-y-3 border-l-2 border-primary pl-4 print:hidden sm:pl-5">
-        <div>
-          <p className="text-sm font-medium text-muted-foreground">Vampire: The Masquerade Fifth Edition</p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-tight text-balance sm:text-5xl">Character Creator</h1>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <TableReference />
-          <CoteriePlanner drafts={activeDrafts(drafts.library)} />
-          <HandoffPrototype />
-        </div>
-      </header>
+      <div className="flex flex-wrap gap-2 print:hidden">
+        <TableReference />
+        <CoteriePlanner drafts={activeDrafts(drafts.library)} />
+        <HandoffPrototype />
+      </div>
 
       <DraftControls
         library={drafts.library}
@@ -261,8 +261,10 @@ function CharacterCreator({ drafts }: { drafts: ReturnType<typeof useBrowserDraf
             </section>
           )}
           {step === 'review' && (
-            <AdvancementJournal key={id ?? 'unnamed'} journal={draft.advancement} result={advancement} creationComplete={!sheet.draft}
-              onChange={journal => dispatch({ type: 'advancement', journal })} />
+            <Suspense fallback={<p role="status">Loading advancement journal…</p>}>
+              <AdvancementJournal key={id ?? 'unnamed'} journal={draft.advancement} result={advancement} creationComplete={!sheet.draft}
+                onChange={journal => dispatch({ type: 'advancement', journal })} />
+            </Suspense>
           )}
 
           <div className="flex flex-wrap items-center justify-between gap-3">

@@ -40,13 +40,27 @@
     body {
       --backdrop-width: clamp(32rem, 83vw, 80rem);
       --backdrop-height: calc(var(--backdrop-width) * 2 / 3);
+      --city-backdrop: url('./assets/nocturnal-city-1536.webp');
       background-image:
         linear-gradient(180deg, transparent 4rem, var(--background) min(100%, 34rem)),
         linear-gradient(90deg, var(--background), transparent 64%),
-        url('./assets/nocturnal-city.jpg');
+        var(--city-backdrop);
       background-position: top right;
       background-repeat: no-repeat;
       background-size: var(--backdrop-width) var(--backdrop-height);
+    }
+  }
+
+  @media screen and (max-width: 639px) {
+    body {
+      --city-backdrop: url('./assets/nocturnal-city-768.webp');
+    }
+  }
+
+  @media screen and (scripting: enabled) {
+    /* Keep the footer below the viewport until the editor mounts. */
+    #root:empty {
+      min-block-size: 100svh;
     }
   }
 }

@@ -64,8 +64,8 @@ export function SharedBuild({ hash, library, onClose, onSave }: SharedBuildProps
 
   if (decoded.issue !== undefined) return (
     <main className="mx-auto max-w-4xl space-y-4 px-4 py-8 sm:px-8">
-      <h1 className="text-3xl font-semibold">Shared mechanical build</h1>
-      {decoded.unavailableSources && <h2 className="font-medium">Unavailable sources</h2>}
+      <h2 className="text-3xl font-semibold">Shared mechanical build</h2>
+      {decoded.unavailableSources && <h3 className="font-medium">Unavailable sources</h3>}
       <p role="alert" className="break-words text-rose-300">{decoded.issue}</p>
       {returnButton}
     </main>
@@ -77,16 +77,16 @@ export function SharedBuild({ hash, library, onClose, onSave }: SharedBuildProps
   return (
     <main className="creator-shell mx-auto max-w-6xl space-y-5 px-4 py-8 sm:px-8 sm:py-12">
       <section className="space-y-4 rounded-xl border border-border bg-card p-5 print:hidden sm:p-7" aria-labelledby="shared-build-heading">
-        <h1 id="shared-build-heading" className="text-3xl font-semibold">Shared mechanical build</h1>
+        <h2 id="shared-build-heading" className="text-3xl font-semibold">Shared mechanical build</h2>
         <p className="text-sm text-muted-foreground">Read-only preview. Save a copy to add a character name, story, and relationships.</p>
         {decoded.omitted.length > 0 && <div>
-          <h2 className="font-medium">Choices to re-enter</h2>
+          <h3 className="font-medium">Choices to re-enter</h3>
           <ul className="list-disc pl-5 text-sm text-muted-foreground">
             {decoded.omitted.map(id => <li key={id}>{omittedChoices[id]}</li>)}
           </ul>
         </div>}
         {openSteps.length > 0 && <div>
-          <h2 className="font-medium">Open mechanical choices</h2>
+          <h3 className="font-medium">Open mechanical choices</h3>
           <ul className="list-disc pl-5 text-sm text-muted-foreground">
             {openSteps.map(step => <li key={step.id}>
               {step.title}

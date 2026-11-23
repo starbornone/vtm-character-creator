@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "completed",
-  "updatedAt": "2026-11-17T00:55:49+11:00",
+  "updatedAt": "2026-11-24T02:09:19+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -259,6 +259,13 @@
       "group": "Browser drafts",
       "notes": "Added a reversible archive. Archiving the open draft saves it and opens blank Concept. Verified active and archived lists after reload, reopening with the same ID, inputs, and step, and preserving both drafts after stale archive and reopen attempts. Quota tests confirm rejected writes preserve stored data.",
       "completedAt": "2026-11-17T00:55:49+11:00"
+    },
+    {
+      "id": "add-public-homepage-seo",
+      "title": "Serve crawler-readable homepage content and search metadata",
+      "group": "Search discovery",
+      "notes": "Added a static introduction, generated canonical and social metadata, application JSON-LD, crawl files, and Vercel redirect and 404 configuration. Added responsive WebP backdrops, reserved editor startup space, and loaded the advancement journal on demand. Verified build output and browser draft restore, print, and sharing with the local production files.",
+      "completedAt": "2026-11-24T02:09:19+11:00"
     }
   ]
 }

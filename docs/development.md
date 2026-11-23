@@ -8,6 +8,7 @@
 | `roadmap/` | Three JSON files tracking pending, finished, and cancelled work. |
 | `AGENTS.md` | Repository instructions for coding agents. |
 | `index.html`, `src/main.tsx`, `src/App.tsx` | HTML entry, React bootstrap, and guide navigation. |
+| `scripts/seo.mjs`, `vercel.json`, `public/404.html` | Public page metadata, crawl files, static hosting, and the missing-page response. |
 | `src/components/ui/`, `src/index.css`, `components.json` | shadcn/ui components, Tailwind theme, and registry configuration. |
 | `src/catalog/traits.ts`, `src/rules/trait-ledger.ts` | Trait IDs and groups, in-memory draft edits, and the pure base allocation evaluator. |
 | `src/catalog/clan-path.ts`, `src/rules/clan-path.ts` | Core and optional clan and Predator Type options, source tags, power slots, and derived grants. |
@@ -66,3 +67,9 @@ For link changes, run the [build link tests](../tests/build-link.test.ts). Gener
 For brief changes, run the [Storyteller brief tests](../tests/storyteller-brief.test.ts). Compare the downloaded Markdown with the preview for Mara Vale and a draft with an unresolved manual ruling or a rejected XP purchase. Toggle a narrative section on and off and confirm that the text appears only while selected.
 
 For releases, use the [first-release verification record](release-verification.md) to repeat the desktop and mobile walkthrough, review printed sheets, and check the notices on the deployed site.
+
+## Deployment and search checks
+
+Run `npm run build` to generate the metadata, JSON-LD, `robots.txt`, and `sitemap.xml` in `dist/`. Use `npm run preview` to inspect the raw HTML and confirm that the introduction and fan notice display with JavaScript disabled. The canonical and the sole sitemap URL should be `https://vtm.astralarchives.games/`. If a future guide gets its own public HTML page, link to it with an ordinary anchor and register the built file in [the public page list](../scripts/seo.mjs).
+
+On a Vercel preview, verify that `/index.html` redirects to `/` with HTTP 308, an unknown path serves the custom page with HTTP 404, and the sitemap, robots file, and social image return HTTP 200. The Vite preview server does not implement the Vercel routing config. After production deployment, submit the sitemap in Search Console and inspect the homepage. Use mobile field data for Core Web Vitals when available.

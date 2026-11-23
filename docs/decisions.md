@@ -10,6 +10,8 @@ The static app, Core catalog, print sheet, named browser drafts, JSON backup and
 
 **Consequences.** A draft belongs to its browser and origin. A failed write keeps the working copy open and downloadable. JSON backup and restore can carry that copy to another browser.
 
+The public homepage introduction and metadata ship in the initial HTML. The build emits crawl files for the public page list. The wizard and fragment-based build previews share the homepage path and use the existing browser session flow.
+
 ## 2 V5 Core Rulebook neonates first
 
 **Context.** Character profiles and editions introduce different starting rules and exceptions.

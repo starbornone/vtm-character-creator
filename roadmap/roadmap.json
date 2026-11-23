@@ -1,7 +1,7 @@
 {
   "schema": "name-roadmap/v1",
   "file": "roadmap",
-  "updatedAt": "2026-11-17T00:55:49+11:00",
+  "updatedAt": "2026-11-24T02:09:19+11:00",
   "project": {
     "key": "vtm-character-creator",
     "title": "Vampire: The Masquerade Character Creator",
@@ -9,6 +9,12 @@
     "summary": "A browser-based Vampire: The Masquerade V5 creator with Core and optional Player’s Guide choices, XP advancement, chronicle presets, a searchable rules reference, and local character and coterie planning tools."
   },
   "items": [
+    {
+      "id": "verify-production-search-discovery",
+      "title": "Verify search discovery after deploying the homepage SEO update",
+      "group": "Release verification",
+      "notes": "Check the Vercel redirect, custom HTTP 404, homepage HTML, crawl files, and social image on the deployment. Submit the sitemap in Search Console, inspect the homepage canonical, and record a mobile Core Web Vitals baseline when field data is available."
+    },
     {
       "id": "add-tzimisce-creation",
       "title": "Add Tzimisce to the opt-in Player’s Guide catalog",

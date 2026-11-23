@@ -10,7 +10,7 @@
     "dev": "vite",
     "test": "node --test",
     "typecheck": "tsc --noEmit",
-    "build": "npm run typecheck && vite build",
+    "build": "npm run typecheck && vite build && node scripts/seo.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

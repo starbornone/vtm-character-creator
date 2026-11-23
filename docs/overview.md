@@ -21,6 +21,8 @@ Open [Handoff prototype](storyteller-workspace.md#prototype-walkthrough) to try 
 
 ## Release boundaries
 
+The [public creator](https://vtm.astralarchives.games/) serves its introduction and page metadata in the initial HTML. JavaScript loads the editor, and saved drafts and shared build previews use the homepage URL.
+
 The first release covers one vampire at a time and the seven named core clans. The supported workflow includes manual entries where the core rules can represent the choice. Those entries carry a Storyteller review flag. The fledgling profile gives newly Embraced characters room to develop a Predator Type during play. The ancilla profile adds a larger starting XP and dot budget. Caitiff can choose any two Core Disciplines, use their own XP rate, and start with Suspect. Thin-blood creation covers the Core fledgling path. The optional Player’s Guide pack adds the Ministry, Ravnos, three Predator Types, and two Obfuscate powers. After completing creation, players can record earned XP and replay purchases in the advancement journal. Drafts stay in the browser until players export or share them.
 
 See [First-release verification](release-verification.md) for the browser, print, and public notice checks.

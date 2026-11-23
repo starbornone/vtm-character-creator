@@ -22,7 +22,7 @@ Try the [local handoff review prototype](docs/storyteller-workspace.md#prototype
 
 ## Run locally
 
-With Node.js 24 or later, run `npm ci` and `npm run dev` from the repository root. Open the URL printed by Vite. Run `npm run build` to type-check and build the production files.
+With Node.js 24 or later, run `npm ci` and `npm run dev` from the repository root. Open the URL printed by Vite. Run `npm run build` to type-check and build the production files, including search metadata and the sitemap. See [Deployment and search checks](docs/development.md#deployment-and-search-checks).
 
 ## Documentation
 
